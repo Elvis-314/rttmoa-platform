@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.57](https://github.com/rttmoa/rttmoa-platform/compare/v2.3.56...v2.3.57) (2025-07-29)
+
+
+### Bug Fixes
+
+* **api:** 🧩 修改job交互的接口信息、添加.sql数据库文件 ([a3f9599](https://github.com/rttmoa/rttmoa-platform/commit/a3f9599ea2361a191f5fcab60ccf0c39828df91c))
+
 ### [2.3.56](https://github.com/rttmoa/rttmoa-platform/compare/v2.3.55...v2.3.56) (2025-07-24)
 
 
