@@ -92,6 +92,7 @@ const useProTable = () => {
 			}
 		}
 	};
+
 	// * 操作 — 员工： 新建、编辑、详情  弹窗内容提交
 	const handleModalSubmit = async (type: string, item: any) => {
 		console.log('Modal 提交：', type, item);
@@ -101,7 +102,7 @@ const useProTable = () => {
 		// 4、重新请求，根据页码等条件
 		const hide = message.loading(type == 'create' ? '正在添加' : '正在编辑');
 		try {
-			let res = type === 'create' ? await addJob(item) : await modifyJob(item);
+			let res = type === 'create' ? await addJob(item) : await modifyJob(item._id, item);
 			if (res) {
 				hide();
 				form.resetFields();

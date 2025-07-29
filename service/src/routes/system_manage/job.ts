@@ -4,12 +4,15 @@ const router = new Router();
 
 
 
-router.get("/allJob", Job.allJob);  // 查询
+router.get("/job", Job.allJob);  // 查询
 
-router.post("/addJob", Job.addJob); 
-router.post("/modifyJob", Job.modifyJob); 
-router.delete("/delJob", Job.delJob); 
-router.post("/delMoreJob", Job.delMoreJob); 
+router.post("/job", Job.addJob); // 增加
+
+router.put("/job/:id", Job.modifyJob); // 修改
+
+router.delete("/job/:id", Job.delJob);  // 删除
+
+router.post("/jobs", Job.delMoreJob);  // 删除更多
 
 
  

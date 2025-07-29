@@ -1,5 +1,12 @@
-import { Context } from "koa";
-import Basic from "../basic";
+import { Context } from 'koa';
+import Basic from '../basic';
+
+type Parmas = {
+	job_name?: string;
+	job_sort?: string;
+	status?: boolean;
+	desc?: string;
+};
 
 // * 岗位管理
 // 字段：
@@ -19,92 +26,78 @@ class Job extends Basic {
 		super();
 	}
 
-	// * 新增岗位：无其他
+	// * 查询岗位
+	allJob = async (ctx: Context) => {
+		try {
+			const data = ctx.request.query;
+
+			const count = await ctx.mongo.count('__job');
+			const job = await ctx.mongo.find('__job');
+
+			return ctx.send({
+				list: job,
+				page: 1,
+				pageSize: 10,
+				total: count,
+			});
+		} catch (err) {
+			return ctx.sendError(500, err.message);
+		}
+	};
+	// * 新增岗位
 	addJob = async (ctx: Context) => {
 		try {
-			// 获取前端参数：
-			type Parmas = {
-				job_name?: string;
-				job_sort?: string;
-				status?: boolean;
-				desc?: string;
-			};
 			const data: Parmas = ctx.request.body;
-			console.log("新增岗位参数：", data);
+			console.log('新增岗位参数：', data);
 			if (!data) return ctx.sendError(400, `新增岗位操作：未获取到参数`, 400);
 			if (!data?.job_name) return ctx.sendError(400, `新增岗位操作：未获取到岗位名称`, 400);
 			if (!data?.job_sort) return ctx.sendError(400, `新增岗位操作：未获取到岗位排序`, 400);
 
 			// * 先查询岗位名称是否重复
 			const newJob: any = {
-				postCode: "ceo",
+				postCode: 'ceo',
 				postName: data?.job_name, // 产品经理 | 前端开发 | 会计
 				postSort: +data?.job_sort, // 排序
-				status: data?.status == true ? "1" : "0", // 开关：开启/关闭  0：关、1：开
+				status: data?.status == true ? '1' : '0', // 开关：开启/关闭  0：关、1：开
 				flag: false,
-				desc: data?.desc || "",
+				desc: data?.desc || '',
 
-				createBy: "admin",
+				createBy: 'admin',
 				createTime: new Date(),
 				updateBy: null,
 				updateTime: null,
 			};
-			const ins = await ctx.mongo.insertOne("__job", newJob);
-			return ctx.send(ins);
+			const ins = await ctx.mongo.insertOne('__job', newJob);
+			return ctx.send(`新增 ${data?.job_name} 成功!`);
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
-		}
-	};
-
-	// * 查询岗位
-	allJob = async (ctx: Context) => {
-		try { 
-			const data = ctx.request.query;
-
-			const job = await ctx.mongo.find("__job");
-
-			return ctx.send({
-				list: job,
-				page: 1,
-				pageSize: 10,
-				total: job.length,
-			});
-		} catch (err) {
-			return ctx.sendError(500, err.message);
 		}
 	};
 
 	// * 修改岗位
 	modifyJob = async (ctx: Context) => {
 		try {
-			// 获取前端参数：
-			type Parmas = {
-				_id?: string;
-				job_name?: string;
-				job_sort?: string;
-				status?: boolean;
-				desc?: string;
-			};
+			const id = ctx.params.id;
 			const data: Parmas = ctx.request.body;
-			console.log("修改岗位参数：", data);
+			console.log('修改岗位参数：', data);
 			if (!data) return ctx.sendError(400, `修改岗位操作：未获取到参数`, 400);
-			if (!data._id) return ctx.sendError(400, `修改岗位操作：无iD`, 400);
+			if (!id) return ctx.sendError(400, `修改岗位操作：无iD`, 400);
 			if (!data?.job_name) return ctx.sendError(400, `修改岗位操作：未获取到岗位名称`, 400);
-			if (typeof Number(data?.job_sort) != "number") return ctx.sendError(400, `修改岗位操作：岗位排序不是数字`, 400);
+			if (typeof Number(data?.job_sort) != 'number') return ctx.sendError(400, `修改岗位操作：岗位排序不是数字`, 400);
 
 			// * 先查询岗位名称是否重复
 			const newJob: any = {
-				postCode: "ceo",
+				postCode: 'ceo',
 				postName: data?.job_name, // 产品经理 | 前端开发 | 会计
 				postSort: +data.job_sort, // 排序
-				status: data?.status == true ? "1" : "0", // 开关：开启/关闭  0：关、1：开
+				status: data?.status == true ? '1' : '0', // 开关：开启/关闭  0：关、1：开
 				flag: false,
-				desc: data?.desc || "",
+				desc: data?.desc || '',
 
 				updateBy: null,
 				updateTime: new Date(),
 			};
-			const ins = await ctx.mongo.updateOne("__job", data._id, newJob);
+			const ins = await ctx.mongo.updateOne('__job', id, newJob);
 			return ctx.send(ins);
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
@@ -113,11 +106,11 @@ class Job extends Basic {
 
 	// * 删除岗位
 	delJob = async (ctx: Context) => {
-		try { 
-			const { id } = ctx.request.query as { id: string };
-			if (!id) return ctx.sendError(400, `删除岗位操作：未获取到iD`, 400);
+		try {
+			const id = ctx.params.id;
+			if (!id) return ctx.sendError(400, `删除岗位操作：前端未传递id！`, 400);
 
-			const ins = await ctx.mongo.deleteOne("__job", id);
+			const ins = await ctx.mongo.deleteOne('__job', id);
 			return ctx.send(ins);
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
@@ -127,17 +120,14 @@ class Job extends Basic {
 	// * 删除多个岗位
 	delMoreJob = async (ctx: Context) => {
 		try {
-			// 获取前端参数：
 			const data: any = ctx.request.body;
-			const ids = data.ids;
-			if (!ids) {
-				return ctx.sendError(400, `删除岗位操作：未获取到iD`, 400);
+			if (!data.length) {
+				return ctx.sendError(400, `删除岗位操作：前端传递的参数不正确！`, 400);
 			}
-			console.log("删除多个岗位 参数：", data);
-			for (const _id of ids) {
-				await ctx.mongo.deleteOne("__job", _id);
+			for (const _id of data) {
+				await ctx.mongo.deleteOne('__job', _id);
 			}
-			return ctx.send("全部删除完成");
+			return ctx.send('全部删除完成');
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}

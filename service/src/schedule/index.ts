@@ -1,5 +1,5 @@
 import { CronJob } from 'cron';
-import { mongoService } from '../middlewares/mongo/_dbMongoService';
+import { mongoService } from '../middlewares/mongo/mongoService';
 const chalk = require('chalk');
 
 let time = {

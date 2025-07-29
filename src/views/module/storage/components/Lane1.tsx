@@ -384,9 +384,10 @@ const Lane: React.FC = () => {
 		try {
 			// const { data } = await axios.get('http://127.0.0.1:6300/shelf/Warehouse_Report')
 			setLoading(true);
-			const data: any = await GetShelfStock();
-			// console.log('data =====', data)
-			const rawData = data.data.material;
+			const { data }: any = await GetShelfStock();
+			// console.log('data =====', data);
+			const rawData = data.data;
+			// console.log('rawData', rawData);
 			setApiData(rawData);
 			rawData.forEach((item: any) => {
 				const { row__c, lay__c, col__c } = item;

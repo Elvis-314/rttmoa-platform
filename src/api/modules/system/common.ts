@@ -20,11 +20,11 @@ export const DelMoreUser = (ids: string[]) => http.post(`/userp/delMoreUsers`, {
 export const DelMoreProTableUser = (ids: Params) => http.post('/userp/delMoreUsers', { data: ids });
 
 // * 系统管理 — 岗位管理
-export const findJob = (params: Params) => http.get(`/job/allJob`, params);
-export const addJob = (params: Params) => http.post(`/job/addJob`, params);
-export const modifyJob = (params: Params) => http.post(`/job/modifyJob`, params);
-export const delJob = (id: string) => http.delete(`/job/delJob`, { id });
-export const delMoreJob = (ids: string[]) => http.post(`/job/delMoreJob`, { ids });
+export const findJob = (params: Params) => http.get(`/jb/job`, params);
+export const addJob = (params: Params) => http.post(`/jb/job`, params);
+export const delJob = (id: string) => http.delete(`/jb/job/${id}`);
+export const delMoreJob = (data: string[]) => http.post(`/jb/jobs`, data);
+export const modifyJob = (id: string, params: Params) => http.put(`/jb/job/${id}`, params);
 
 // * 系统管理 — 角色管理
 export const findRole = (params: Params) => http.get(`/role/findRole`, params);
