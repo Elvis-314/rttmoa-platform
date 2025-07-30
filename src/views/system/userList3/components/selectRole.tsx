@@ -1,4 +1,4 @@
-import { fetchUserSetRole } from '@/api/modules/system/userManage2';
+import { fetchUserSetRole } from '@/api/modules/system';
 import { message } from '@/hooks/useMessage';
 import { Button, Card, Modal, Radio, Space } from 'antd';
 import React, { useState } from 'react';

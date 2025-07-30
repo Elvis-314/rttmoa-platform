@@ -1,14 +1,16 @@
 import http from '@/api';
+import httpUpack from '@/api/upack';
 import { AuthState } from '@/redux/interface';
 import { PORT1 } from '@/api/config/servicePort';
-import { ReqLogin, ReqPage, ResLogin, ResPage, UserList } from '@/api/interface/index';
+import { Params, ReqLogin, ReqPage, ResLogin, ResPage, UserList } from '@/api/interface/index';
 import authMenuList from '@/assets/api/authMenuList.json';
 import authButtonList from '@/assets/api/authButtonList.json';
 import loginJSON from '@/assets/api/login.json';
 
-/**
- * @name AuthModule
- */
+// * 系统管理 — 用户管理 — 登陆、注册、退出
+export const userLogin = (params: Params) => httpUpack.post(`/userp/login`, params);
+export const userLogout = (params: Params) => httpUpack.post(`/userp/logout`, params);
+export const userRegister = (params: Params) => httpUpack.post(`/userp/register`, params);
 
 // 用户登陆
 export const loginApi = (params: ReqLogin) => {
@@ -27,20 +29,11 @@ export const getAuthMenuListApi = () => {
 };
 
 // 获取按钮权限
-export const getAuthButtonListApi = () => {
-	// return http.get<AuthState['authButtonList']>(PORT1 + `/auth/buttons`)
-	return authButtonList;
-};
+// export const getAuthButtonListApi = () => http.get<AuthState['authButtonList']>(PORT1 + `/auth/buttons`)
+export const getAuthButtonListApi = () => authButtonList;
 
 // 用户退出
-export const logoutApi = () => {
-	return http.post(PORT1 + `/logout`, {}, { loading: true });
-};
+export const logoutApi = () => http.post(PORT1 + `/logout`, {}, { loading: true });
 
-/**
- * @description Get user list
- * @name UserModule
- */
-export const getUserList = (params: ReqPage) => {
-	return http.post<ResPage<UserList>>(PORT1 + `/user/list`, params);
-};
+// 获取用户列表
+export const getUserList = (params: ReqPage) => http.post<ResPage<UserList>>(PORT1 + `/user/list`, params);

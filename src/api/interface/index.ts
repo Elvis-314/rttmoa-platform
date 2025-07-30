@@ -55,3 +55,6 @@ export type FormValueType = {
 	time?: string;
 	frequency?: string;
 } & Partial<UserList>;
+
+export type Params = { [key: string]: any };
+export type Modify = { id: string; data: any };

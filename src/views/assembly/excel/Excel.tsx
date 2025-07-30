@@ -1,11 +1,9 @@
-import { Button, Dropdown, Popconfirm, Tooltip, Upload } from 'antd';
-import React, { useState } from 'react';
-
+import { Button, Dropdown, Tooltip, Upload } from 'antd';
+import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { message } from '@/hooks/useMessage';
-import { IconFont } from '@/components/Icon';
-import { DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleFilled, QuestionCircleTwoTone, QuestionOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleTwoTone, SettingOutlined } from '@ant-design/icons';
 
 // const tableHeaders = ['序号', '学科', '项目名称', '端', '账号', '密码'];
 
@@ -13,11 +11,14 @@ import { DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleFilled, Questi
 export default function Excel(Props: any) {
 	const {
 		TableName, // 导出文件名：用户管理
+		setFileName,
 		ExportTableData, // 导出表格数据
-		tableHeaders, // 表头名称：['序号', '学科', '项目名称', '端', '账号', '密码'];
+		tableHeaders, // 表头名称：['序号', '学科', '项目名称', '端', '账号', '密码'];  需传递此种格式
 	} = Props;
+	// console.log('Props', Props);
+
 	const [tableLoading, setTableLoading] = useState<boolean>(false); // 加载状态：Loading
-	const [fileName, setFileName] = useState<string>(''); // 文件名称： __EXCEL__黑马账号信息.xlsx
+	// const [fileName, setFileName] = useState<string>(''); // 文件名称： __EXCEL__黑马账号信息.xlsx
 
 	// ! 导入表格数据
 	// 参数设置   (file:文件 Blob类型,sheetName:工作区名称 string类型)
@@ -79,6 +80,7 @@ export default function Excel(Props: any) {
 	// ! 传参：expectedHeaders表头信息
 	const exportTemplate = () => {
 		// const tableHeaders = ['序号', '学科', '项目名称', '端', '账号', '密码'];
+		const columnConfig = tableHeaders.map((value: any) => value.title);
 
 		// 1. 构造一个空的 worksheet，只包含表头
 		const ws = XLSX.utils.aoa_to_sheet([tableHeaders]);
@@ -112,11 +114,7 @@ export default function Excel(Props: any) {
 			key: '1',
 			label: (
 				<div>
-					<Upload
-						beforeUpload={file => {
-							handleUpload(file);
-						}}
-					>
+					<Upload beforeUpload={handleUpload}>
 						{/* 提示：只导入工作区是 Sheet1 的数据 */}
 						<Button key='view' type='text' size='middle' icon={<EyeOutlined />}>
 							导入表格数据
@@ -133,6 +131,22 @@ export default function Excel(Props: any) {
 		{
 			key: '2',
 			label: (
+				<div>
+					{/* 提示：只导入工作区是 Sheet1 的数据 */}
+					<Button key='view' type='text' size='middle' icon={<EyeOutlined />}>
+						导入表格数据高级设置
+						<Tooltip title='设置是否去重、根据字段去更新还是新增'>
+							<span>
+								<QuestionCircleTwoTone />
+							</span>
+						</Tooltip>
+					</Button>
+				</div>
+			),
+		},
+		{
+			key: '3',
+			label: (
 				<Button key='edit' type='text' size='middle' icon={<EditOutlined />} onClick={exportTemplate}>
 					导出表格模板
 					<Tooltip title='模板格式、按格式去导入！'>
@@ -144,7 +158,7 @@ export default function Excel(Props: any) {
 			),
 		},
 		{
-			key: '3',
+			key: '4',
 			label: (
 				<Button key='delete' type='text' size='middle' icon={<DeleteOutlined />} onClick={handleExport}>
 					导出表格数据
@@ -168,7 +182,8 @@ export default function Excel(Props: any) {
 				trigger={['click']}
 			>
 				<div className='more-button-item'>
-					<IconFont style={{ fontSize: 22 }} type='icon-xiala' />
+					{/* <IconFont style={{ fontSize: 22 }} type='icon-xiala' /> */}
+					<SettingOutlined className='hover:cursor-pointer' />
 				</div>
 			</Dropdown>
 		</>

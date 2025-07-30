@@ -13,14 +13,15 @@ const TableDataImport = () => {
 	const DataSource = Config().dataSource;
 	const Column: any = Config().column;
 	return (
-		<div className='TableDataImport bg-white p-[24px]'>
-			<div className='fileUpDiv mb-5' style={{ marginTop: 0, marginBottom: 40 }}>
-				<span style={{ marginRight: 42 }}>文件名称</span>
+		<div className='TableDataImport bg-white p-[24px] h-full'>
+			<div className='fileUpDiv mb-[40px] mt-0'>
+				<div className='mr-[40px]'>文件名称：</div>
 				<span className='fileName'>{fileName}</span>
 				<Excel
-					TableName='用户管理' //
-					ExportTableData={[]} // 接口数据：所有表数据
-					tableHeaders={[]} // 表头数据
+					TableName='用户管理'
+					setFileName={setFileName}
+					ExportTableData={DataSource} // 接口数据：所有表数据
+					tableHeaders={Column.map((value: any) => value.title)} // 表头数据
 				/>
 			</div>
 			<Table

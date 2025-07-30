@@ -15,7 +15,7 @@ import Role from "./system_manage/role";
 import Dept from "./system_manage/dept";
 import restApi from './system_manage/restApi'
 import { config } from "../config/config";
-
+ 
 
 
 
@@ -27,7 +27,7 @@ export const unprotect = (app: any) => {
 	router.use("/userp", User.routes());
 	router.use("/monitor", Monitor.routes());
 	router.use("/jb", Job.routes()); // * 模板
-	router.use("/role", Role.routes());
+ 	router.use("/role", Role.routes());
 	app.use(router.routes()).use(router.allowedMethods());
 };
 

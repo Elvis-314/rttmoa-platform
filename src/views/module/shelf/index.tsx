@@ -11,7 +11,7 @@ import UpdateForm from './component/_UpdateForm';
 import './index.less';
 import TableColumnsConfig, { TableColumnsParams } from './component/Table_Column_Config';
 import ToolBarRender from './component/ToolBarRender';
-import { GetAllShelf, GetShelfStock } from '@/api/modules/module/common';
+import { GetAllShelf, GetShelfStock } from '@/api/modules/module';
 
 export type FormValueType = {
 	target?: string;

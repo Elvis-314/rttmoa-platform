@@ -30,17 +30,18 @@ const AvatarIcon: React.FC = () => {
 			cancelText: '取消',
 			maskClosable: true,
 			onOk: async () => {
-				// todo 退出逻辑
-				//  todo 1.执行注销接口
-				//  todo 2.设置 Token 为空
-				//  todo 3.设置 Menu 为空
-				//  todo 4.跳转至 登录页面
-				//  todo 5.提示 退出成功
-				//  todo ? 要不要清除Redux持久化数据
+				//   退出逻辑
+				//    1.执行注销接口
+				//    2.设置 Token 为空
+				//    3.设置 Menu 为空
+				//    4.跳转至 登录页面
+				//    5.提示 退出成功
+				//    ？ 要不要清除Redux持久化数据
 				await logoutApi();
 				dispatch(setToken(''));
 				dispatch(setAuthMenuList([]));
 				navigate(LOGIN_URL, { replace: true });
+				// navigate(LOGIN_URL);
 				// navigate("/login?to=/personal", { replace: true });
 				message.success('退出登录成功！');
 			},

@@ -226,9 +226,9 @@ rttmoa-platform
 │   │   ├── monitor
 │   │   └── system
 │   └── vite-env.d.ts
-├── stats.html
-├── tailwind.config.js
-├── tsconfig.json
-├── vite.config.ts                    
-├── yarn.lock
+├── stats.html                            # 打包后生成的文件
+├── tailwind.config.js                    # tailwindcss 的配置文件
+├── tsconfig.json                         # typescript 的配置文件
+├── vite.config.ts                        # vite 构建工具的配置文件
+├── yarn.lock                             # yarn安装的依赖项
 └── 项目创建表案例.docx

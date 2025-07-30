@@ -22,18 +22,16 @@ export default function Draft() {
 	};
 	const message = (
 		<span>
-			富文本使用 wangEditor 5 插件完成，官方文档请查看 ：
+			富文本使用 wangEditor 5 插件完成，官方文档请查看
 			<Link href='https://www.wangeditor.com/' target='_blank'>
 				wangEditor 5
 			</Link>
 		</span>
 	);
 	return (
-		<div>
-			<Card>
-				<Alert className='mb-4' message={message} type='info' showIcon />
-				<MyEditor {...props} />
-			</Card>
-		</div>
+		<Card className='h-full'>
+			<Alert className='mb-4' message={message} type='info' showIcon />
+			<MyEditor {...props} />
+		</Card>
 	);
 }

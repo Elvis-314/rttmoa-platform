@@ -7,7 +7,7 @@ import type { ActionType, FormInstance, ProDescriptionsItemProps } from '@ant-de
 import { message } from '@/hooks/useMessage';
 import TableColumnsConfig from './component/ColumnConfig';
 import ToolBarRender from './component/ToolBar';
-import { addJob, delJob, DelMenu, delMoreJob, DelMoreUser, DelUser, FindAllMenu, findJob, GetProTableUser, InsNewMenu, modifyJob, UpMenu } from '@/api/modules/system/common';
+import { addJob, delJob, DelMenu, delMoreJob, DelMoreUser, DelUser, FindAllMenu, findJob, GetProTableUser, InsNewMenu, modifyJob, UpMenu } from '@/api/modules/system';
 import './index.less';
 import ModalComponent from './component/Modal';
 import DrawerComponent from './component/Drawer';
@@ -47,7 +47,7 @@ const useProTable = () => {
 
 	// * 操作 — 员工： 新建、编辑、详情、删除  按钮
 	const handleOperator = async (type: string, item: any) => {
-		// console.log('操作：类型+记录', type, item);
+		console.log('操作：类型+记录', type, item);
 		if (type === 'detail') {
 			setDrawerIsVisible(true);
 			setDrawerCurrentRow(item);
@@ -69,7 +69,7 @@ const useProTable = () => {
 				if (result) {
 					hide();
 					actionRef?.current?.reload();
-					message.success(`删除 ${item?.postName} 成功`);
+					message.success(`删除 ${item?.meta?.title} 成功`);
 				}
 			} catch (error) {
 				hide();

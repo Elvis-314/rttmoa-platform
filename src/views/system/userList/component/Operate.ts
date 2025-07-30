@@ -1,4 +1,4 @@
-import { DelMoreProTableUser } from '@/api/modules/system/common';
+import { DelMoreProTableUser } from '@/api/modules/system';
 import { message } from '@/hooks/useMessage';
 
 /**

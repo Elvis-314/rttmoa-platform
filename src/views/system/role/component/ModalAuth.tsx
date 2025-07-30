@@ -1,4 +1,4 @@
-import { roleTransferList } from '@/api/modules/system/roleManage';
+import { roleTransferList } from '@/api/modules/system';
 import { Form, Input, Modal, Transfer } from 'antd';
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 

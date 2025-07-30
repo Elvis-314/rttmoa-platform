@@ -1,4 +1,4 @@
-import { fetchUserAdd, fetchUserDetailUpdate } from '@/api/modules/system/userManage2';
+import { fetchUserAdd, fetchUserDetailUpdate } from '@/api/modules/system';
 import { regExpConfig } from '@/config/regular';
 import { message } from '@/hooks/useMessage';
 import { Button, Drawer, Form, Input, Select } from 'antd';

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { roleList } from '@/api/modules/system/roleManage';
-import { fetchChangeUserStatus, fetchUserDelete, fetchUserDepttList, fetchUserDetail, fetchUserList } from '@/api/modules/system/userManage2';
 import { Layout, Form, Spin, Button, Input, Popconfirm, Card } from 'antd';
 import TreeList from './components/treeList';
 import TableList from './components/tableList';
@@ -8,6 +6,7 @@ import { message, notification } from '@/hooks/useMessage';
 import AddPolice from './components/addPolice';
 import SelectRole from './components/selectRole';
 import './index.less';
+import { fetchChangeUserStatus, fetchUserDelete, fetchUserDepttList, fetchUserDetail, fetchUserList, roleList } from '@/api/modules/system';
 const FormItem = Form.Item;
 const { Content, Sider } = Layout;
 

@@ -6,14 +6,13 @@ import { useDispatch } from '@/redux';
 import { setToken } from '@/redux/modules/user';
 import { setTabsList } from '@/redux/modules/tabs';
 import { notification } from '@/hooks/useMessage';
-import { loginApi } from '@/api/modules/login';
+import { loginApi, userLogin, userRegister } from '@/api/modules/login';
 import { ReqLogin } from '@/api/interface';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { message } from '@/hooks/useMessage';
 import type { FormInstance, FormProps } from 'antd/es/form';
 import { LockOutlined, UserOutlined, CheckCircleFilled, PhoneOutlined, UserAddOutlined, BulbOutlined } from '@ant-design/icons';
 import usePermissions from '@/hooks/usePermissions';
-import { userLogin, userRegister } from '@/api/modules/system/login';
 
 /* 自定义表单校验规则 （手机号、验证码） */
 const validate = {
@@ -85,7 +84,7 @@ const LoginForm: React.FC = () => {
 			// 清除最后一个帐户选项卡
 			dispatch(setTabsList([]));
 
-			// * 初始化权限： 获取用户按钮权限 && 获取用户菜单权限
+			// * 初始化权限： 获取用户按钮权限 && 获取用户菜单权限     Button & Menu
 			await initPermissions(data.token);
 
 			notification.success({
