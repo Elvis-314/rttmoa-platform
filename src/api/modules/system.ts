@@ -1,47 +1,47 @@
 import { PORT1 } from '@/api/config/servicePort';
-import http from '@/api/upack';
-import httpIndex from '@/api';
+import httpUpack from '@/api/upack';
+import httpIndex from '@/api/api';
 import { Params } from '@/api/interface';
 
-// * http://localhost:9527/upack/shelf/Warehouse_Report // upack为代理地址
+// * httpUpack://localhost:9527/upack/shelf/Warehouse_Report // upack为代理地址
 
 // * System
 // * 系统管理 — 菜单管理
-export const FindAllMenu = (params: Params) => http.get(`/menu/allMenu`, params);
-export const InsNewMenu = (params: Params) => http.post(`/menu/addMenu`, params);
-export const UpMenu = (params: Params) => http.post(`/menu/modMenu`, params);
-export const DelMenu = (params: Params) => http.post(`/menu/delMenu`, params);
+export const FindAllMenu = (params: Params) => httpUpack.get(`/menu/allMenu`, params);
+export const InsNewMenu = (params: Params) => httpUpack.post(`/menu/addMenu`, params);
+export const UpMenu = (params: Params) => httpUpack.post(`/menu/modMenu`, params);
+export const DelMenu = (params: Params) => httpUpack.post(`/menu/delMenu`, params);
 
 // * 系统管理 — 用户管理
-export const GetUserManagerList = (params: Params) => http.get(`/userp/users2`, params);
-export const DelUser = (id: string) => http.delete(`/userp/users`, { id });
-export const GetProTableUser = (params: Params) => http.get(`/userp/users1`, params);
-export const DelMoreUser = (ids: string[]) => http.post(`/userp/delMoreUsers`, { ids });
-export const DelMoreProTableUser = (ids: Params) => http.post('/userp/delMoreUsers', { data: ids });
+export const GetUserManagerList = (params: Params) => httpUpack.get(`/userp/users2`, params);
+export const DelUser = (id: string) => httpUpack.delete(`/userp/users`, { id });
+export const GetProTableUser = (params: Params) => httpUpack.get(`/userp/users1`, params);
+export const DelMoreUser = (ids: string[]) => httpUpack.post(`/userp/delMoreUsers`, { ids });
+export const DelMoreProTableUser = (ids: Params) => httpUpack.post('/userp/delMoreUsers', { data: ids });
 
 // * 系统管理 — 岗位管理
-export const findJob = (params: Params) => http.get(`/jb/job`, params);
-export const addJob = (params: Params) => http.post(`/jb/job`, params);
-export const delJob = (id: string) => http.delete(`/jb/job/${id}`);
-export const delMoreJob = (data: string[]) => http.post(`/jb/jobs`, data);
-export const modifyJob = (id: string, params: Params) => http.put(`/jb/job/${id}`, params);
+export const findJob = (params: Params) => httpUpack.get(`/jb/job`, params);
+export const addJob = (params: Params) => httpUpack.post(`/jb/job`, params);
+export const delJob = (id: string) => httpUpack.delete(`/jb/job/${id}`);
+export const delMoreJob = (data: string[]) => httpUpack.post(`/jb/jobs`, data);
+export const modifyJob = (id: string, params: Params) => httpUpack.put(`/jb/job/${id}`, params);
 
 // * 系统管理 — 角色管理
-export const findRole = (params: Params) => http.get(`/role/findRole`, params);
-export const addRole = (params: Params) => http.post(`/role/addRole`, params);
-export const modifyRole = (params: Params) => http.post(`/role/modifyRole`, params);
-export const delRole = (id: string) => http.delete(`/role/delRole`, { id });
+export const findRole = (params: Params) => httpUpack.get(`/role/findRole`, params);
+export const addRole = (params: Params) => httpUpack.post(`/role/addRole`, params);
+export const modifyRole = (params: Params) => httpUpack.post(`/role/modifyRole`, params);
+export const delRole = (id: string) => httpUpack.delete(`/role/delRole`, { id });
 
 export const roleList = () => httpIndex.get(PORT1 + `/role/list`); // 获取角色列表
 export const roleTransferList = (id: number) => httpIndex.get(PORT1 + `/role/transfer/list`); // 获取角色转换列表
 
 // * 系统管理 — 部门管理
-export const findDept = (params: Params) => http.get(`/dept/departments`, params);
-export const addDept = (params: Params) => http.post(`/dept/department`, params);
-export const modifyDept = (id: string, data: any) => http.put(`/dept/department/${id}`, data);
-export const delDept = (id: string) => http.delete(`/dept/department/${id}`);
+export const findDept = (params: Params) => httpUpack.get(`/dept/departments`, params);
+export const addDept = (params: Params) => httpUpack.post(`/dept/department`, params);
+export const modifyDept = (id: string, data: any) => httpUpack.put(`/dept/department/${id}`, data);
+export const delDept = (id: string) => httpUpack.delete(`/dept/department/${id}`);
 
-const categoryList = (parentId: string) => http.get(`/category/list?parentId=${parentId}`); // 获取分类列表
+const categoryList = (parentId: string) => httpUpack.get(`/category/list?parentId=${parentId}`); // 获取分类列表
 
 export const fetchUserDepttList = (params = {}) => httpIndex.get(PORT1 + `/dept/list`, params); // 获取用户管理左侧分类列表（杭州,上海地区）
 export const fetchUserList = (params = {}) => httpIndex.get(PORT1 + `/user/list2`, params); // 获取用户列表

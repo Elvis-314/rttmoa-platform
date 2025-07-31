@@ -3,7 +3,7 @@ import { AxiosRequestConfig } from 'axios';
 import RequestHttp from './index';
 
 const config: AxiosRequestConfig = {
-	baseURL: 'upack', // development: /upack
+	baseURL: import.meta.env.VITE_API_URL as string, // development: /api
 	timeout: ResultEnum.TIMEOUT as number,
 	withCredentials: false, // 跨域时候允许携带凭证
 };

@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store, persistor } from '@/redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import '@/styles/tailwind.css';
 import 'antd/dist/reset.css';
+import '@/styles/tailwind.css';
 import '@/styles/index.less';
 import '@/assets/fonts/font.less'; // font
 import '@/assets/iconfont/iconfont.less'; // iconfont

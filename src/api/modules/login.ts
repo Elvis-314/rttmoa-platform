@@ -1,4 +1,4 @@
-import http from '@/api';
+import http from '@/api/api';
 import httpUpack from '@/api/upack';
 import { AuthState } from '@/redux/interface';
 import { PORT1 } from '@/api/config/servicePort';

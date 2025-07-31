@@ -12,14 +12,14 @@ import { store } from '@/redux'; // redux：Store
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 	loading?: boolean;
 }
-const config: AxiosRequestConfig = {
-	baseURL: import.meta.env.VITE_API_URL as string, // development: /api
-	timeout: ResultEnum.TIMEOUT as number,
-	withCredentials: false, // 跨域时候允许携带凭证
-};
+// const config: AxiosRequestConfig = {
+// 	baseURL: 'upack', // development: /upack
+// 	timeout: ResultEnum.TIMEOUT as number,
+// 	withCredentials: false, // 跨域时候允许携带凭证
+// };
 
 // 注意点：
-// 1.env文件，是开发还是生产环境
+// 1..env文件，是开发还是生产环境
 // 2.Axios二次封装，接口统一存放,满足RESTful风格： https://wocwin.github.io/t-ui/projectProblem/axios.html
 // 3.参考 Axios Typescript 属性
 class RequestHttp {
@@ -108,7 +108,9 @@ class RequestHttp {
 			},
 			async (error: AxiosError) => {
 				console.log('响应错误拦截: ', error);
-				const { response } = error;
+				console.log('响应错误拦截信息: ', error.response?.data);
+
+				const { response }: any = error;
 				tryHideFullScreenLoading();
 				// 分别判断请求超时 & 网络错误，无响应   ——    "timeout of 2000ms exceeded"
 				if (error.message.indexOf('timeout') !== -1) {
@@ -117,8 +119,18 @@ class RequestHttp {
 				if (error.message.indexOf('Network Error') !== -1) {
 					message.error('网络错误！请您稍后重试');
 				}
+
+				// ! login failure （401）
+				if (+response.data.code === ResultEnum.OVERDUE) {
+					console.log('code=401');
+					store.dispatch(setToken(''));
+					message.error(response.data.msg);
+					window.$navigate(LOGIN_URL);
+					return Promise.reject(response.data);
+				}
+
 				// 根据服务器响应的错误状态代码进行不同处理
-				if (response) checkStatus(response.status);
+				if (response) checkStatus(response.status, error.response?.data);
 				// 服务器不返回任何结果（可能是服务器出错或客户端断开了网络连接），断开连接处理：您可以跳转到断开连接页面
 				if (!window.navigator.onLine) window.$navigate('/500');
 				return Promise.reject(error);
@@ -146,4 +158,5 @@ class RequestHttp {
 	}
 }
 
-export default new RequestHttp(config);
+// export default new RequestHttp(config);
+export default RequestHttp;

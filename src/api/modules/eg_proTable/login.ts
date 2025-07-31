@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import http from '@/api';
+import http from '@/api/upack';
 
 /** 发送验证码 POST /api/login/captcha */
 export async function getFakeCaptcha(

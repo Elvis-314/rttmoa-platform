@@ -1,7 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 
-import http from '@/api';
+import http from '@/api/upack';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
