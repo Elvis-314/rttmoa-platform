@@ -1,19 +1,19 @@
 // * await waitTime(2000)
-export const waitTime = (time = 100) => {
-	return new Promise(reslove => {
-		setTimeout(() => {
-			reslove(true);
-		}, time);
-	});
-};
+// export const waitTime = (time = 100) => {
+// 	return new Promise(reslove => {
+// 		setTimeout(() => {
+// 			reslove(true);
+// 		}, time);
+// 	});
+// };
 
-export const suffix = (object = {}) => {
-	const timestamp = Math.round(new Date().getTime());
-	return {
-		...object,
-		timestamp,
-	};
-};
+// export const suffix = (object = {}) => {
+// 	const timestamp = Math.round(new Date().getTime());
+// 	return {
+// 		...object,
+// 		timestamp,
+// 	};
+// };
 
 // flattenRoutes([{name:'zs', children: [{name:'zz'}]}])
 export const flattenRoutes: any = (arr = []) =>
@@ -121,12 +121,6 @@ export const checkIsLocalPage = () => {
 	});
 };
 
-// Generate Random Hex
-export const randomHex = () =>
-	`#${Math.floor(Math.random() * 0xffffff)
-		.toString(16)
-		.padEnd(6, '0')}`;
-
 // Clear All Cookies
 export const clearCookies = document.cookie
 	.split(';')
@@ -166,16 +160,6 @@ export const camelizeCamelCase = (str: string) =>
 export const promiseWithTimeout = (promise: any, timeout: number) => {
 	const timeoutPromise = new Promise(resolve => setTimeout(() => resolve('Time Out!'), timeout));
 	return Promise.race([timeoutPromise, promise]);
-};
-export const copyTextToClipboard = async (textToCopy: string) => {
-	try {
-		if (navigator?.clipboard?.writeText) {
-			await navigator.clipboard.writeText(textToCopy);
-			console.log('已成功复制到剪贴板');
-		}
-	} catch (err: any) {
-		console.error(`复制到剪贴板失败:${err.message}`);
-	}
 };
 
 export const getRandomId = () => {

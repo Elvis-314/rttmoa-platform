@@ -1,9 +1,10 @@
+/* eslint-disable prefer-rest-params */
 /* eslint-disable prettier/prettier */
 import { store } from '@/redux';
 import { ResPage } from '@/api/interface';
 import { RouteObjectType } from '@/routers/interface';
 import { RequestData } from '@ant-design/pro-components';
-import { isArray, isObject } from './is';
+import { Is } from './is';
 
 const mode = import.meta.env.VITE_ROUTER_MODE;
 
@@ -67,17 +68,39 @@ function simpleClone(obj: any) {
 function deepClone(obj: any) {
 	let result: any;
 	if (typeof obj == 'object') {
-		result = isArray(obj) ? [] : {};
+		result = Is.isArray(obj) ? [] : {};
 		for (let i in obj) {
 			//isObject(obj[i]) ? deepClone(obj[i]) : obj[i]
 			//多谢"朝歌在掘金"指出，多维数组会有问题
-			result[i] = isObject(obj[i]) || isArray(obj[i]) ? deepClone(obj[i]) : obj[i];
+			result[i] = Is.isObject(obj[i]) || Is.isArray(obj[i]) ? deepClone(obj[i]) : obj[i];
 		}
 	} else {
 		result = obj;
 	}
 	return result;
 }
+/** #### 深递归：判断对象是否相等  obj1 == obj2  */
+// const obj1 = { name: 'zhangsan', age: 18, info: { eat: '吃', do: 'do' } };
+// const obj2 = { name: 'zhangsan', age: 18, info: { eat: '吃', do: 'do' } };
+const diff_obj = (obj1: { [x: string]: any }, obj2: { [x: string]: any }): boolean => {
+	let o1 = obj1 instanceof Object;
+	let o2 = obj2 instanceof Object;
+	if (!o1 || !o2) {
+		return obj1 === obj2;
+	}
+	if (Object.keys(obj1).length !== Object.keys(obj2).length) return false;
+
+	for (let attr in obj1) {
+		let t1 = obj1[attr] instanceof Object;
+		let t2 = obj2[attr] instanceof Object;
+		if (t1 && t2) {
+			return diff_obj(obj1[attr], obj2[attr]);
+		} else if (obj1[attr] !== obj2[attr]) {
+			return false;
+		}
+	}
+	return true;
+};
 
 /** #### 设置样式属性 document.documentElement  */
 export function setStyleProperty(key: string, val: string) {
@@ -304,15 +327,6 @@ export function blockDebugger() {
 }
 
 /**
- * @description 👇 is-browser
- * @returns {boolean}
- */
-// isBrowser()
-export const isBrowser = () => {
-	return typeof window !== 'undefined' && typeof window.document !== 'undefined';
-};
-
-/**
  * @description 👇 异步延时, ms秒种
  * @returns {void}
  */
@@ -322,3 +336,218 @@ export const delay = (ms: number) => {
 		setTimeout(() => reslove(), ms);
 	});
 };
+
+/**
+ * ! 劫持粘贴板
+ */
+export const copyTextToClipboard = (value: string) => {
+	var textArea = document.createElement('textarea');
+	textArea.style.background = 'transparent';
+	textArea.value = value;
+	document.body.appendChild(textArea);
+	textArea.select();
+	try {
+		var successful = document.execCommand('copy');
+	} catch (err) {
+		console.log('Oops, unable to copy');
+	}
+	document.body.removeChild(textArea);
+};
+
+export const copyTextToClipboard2 = async (textToCopy: string) => {
+	try {
+		if (navigator?.clipboard?.writeText) {
+			await navigator.clipboard.writeText(textToCopy);
+			console.log('已成功复制到剪贴板');
+		}
+	} catch (err: any) {
+		console.error(`复制到剪贴板失败:${err.message}`);
+	}
+};
+
+// ?? Method
+// Method.trim(str: string, type: number)  -  去除字符串
+// Method.changeCase(str: string, type: number)  -  大小写转换
+export class Method {
+	/**
+	 * 去除空格
+	 * @param  {str}
+	 * @param  {type} type:  1-所有空格  2-前后空格  3-前空格 4-后空格
+	 * @return {String}
+	 */
+	static trim(str: string, type: number) {
+		type = type || 1;
+		switch (type) {
+			case 1:
+				return str.replace(/\s+/g, '');
+			case 2:
+				return str.replace(/(^\s*)|(\s*$)/g, '');
+			case 3:
+				return str.replace(/(^\s*)/g, '');
+			case 4:
+				return str.replace(/(\s*$)/g, '');
+			default:
+				return str;
+			// trim(" s   ss 123 1   ", 1) // "sss1231"
+			// trim(" s   ss 123 1   ", 2) // "s   ss 123 1"
+			// trim(" s   ss 123 1   ", 3) // "s   ss 123 1   "
+			// trim(" s   ss 123 1   ", 4) // " s   ss 123 1"
+		}
+	}
+
+	/**
+	 * 字符转换
+	 * @param  {str}
+	 * @param  {type} type:  1:首字母大写  2：首页母小写  3：大小写转换  4：全部大写  5：全部小写
+	 * @return {String}
+	 */
+	static changeCase(str: string, type: number) {
+		type = type || 4;
+		switch (type) {
+			case 1:
+				return str.replace(/\b\w+\b/g, function (word: string) {
+					return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
+				});
+			case 2:
+				return str.replace(/\b\w+\b/g, function (word: string) {
+					return word.substring(0, 1).toLowerCase() + word.substring(1).toUpperCase();
+				});
+			case 3:
+				return str
+					.split('')
+					.map(function (word: string) {
+						if (/[a-z]/.test(word)) {
+							return word.toUpperCase();
+						} else {
+							return word.toLowerCase();
+						}
+					})
+					.join('');
+			case 4:
+				return str.toUpperCase();
+			case 5:
+				return str.toLowerCase();
+			default:
+				return str;
+		}
+		// changeCase("abcd", 1) // Abcd
+		// changeCase("abcd", 2) // aBCD
+		// changeCase("aBcD", 3) // AbCd
+		// changeCase("aBcD", 4) // ABCD
+		// changeCase("aBcD", 5) // abcd
+	}
+}
+
+// ?? StorageHandler
+const CookieKey = 'globalCookie';
+class StorageHandler {
+	[x: string]: any;
+	constructor() {
+		this.ls = window.localStorage;
+		this.ss = window.sessionStorage;
+	}
+
+	/*-----------------  cookie  ---------------------*/
+	// 设置 cookie
+	setCookie(name: string, value: string | number, day: number) {
+		var setting = arguments[0];
+		if (Object.prototype.toString.call(setting).slice(8, -1) === 'Object') {
+			for (var i in setting) {
+				var oDate = new Date();
+				oDate.setDate(oDate.getDate() + day);
+				document.cookie = i + '=' + setting[i] + ';expires=' + oDate;
+			}
+		} else {
+			var oDate = new Date();
+			oDate.setDate(oDate.getDate() + day);
+			document.cookie = name + '=' + value + ';expires=' + oDate;
+		}
+	}
+
+	// 获取 cookie
+	getCookie(name: string) {
+		var arr = document.cookie.split('; ');
+		for (var i = 0; i < arr.length; i++) {
+			var arr2 = arr[i].split('=');
+			if (arr2[0] == name) {
+				return arr2[1];
+			}
+		}
+		return '';
+	}
+
+	// 删除 cookie
+	removeCookie(name: any) {
+		this.setCookie(name, 1, -1);
+	}
+
+	/*-----------------  cookie call  ---------------------*/
+	getCookieToken() {
+		return this.getCookie(CookieKey);
+	}
+	setCookieToken(token: string) {
+		return this.setCookie(CookieKey, token, 1);
+	}
+	removeCookieToken() {
+		return this.removeCookie(CookieKey);
+	}
+
+	/*-----------------  localStorage  ---------------------*/
+	// 设置 localStorage
+	setLocal(key: any, val: any) {
+		var setting = arguments[0];
+		if (Object.prototype.toString.call(setting).slice(8, -1) === 'Object') {
+			for (var i in setting) {
+				this.ls.setItem(i, JSON.stringify(setting[i]));
+			}
+		} else {
+			this.ls.setItem(key, JSON.stringify(val));
+		}
+	}
+
+	// 获取 localStorage
+	getLocal(key: any) {
+		if (key) return JSON.parse(this.ls.getItem(key));
+		return null;
+	}
+
+	// 移除 localStorage
+	removeLocal(key: any) {
+		this.ls.removeItem(key);
+	}
+
+	// 移除所有 localStorage
+	clearLocal() {
+		this.ls.clear();
+	}
+
+	/*-----------------  sessionStorage  ---------------------*/
+	// 设置 sessionStorage
+	setSession(key: any, val: any) {
+		var setting = arguments[0];
+		if (Object.prototype.toString.call(setting).slice(8, -1) === 'Object') {
+			for (var i in setting) {
+				this.ss.setItem(i, JSON.stringify(setting[i]));
+			}
+		} else {
+			this.ss.setItem(key, JSON.stringify(val));
+		}
+	}
+
+	// 获取 sessionStorage
+	getSession(key: any) {
+		if (key) return JSON.parse(this.ss.getItem(key));
+		return null;
+	}
+
+	// 移除 sessionStorage
+	removeSession(key: any) {
+		this.ss.removeItem(key);
+	}
+
+	// 移除所有 sessionStorage
+	clearSession() {
+		this.ss.clear();
+	}
+}
+export default StorageHandler;

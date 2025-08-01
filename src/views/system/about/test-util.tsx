@@ -1,7 +1,4 @@
-import { changeToChinese } from '@/utils/common/Others';
-import { clipboardObj, connectInfo, getGeolocation, mediaDevicesObj, navigatorAttr, queryPermissions } from '@/utils/common/navigator';
-import { changeCase, checkPwd, trim } from '@/utils/common/string';
-import { decimals } from '@/utils/decimals';
+import { connectInfo, getGeolocation, mediaDevicesObj, navigatorAttr, queryPermissions } from '@/utils/navigator';
 import React from 'react';
 import { useState, useEffect } from 'react';
 

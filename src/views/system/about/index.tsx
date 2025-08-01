@@ -1,13 +1,30 @@
-import React from 'react';
-import { Alert, Card, Descriptions, Tag, Typography } from 'antd';
+import React, { useEffect } from 'react';
+import { Alert, Button, Card, Descriptions, Tag, Typography } from 'antd';
 import TestUtil from './test-util';
 import Link from 'antd/lib/typography/Link';
 import TestForm from './test-form';
+import { Is } from '@/utils/is';
+import { Compute } from '@/utils/compute';
+import { randomHex } from '@/utils/color';
+import { connectInfo, getGeolocation, mediaDevicesObj } from '@/utils/navigator';
+// import { suffix } from '@/utils/public';
 
 const About: React.FC = () => {
 	const { pkg, lastBuildTime } = __APP_INFO__;
 	const { dependencies, devDependencies, version } = pkg;
 
+	// useEffect(() => {
+	// 	console.log('Is', Is.isString(123));
+	// 	console.log('Is', Is.checkStr(123, '123'));
+	// 	console.log('isBrowserType', Is.reqStringify('231085199811011415'));
+
+	// 	console.log('Compute', Compute.add(3123, 123.2222, 0));
+	// });
+
+	const onClick = async (_: any) => {
+		// copyTextToClipboard('adsaf1231sssss23');
+		// mediaDevicesObj.startMediaInput({ video: true, audio: true });
+	};
 	return (
 		<>
 			<TestUtil />
@@ -25,6 +42,11 @@ const About: React.FC = () => {
 					type='success'
 					showIcon
 				/>
+				<div className='flex justify-end mt-[10px]'>
+					<Button type='primary' onClick={onClick}>
+						按钮
+					</Button>
+				</div>
 			</Card>
 
 			<Card className='mb10'>

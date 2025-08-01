@@ -5,6 +5,12 @@ import { Params } from '@/api/interface';
 
 // * httpUpack://localhost:9527/upack/shelf/Warehouse_Report // upack为代理地址
 
+// 添加后缀时间戳：{name: 'zs', timestamp: 1754027551940}
+const suffix = (object = {}) => {
+	const timestamp = Math.round(new Date().getTime());
+	return { ...object, timestamp };
+};
+
 // * System
 // * 系统管理 — 菜单管理
 export const FindAllMenu = (params: Params) => httpUpack.get(`/menu/allMenu`, params);

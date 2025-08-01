@@ -14,6 +14,7 @@ export default function Excel(Props: any) {
 		setFileName,
 		ExportTableData, // 导出表格数据
 		tableHeaders, // 表头名称：['序号', '学科', '项目名称', '端', '账号', '密码'];  需传递此种格式
+		fakeData,
 	} = Props;
 	// console.log('Props', Props);
 
@@ -60,10 +61,13 @@ export default function Excel(Props: any) {
 				tableDataRes.push(obj);
 			});
 			console.log('tableData', tableDataRes); // ! 最终表格数据
+
 			if (tableDataRes.length == 0) {
 				message.warning('导入错误：表格无数据');
 				setTableLoading(false);
 				return false;
+			} else {
+				fakeData && fakeData(tableDataRes);
 			}
 			// // 设置表头
 			// setColumns(columns);
@@ -75,7 +79,9 @@ export default function Excel(Props: any) {
 		};
 		reader.readAsArrayBuffer(file);
 	};
-
+	const ImportAdvanced = () => {
+		message.info('正在开发中');
+	};
 	// * 导出模板
 	// ! 传参：expectedHeaders表头信息
 	const exportTemplate = () => {
@@ -133,7 +139,7 @@ export default function Excel(Props: any) {
 			label: (
 				<div>
 					{/* 提示：只导入工作区是 Sheet1 的数据 */}
-					<Button key='view' type='text' size='middle' icon={<EyeOutlined />}>
+					<Button key='view' type='text' size='middle' icon={<EyeOutlined />} onClick={ImportAdvanced}>
 						导入表格数据高级设置
 						<Tooltip title='设置是否去重、根据字段去更新还是新增'>
 							<span>

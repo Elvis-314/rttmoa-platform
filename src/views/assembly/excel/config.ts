@@ -2,8 +2,6 @@ import { Input } from 'antd';
 import { useState } from 'react';
 
 const Config = () => {
-	const [editedCells, setEditedCells] = useState<{ [key: string]: boolean }>({});
-
 	const dataSource = [
 		{
 			key: 0,
@@ -56,17 +54,6 @@ const Config = () => {
 			公共: 'common',
 		},
 	];
-	const [data, setData] = useState(dataSource);
-	// 修改数据并记录已修改的单元格
-	const changeTableData = (value: any, rowIndex: number, dataIndex: string) => {
-		const newData: any = [...data];
-		newData[rowIndex][dataIndex] = value;
-		setData(newData);
-
-		const cellKey = `${rowIndex}_${dataIndex}`;
-		setEditedCells(prev => ({ ...prev, [cellKey]: true }));
-	};
-
 	const column = [
 		{
 			title: '序号',
@@ -140,7 +127,6 @@ const Config = () => {
 			align: 'center',
 		},
 	];
-
 	return {
 		column,
 		dataSource,
