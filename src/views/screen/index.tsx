@@ -53,7 +53,7 @@ const DataScreen = () => {
 					<div className='header-ct'>
 						<div className='header-ct-title'>
 							<span>智慧旅游可视化大数据展示平台</span>
-							<div className='header-ct-warning'>平台高峰预警信息（2条）</div>
+							{/* <div className='header-ct-warning'>平台高峰预警信息（2条）</div> */}
 						</div>
 					</div>
 					<div className='header-ri'>
@@ -66,7 +66,7 @@ const DataScreen = () => {
 				</div>
 				<div className='dataScreen-main'>
 					<div className='dataScreen-lf'>
-						<div className='dataScreen-top'>
+						{/* <div className='dataScreen-top'>
 							<div className='dataScreen-main-title'>
 								<span>实时游客统计</span>
 								<img src={titleIcon} alt='' />
@@ -74,10 +74,10 @@ const DataScreen = () => {
 							<div className='dataScreen-main-chart'>
 								<RealTimeAccessChart />
 							</div>
-						</div>
+						</div> */}
 						<div className='dataScreen-center'>
 							<div className='dataScreen-main-title'>
-								<span>男女比例</span>
+								<span>待入库托盘列表【入库任务】</span>
 								<img src={titleIcon} alt='' />
 							</div>
 							<div className='dataScreen-main-chart'>
@@ -86,7 +86,7 @@ const DataScreen = () => {
 						</div>
 						<div className='dataScreen-bottom'>
 							<div className='dataScreen-main-title'>
-								<span>年龄比例</span>
+								<span>出入库任务看板</span>
 								<img src={titleIcon} alt='' />
 							</div>
 							<div className='dataScreen-main-chart'>
@@ -94,7 +94,7 @@ const DataScreen = () => {
 							</div>
 						</div>
 					</div>
-					<div className='dataScreen-ct'>
+					{/* <div className='dataScreen-ct'>
 						<div className='dataScreen-map'>
 							<div className='dataScreen-map-title'>景区实时客流量</div>
 							<ChinaMapChart />
@@ -108,18 +108,18 @@ const DataScreen = () => {
 								<OverNext30Chart />
 							</div>
 						</div>
-					</div>
+					</div> */}
 					<div className='dataScreen-rg'>
 						<div className='dataScreen-top'>
 							<div className='dataScreen-main-title'>
-								<span>热门景区排行</span>
+								<span>库容库龄看板 ******</span>
 								<img src={titleIcon} alt='' />
 							</div>
 							<div className='dataScreen-main-chart'>
 								<HotPlateChart />
 							</div>
 						</div>
-						<div className='dataScreen-center'>
+						{/* <div className='dataScreen-center'>
 							<div className='dataScreen-main-title'>
 								<span>年度游客量对比</span>
 								<img src={titleIcon} alt='' />
@@ -127,7 +127,7 @@ const DataScreen = () => {
 							<div className='dataScreen-main-chart'>
 								<AnnualUseChart />
 							</div>
-						</div>
+						</div> */}
 						<div className='dataScreen-bottom'>
 							<div className='dataScreen-main-title'>
 								<span>预约渠道数据统计</span>
