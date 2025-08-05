@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.61](https://github.com/rttmoa/rttmoa-platform/compare/v2.3.60...v2.3.61) (2025-08-05)
+
+
+### Features
+
+* **api:** 🚀 large screen board ([be1e6a1](https://github.com/rttmoa/rttmoa-platform/commit/be1e6a11ec0b096237b1c9c02ee521dae5eed4c9))
+
 ### [2.3.60](https://github.com/rttmoa/rttmoa-platform/compare/v2.3.59...v2.3.60) (2025-08-01)
 
 
