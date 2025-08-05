@@ -168,7 +168,7 @@ const AgeRatioChart: React.FC = () => {
 		<div className='h-full'>
 			<table className='w-full text-white border-collapse font-mono'>
 				<thead className='w-full hot-header'>
-					<tr className=''>
+					<tr>
 						<th>四项车号</th>
 						<th>姓名</th>
 						<th>年龄</th>
@@ -178,7 +178,7 @@ const AgeRatioChart: React.FC = () => {
 				<tbody className='text-center'>
 					{dataSource.map((value: any) => {
 						return (
-							<tr className='py-2'>
+							<tr className='hot-header'>
 								<td>{value.key}</td>
 								<td>{value.name}</td>
 								<td>{value.age}</td>

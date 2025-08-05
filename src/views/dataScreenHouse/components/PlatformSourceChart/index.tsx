@@ -352,7 +352,7 @@ const HotPlateChart: React.FC = () => {
 					<ECharts option={option} isResize={false} height={140} />
 				</div>
 			</div>
-			<div className='flex justify-center font-mono text-[18px] text-green-500 font-black'>库龄最久物料 Top</div>
+			<div className='flex justify-center  text-[18px] text-green-400 font-bold'>库龄最久物料 Top x</div>
 			<table className='w-full text-white border-collapse font-mono'>
 				<thead className=''>
 					<tr className='hot-header'>
@@ -364,7 +364,7 @@ const HotPlateChart: React.FC = () => {
 				<tbody className='text-center'>
 					{dataSource.map((value: any) => {
 						return (
-							<tr className=' '>
+							<tr className='hot-header'>
 								<td>{value.name}</td>
 								<td>{value.age}</td>
 								<td>{value.address}</td>

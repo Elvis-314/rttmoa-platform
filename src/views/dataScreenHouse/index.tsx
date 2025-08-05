@@ -66,15 +66,6 @@ const DataScreen = () => {
 				</div>
 				<div className='dataScreen-main'>
 					<div className='dataScreen-lf'>
-						{/* <div className='dataScreen-top'>
-							<div className='dataScreen-main-title'>
-								<span>实时游客统计</span>
-								<img src={titleIcon} alt='' />
-							</div>
-							<div className='dataScreen-main-chart'>
-								<RealTimeAccessChart />
-							</div>
-						</div> */}
 						<div className='dataScreen-center'>
 							<div className='dataScreen-main-title'>
 								<span>待入库托盘列表【入库任务】</span>
@@ -94,43 +85,19 @@ const DataScreen = () => {
 							</div>
 						</div>
 					</div>
-					{/* <div className='dataScreen-ct'>
-						<div className='dataScreen-map'>
-							<div className='dataScreen-map-title'>景区实时客流量</div>
-							<ChinaMapChart />
-						</div>
-						<div className='dataScreen-cb'>
-							<div className='dataScreen-main-title'>
-								<span>未来30天游客量趋势图</span>
-								<img src={titleIcon} alt='' />
-							</div>
-							<div className='dataScreen-main-chart'>
-								<OverNext30Chart />
-							</div>
-						</div>
-					</div> */}
 					<div className='dataScreen-rg'>
 						<div className='dataScreen-top'>
 							<div className='dataScreen-main-title'>
-								<span>库容库龄看板 ******</span>
+								<span>待出库托盘列表【出库任务】</span>
 								<img src={titleIcon} alt='' />
 							</div>
 							<div className='dataScreen-main-chart'>
 								<HotPlateChart />
 							</div>
 						</div>
-						{/* <div className='dataScreen-center'>
-							<div className='dataScreen-main-title'>
-								<span>年度游客量对比</span>
-								<img src={titleIcon} alt='' />
-							</div>
-							<div className='dataScreen-main-chart'>
-								<AnnualUseChart />
-							</div>
-						</div> */}
 						<div className='dataScreen-bottom'>
 							<div className='dataScreen-main-title'>
-								<span>预约渠道数据统计</span>
+								<span>库容库龄看板</span>
 								<img src={titleIcon} alt='' />
 							</div>
 							<div className='dataScreen-main-chart'>
