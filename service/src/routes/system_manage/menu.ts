@@ -10,6 +10,8 @@ router.post("/delMenu", Menu.DelMenu);
 
 router.get("/allMenu", Menu.FindAllMenu);
 
+router.get('/exportMenu', Menu.exportMenu) 
+
 export default router;
  
 
