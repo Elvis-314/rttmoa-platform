@@ -54,18 +54,36 @@ interface DataType {
 }
 
 //* 表格提示框，鼠标悬停时显示的内容  ——  货位信息：货品名词、生产日期、在库整数总数
-function titleFN(data: string, record?: any, index?: number, apiData?: any) {
-	// console.log('titleFN', data, record, index, apiData)
+function titleFN(data: number, record?: any, index?: number, apiData?: any) {
+	// console.log('titleFN', data, record, index, apiData);
 	// return
 	if (!data) return null;
-	const lane = record?.lane__c ?? '';
 	const row = record?.row__c ?? '';
 	const layer = record?.lay__c ?? '';
 	const str = `${row}排 - ${layer}层 - ${data}列`;
 
-	let color = data === '空闲' ? '#B4EEB4' : '#FF6A6A'; // 绿色 / 红色
-	color = '#FFF';
+	const position = `0${row}0${layer}${data >= 10 ? data : '0' + data}`;
 
+	const currStatus = apiData.filter((v: any) => v.position__c == position);
+
+	function GetColor(data: any) {
+		if (data && data.length && data[0]) {
+			const status = data[0].status__c;
+			if (status == '空') return '#03de6d';
+			else if (status == '预占用') return '#f9a8d4';
+			else if (status == '占用') return '#f95222';
+			else if (status == '禁用') return '#b4b4b4';
+			else return '#fff';
+		} else {
+			return '#fff';
+		}
+	}
+
+	let color = GetColor(currStatus);
+	// <div className='w-[80px] px-[4px] py-[6px]  text-center text-[12px] bg-[#03de6d] text-[#ffffff]'>空库位</div>
+	// 			<div className='w-[80px] px-[4px] py-[6px]  text-center text-[12px] bg-[#f9a8d4] text-[#ffffff]'>预占用库位</div>
+	// 			<div className='w-[80px] px-[4px] py-[6px]  text-center text-[12px] bg-[#f95222] text-[#ffffff]'>占用</div>
+	// 			<div className='w-[80px] px-[4px] py-[6px]  text-center text-[12px] bg-[#b4b4b4] text-[#ffffff]'>禁用</div>
 	return (
 		<Tooltip
 			placement='top'
@@ -73,11 +91,13 @@ function titleFN(data: string, record?: any, index?: number, apiData?: any) {
 			title={
 				<table className='w-full border-collapse  text-slate-700 '>
 					<tr>
+						<th className='w-[250px] text-[12px] text-center'>仓位</th>
 						<th className='w-[250px] text-[12px] text-center'>货品名词</th>
 						<th className='w-[150px] text-[12px] text-center'>生产日期</th>
 						<th className='w-[350px] text-[12px] text-center'>在库整数总数</th>
 					</tr>
 					<tr>
+						<td className='  text-[12px] text-center'>{position}</td>
 						<td className='  text-[12px] text-center'>食品火腿肠</td>
 						<td className='  text-[12px] text-center'>2020-11-19 12:32:00</td>
 						<td className='w-[350px] text-[12px] text-center'>500箱0根</td>
@@ -149,229 +169,229 @@ const columns = (apiData: any) => [
 		title: '第 1 列',
 		dataIndex: 'column1',
 		key: 'column1',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 2 列',
 		dataIndex: 'column2',
 		key: 'column2',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 3 列',
 		dataIndex: 'column3',
 		key: 'column3',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 4 列',
 		dataIndex: 'column4',
 		key: 'column4',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 5 列',
 		dataIndex: 'column5',
 		key: 'column5',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 6 列',
 		dataIndex: 'column6',
 		key: 'column6',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 7 列',
 		dataIndex: 'column7',
 		key: 'column7',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 8 列',
 		dataIndex: 'column8',
 		key: 'column8',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 9 列',
 		dataIndex: 'column9',
 		key: 'column9',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 10 列',
 		dataIndex: 'column10',
 		key: 'column10',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 11 列',
 		dataIndex: 'column11',
 		key: 'column11',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 12 列',
 		dataIndex: 'column12',
 		key: 'column12',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 13 列',
 		dataIndex: 'column13',
 		key: 'column13',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 14 列',
 		dataIndex: 'column14',
 		key: 'column14',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 15 列',
 		dataIndex: 'column15',
 		key: 'column15',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 16 列',
 		dataIndex: 'column16',
 		key: 'column16',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 17 列',
 		dataIndex: 'column17',
 		key: 'column17',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 18 列',
 		dataIndex: 'column18',
 		key: 'column18',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 19 列',
 		dataIndex: 'column19',
 		key: 'column19',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 20 列',
 		dataIndex: 'column20',
 		key: 'column20',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 21 列',
 		dataIndex: 'column21',
 		key: 'column21',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 22 列',
 		dataIndex: 'column22',
 		key: 'column22',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 23 列',
 		dataIndex: 'column23',
 		key: 'column23',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 24 列',
 		dataIndex: 'column24',
 		key: 'column24',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 25 列',
 		dataIndex: 'column25',
 		key: 'column25',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 26 列',
 		dataIndex: 'column26',
 		key: 'column26',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 27 列',
 		dataIndex: 'column27',
 		key: 'column27',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 28 列',
 		dataIndex: 'column28',
 		key: 'column28',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 29 列',
 		dataIndex: 'column29',
 		key: 'column29',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 30 列',
 		dataIndex: 'column30',
 		key: 'column30',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 31 列',
 		dataIndex: 'column31',
 		key: 'column31',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 32 列',
 		dataIndex: 'column32',
 		key: 'column32',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 33 列',
 		dataIndex: 'column33',
 		key: 'column33',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 34 列',
 		dataIndex: 'column34',
 		key: 'column34',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 35 列',
 		dataIndex: 'column35',
 		key: 'column35',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 36 列',
 		dataIndex: 'column36',
 		key: 'column36',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 37 列',
 		dataIndex: 'column37',
 		key: 'column37',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 	{
 		title: '第 38 列',
 		dataIndex: 'column38',
 		key: 'column38',
-		render: (value: string, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
+		render: (value: number, record: any, index: number | undefined) => titleFN(value, record, index, apiData),
 	},
 ];
 let groupedData: any[] = [];
@@ -384,9 +404,9 @@ const Lane: React.FC = () => {
 		try {
 			// const { data } = await axios.get('http://127.0.0.1:6300/shelf/Warehouse_Report')
 			setLoading(true);
-			const { data }: any = await GetShelfStock();
-			// console.log('data =====', data);
-			const rawData = data.data;
+			const { data }: any = await GetShelfStock({ zone__c: '原料库' });
+			console.log('data =====', data);
+			const rawData = data.stock;
 			// console.log('rawData', rawData);
 			setApiData(rawData);
 			rawData.forEach((item: any) => {
@@ -408,7 +428,7 @@ const Lane: React.FC = () => {
 				// 按列号填充 column1 ~ columnN
 				existing[`column${col__c}`] = col__c;
 			});
-			// console.log('处理后的rawData：', rawData) //* 总共24条
+			console.log('处理后的rawData：', rawData); //* 总共24条
 			console.log('合并 groupedData', groupedData); //* 总共8条    将库位数据合并
 
 			// 📌 2️⃣ 处理 rowSpan，合并相同行
@@ -444,10 +464,10 @@ const Lane: React.FC = () => {
 	let Header = (
 		<div className='flex flex-row justify-between'>
 			<div className='flex flex-row'>
-				<div className='w-[80px] px-[4px] py-[6px]  text-center text-[12px] bg-slate-100'>空库位</div>
-				<div className='w-[80px] px-[4px] py-[6px]  text-center text-[12px] bg-pink-300'>预占用库位</div>
-				<div className='w-[80px] px-[4px] py-[6px]  text-center text-[12px] bg-green-400'>有库存库位</div>
-				<div className='w-[80px] px-[4px] py-[6px]  text-center text-[12px] bg-slate-100 text-red-500'>选中库位</div>
+				<div className='w-[80px] px-[4px] py-[6px]  text-center text-[12px] bg-[#03de6d] text-[#ffffff]'>空库位</div>
+				<div className='w-[80px] px-[4px] py-[6px]  text-center text-[12px] bg-[#f9a8d4] text-[#ffffff]'>预占用库位</div>
+				<div className='w-[80px] px-[4px] py-[6px]  text-center text-[12px] bg-[#f95222] text-[#ffffff]'>占用</div>
+				<div className='w-[80px] px-[4px] py-[6px]  text-center text-[12px] bg-[#b4b4b4] text-[#ffffff]'>禁用</div>
 			</div>
 			<div>
 				<Button type='text' icon={<RedoOutlined />} onClick={execFunc}>

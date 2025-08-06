@@ -6,10 +6,12 @@ class Shelf {
 	//* 宁波1880个库位、库存报表
 	static async Warehouse_Report(ctx: Context) {
 		try {
-			const result = await ctx.mongo.find("nb_storage_shelf__c", { query: {} });
-			const material = await ctx.mongo.find("nb_storage_shelf__c", { query: { shelf_zone__c: "原料库" } });
+			const data = ctx.request.query
 
-			return ctx.send({ message: "ok", data: result, material });
+			const result = await ctx.mongo.find("nb_storage_shelf__c", { query: {} });
+			const stock = await ctx.mongo.find("nb_storage_shelf__c", { query: {zone__c: data.zone__c} });
+
+			return ctx.send({ message: "ok", data: result, stock });
 		} catch (err) {
 			return ctx.sendError(config.resCodes.serverError, err.message);
 		}
