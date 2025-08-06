@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.63](https://github.com/rttmoa/rttmoa-platform/compare/v2.3.62...v2.3.63) (2025-08-06)
+
+
+### Bug Fixes
+
+* 🧩 修改dataScreenHouse代码、完善大屏信息 ([27a9bc8](https://github.com/rttmoa/rttmoa-platform/commit/27a9bc818d58ec777c69761331d44c388ee45fcf))
+
 ### [2.3.62](https://github.com/rttmoa/rttmoa-platform/compare/v2.3.61...v2.3.62) (2025-08-05)
 
 
