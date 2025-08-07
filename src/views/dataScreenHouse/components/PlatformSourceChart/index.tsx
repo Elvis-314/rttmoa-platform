@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ECharts from '@/components/Echarts';
 import { ECOption } from '@/components/Echarts/config';
 import { ranking1, ranking2, ranking3, ranking4 } from './icons/ranking';
 import './index.less';
-import { Col, Row, Space, Table, TableProps, Tag } from 'antd';
+import { Col, Empty, Row, Space, Table, TableProps, Tag } from 'antd';
+import FakeData from './FakeData';
 
 interface ChartProp {
 	name: string;
@@ -13,63 +14,54 @@ interface ChartProp {
 }
 
 const HotPlateChart: React.FC = () => {
-	const data = [
-		{
-			value: 79999,
-			name: '峨眉山',
-			percentage: '80%',
-			maxValue: 100000,
-		},
-		{
-			value: 59999,
-			name: '稻城亚丁',
-			percentage: '60%',
-			maxValue: 100000,
-		},
-		{
-			value: 49999,
-			name: '九寨沟',
-			percentage: '50%',
-			maxValue: 100000,
-		},
-		{
-			value: 39999,
-			name: '万里长城',
-			percentage: '40%',
-			maxValue: 100000,
-		},
-		{
-			value: 29999,
-			name: '北京故宫',
-			percentage: '30%',
-			maxValue: 100000,
-		},
-	];
+	function formatTimeToUTC8(isoString: string) {
+		const date = new Date(isoString);
 
-	const colors = ['#1089E7', '#F57474', '#56D0E3', '#F8B448', '#8B78F6'];
+		// 转换为东八区时间 (UTC+8)
+		date.setHours(date.getHours() + 8);
 
-	var ROOT_PATH = 'https://echarts.apache.org/examples';
-	const weatherIcons = {
-		Sunny: ROOT_PATH + '/data/asset/img/weather/sunny_128.png',
-		Cloudy: ROOT_PATH + '/data/asset/img/weather/cloudy_128.png',
-		Showers: ROOT_PATH + '/data/asset/img/weather/showers_128.png',
-	};
-	const option: any = {
-		// title: {
-		// 	text: 'Weather Statistics',
-		// 	subtext: 'Fake Data',
-		// 	left: 'center',
-		// },
-		// tooltip: {
-		// 	trigger: 'item',
-		// 	formatter: '{a} <br/>{b} : {c} ({d}%)',
-		// },
+		// 提取时间组件并补零
+		const year = date.getUTCFullYear();
+		const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+		const day = String(date.getUTCDate()).padStart(2, '0');
+		const hours = String(date.getUTCHours()).padStart(2, '0');
+		const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+		const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+		return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+	}
+
+	const [datasource, setdataSource] = useState([]);
+	useEffect(() => {
+		fetch('http://127.0.0.1:1880/shelf')
+			.then(res => res.json())
+			.then(value => {
+				// console.log('data', value.data)
+				const data = value.data.filter((v: any) => {
+					return v.status__c == 'fin-in' && v.onloc_time__c;
+				});
+
+				const data1 = data
+					.sort((a: any, b: any) => {
+						const dateA = new Date(a.onloc_time__c).getTime();
+						const dateB = new Date(b.onloc_time__c).getTime();
+						return dateA - dateB;
+					})
+					.slice(0, 6)
+					.map((v: any, index: any) => ({ ...v, key: index + 1 }));
+				// console.log('data1', data1)
+
+				setdataSource(data1);
+			});
+	}, []);
+
+	const option1: any = {
 		legend: {
 			bottom: 10,
 			left: 'center',
-			data: ['CityA', 'CityB', 'CityD', 'CityC', 'CityE'],
+			data: ['空闲', '预占用', '占用', '禁用'],
 			selectorLabel: { color: '#fff', backgroundColor: '#259645', padding: 20 },
-			textStyle: { color: '#fff' },
+			textStyle: { color: '#fff' }, // 图表下方文字
 		},
 		series: [
 			{
@@ -78,10 +70,10 @@ const HotPlateChart: React.FC = () => {
 				center: ['50%', '40%'],
 				selectedMode: 'single',
 				data: [
-					{ value: 735, name: 'CityC', color: '#eee' },
-					{ value: 510, name: 'CityD' },
-					{ value: 434, name: 'CityB' },
-					{ value: 335, name: 'CityA' },
+					{ value: 211, name: '空闲' },
+					{ value: 3, name: '预占用' },
+					{ value: 197, name: '占用' },
+					{ value: 379, name: '禁用' },
 				],
 				emphasis: {
 					itemStyle: {
@@ -94,285 +86,93 @@ const HotPlateChart: React.FC = () => {
 			},
 		],
 	};
-	const option2: ECOption = {
-		grid: {
-			top: '5%',
-			left: '7%',
-			right: '4%',
-			bottom: '1%',
-			containLabel: true,
+	const option2: any = {
+		legend: {
+			bottom: 10,
+			left: 'center',
+			data: ['静止<1天', '静止>2天', '静止时间>1天<2天轴数'],
+			selectorLabel: { color: '#fff', backgroundColor: '#259645', padding: 20 },
+			textStyle: { color: '#fff' }, // 图表下方文字
 		},
-		xAxis: {
-			type: 'value',
-			axisLine: {
-				show: false,
-				lineStyle: {
-					color: 'white',
-				},
-			},
-			nameGap: 1,
-			splitLine: {
-				show: false,
-			},
-			axisTick: {
-				show: false,
-			},
-			axisLabel: {
-				show: false,
-				fontSize: 16,
-			},
-			triggerEvent: false,
-		},
-		yAxis: [
-			{
-				show: true,
-				data: data.map((val: ChartProp) => val.name),
-				inverse: true,
-				axisLine: {
-					show: false,
-				},
-				splitLine: {
-					show: false,
-				},
-				axisTick: {
-					show: false,
-				},
-				axisLabel: {
-					color: '#fff',
-					formatter: (value: string) => {
-						let str = value.length > 6 ? value.slice(0, 6) + '...' : value;
-						let index = data.map((item: ChartProp) => item.name).indexOf(value) + 1;
-						return ['{' + (index > 3 ? 'lg' : 'lg' + index) + '|NO.' + index + '}', '{title|' + str + '}'].join(' ');
-					},
-					rich: {
-						lg1: {
-							width: 60,
-							backgroundColor: {
-								image: ranking1,
-							},
-							color: '#fff',
-							align: 'center',
-							height: 20,
-							fontSize: 13,
-						},
-						lg2: {
-							width: 60,
-							backgroundColor: {
-								image: ranking2,
-							},
-							color: '#fff',
-							align: 'center',
-							height: 20,
-							fontSize: 13,
-						},
-						lg3: {
-							width: 60,
-							backgroundColor: {
-								image: ranking3,
-							},
-							color: '#fff',
-							align: 'center',
-							height: 20,
-							fontSize: 13,
-						},
-						lg: {
-							width: 60,
-							backgroundColor: {
-								image: ranking4,
-							},
-							color: '#fff',
-							align: 'center',
-							height: 20,
-							fontSize: 13,
-						},
-						title: {
-							width: 60,
-							fontSize: 13,
-							align: 'center',
-							padding: [0, 10, 0, 15],
-						},
-					},
-				},
-				triggerEvent: false,
-			},
-			{
-				show: true,
-				inverse: true,
-				data,
-				axisLabel: {
-					fontSize: 14,
-					color: '#fff',
-					margin: 20,
-					formatter: (value: number) => {
-						return value >= 10000 ? (value / 10000).toFixed(2) + 'w' : value + '';
-					},
-				},
-				axisLine: {
-					show: false,
-				},
-				splitLine: {
-					show: false,
-				},
-				axisTick: {
-					show: false,
-				},
-				triggerEvent: false,
-			},
-		],
 		series: [
 			{
-				name: '条',
-				type: 'bar',
-				yAxisIndex: 0,
-				data,
-				barWidth: 12,
-				itemStyle: {
-					borderRadius: 30,
-					color: function (params) {
-						let num = colors.length;
-						return colors[params.dataIndex % num];
+				type: 'pie',
+				radius: '45%',
+				center: ['50%', '40%'],
+				selectedMode: 'single',
+				data: [
+					{ value: 90, name: '静止<1天' },
+					{ value: 60, name: '静止>2天' },
+					{ value: 39, name: '静止时间>1天<2天轴数' },
+				],
+				emphasis: {
+					itemStyle: {
+						shadowBlur: 10,
+						shadowOffsetX: 0,
+						// shadowColor: 'rgba(0, 0, 0, 0.5)',
+						shadowColor: 'rgba(234, 212, 228)',
 					},
 				},
-				label: {
-					show: true,
-					position: [12, 0],
-					lineHeight: 14,
-					color: '#fff',
-					formatter: params => {
-						return (params.data as ChartProp).percentage;
-					},
-				},
-			},
-			{
-				name: '框',
-				type: 'bar',
-				yAxisIndex: 1,
-				data: data.map((val: ChartProp) => {
-					if (!val.maxValue) return 5;
-					return val.maxValue;
-				}),
-				barWidth: 18,
-				itemStyle: {
-					color: 'none',
-					borderColor: '#00c1de',
-					borderWidth: 1,
-					borderRadius: 15,
-				},
-				silent: true,
 			},
 		],
 	};
-
-	interface DataType {
-		key: string;
-		name: string;
-		age: number;
-		address: string;
-		tags: string[];
-	}
-
-	const columns: TableProps<DataType>['columns'] = [
-		{
-			title: 'Name',
-			dataIndex: 'name',
-			key: 'name',
-			render: text => <a>{text}</a>,
-		},
-		{
-			title: 'Age',
-			dataIndex: 'age',
-			key: 'age',
-		},
-		{
-			title: 'Address',
-			dataIndex: 'address',
-			key: 'address',
-		},
-		{
-			title: 'Tags',
-			key: 'tags',
-			dataIndex: 'tags',
-			render: (_, { tags }) => (
-				<>
-					{tags.map(tag => {
-						let color = tag.length > 5 ? 'geekblue' : 'green';
-						if (tag === 'loser') {
-							color = 'volcano';
-						}
-						return (
-							<Tag color={color} key={tag}>
-								{tag.toUpperCase()}
-							</Tag>
-						);
-					})}
-				</>
-			),
-		},
-		{
-			title: 'Action',
-			key: 'action',
-			render: (_, record) => (
-				<Space size='middle'>
-					<a>Invite {record.name}</a>
-					<a>Delete</a>
-				</Space>
-			),
-		},
-	];
-	const dataSource: DataType[] = [
-		{
-			key: '1',
-			name: 'John Brown',
-			age: 32,
-			address: 'New York No. 1 Lake Park',
-			tags: ['nice', 'developer'],
-		},
-		{
-			key: '2',
-			name: 'Jim Green',
-			age: 42,
-			address: 'London No. 1 Lake Park',
-			tags: ['loser'],
-		},
-		{
-			key: '3',
-			name: 'Joe Black',
-			age: 32,
-			address: 'Sydney No. 1 Lake Park',
-			tags: ['cool', 'teacher'],
-		},
-	];
 	return (
 		<React.Fragment>
 			<div className='hot-echarts'>
 				<div className='w-full ml-[40px] '>
-					<ECharts option={option} isResize={false} height={140} />
+					<ECharts option={option1} isResize={false} height={140} />
 				</div>
 				<div className='w-full ml-[120px]'>
-					<ECharts option={option} isResize={false} height={140} />
+					<ECharts option={option2} isResize={false} height={140} />
 				</div>
 			</div>
-			<div className='flex justify-center  text-[18px] text-green-400 font-bold'>库龄最久物料 Top x</div>
-			<table className='w-full text-white border-collapse font-mono'>
-				<thead className=''>
-					<tr className='hot-header'>
-						<th>姓名</th>
-						<th>年龄</th>
-						<th>城市</th>
-					</tr>
-				</thead>
-				<tbody className='text-center'>
-					{dataSource.map((value: any) => {
-						return (
-							<tr className='hot-header'>
-								<td>{value.name}</td>
-								<td>{value.age}</td>
-								<td>{value.address}</td>
-							</tr>
-						);
-					})}
-				</tbody>
-			</table>
+			<div className='flex justify-center  text-[18px] text-green-400 font-bold'>库龄最久物料 Top 6</div>
+			<div className='mt-[15px] w-full text-white font-mono'>
+				<table className='w-full border-collapse'>
+					<thead>
+						<tr className='text-[14px] text-orange-400'>
+							<th className='w-[40px]'>索引</th>
+							<th className='w-[40px]'>排</th>
+							<th className='w-[40px]'>列</th>
+							<th className='w-[40px]'>层</th>
+							<th className='w-[90px]'>产品代码</th>
+							<th className='w-[190px]'>产品名称</th>
+							<th className='w-[90px]'>托盘码</th>
+							<th className='w-[90px]'>产品班次</th>
+							<th className='w-[90px]'>产品班组</th>
+							<th className='w-[190px]'>入库日期</th>
+						</tr>
+					</thead>
+				</table>
+
+				{/* 滚动区域 */}
+				<div className='max-h-[300px] overflow-y-auto'>
+					<table className='w-full border-collapse'>
+						<tbody>
+							{FakeData.length != 0 ? (
+								FakeData.map((value: any, index: number) => (
+									<tr key={index} className='w-[100px] text-[14px]'>
+										<td className='w-[40px] ellipsis text-center'>{value.key}</td>
+										<td className='w-[40px] ellipsis text-center'>{value.row__c}</td>
+										<td className='w-[40px] ellipsis text-center'>{value.col__c}</td>
+										<td className='w-[40px] ellipsis text-center'>{value.lay__c}</td>
+										<td className='w-[90px] ellipsis text-center'>{value.item_code__c}</td>
+										<td className='w-[190px] ellipsis text-center'>{value.item_name__c}</td>
+										<td className='w-[90px] ellipsis text-center'>{value.pallet_code__c && value.pallet_code__c.substring(4)}</td>
+										<td className='w-[90px] ellipsis text-center'>{value.item_batch__c}</td>
+										<td className='w-[90px] ellipsis text-center'>{value.remark3__c}</td>
+										<td className='w-[190px] ellipsis text-center'>{formatTimeToUTC8(value.onloc_time__c)}</td>
+									</tr>
+								))
+							) : (
+								<div className='flex justify-center mt-[30px]'>
+									<Empty description={<div className='text-[#fba926] text-[16px]'>暂无数据</div>} />
+								</div>
+							)}
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</React.Fragment>
 	);
 };

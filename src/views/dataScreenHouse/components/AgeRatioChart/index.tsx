@@ -1,6 +1,7 @@
 import ECharts from '@/components/Echarts';
 import { ECOption } from '@/components/Echarts/config';
 import './index.less';
+import { Empty } from 'antd';
 
 interface ChartProp {
 	value: number;
@@ -132,62 +133,76 @@ const AgeRatioChart: React.FC = () => {
 
 	const dataSource: any[] = [
 		{
-			key: '1',
-			name: 'John Brown',
-			age: 32,
-			address: 'New York No. 1 Lake Park',
-			tags: ['nice', 'developer'],
+			key: '1#',
+			name: '60',
+			address: '83',
+			status: '未充电',
 		},
 		{
-			key: '2',
-			name: 'Jim Green',
-			age: 42,
-			address: 'London No. 1 Lake Park',
-			tags: ['loser'],
+			key: '2#',
+			name: '70',
+			address: '63',
+			status: '充电中',
 		},
 		{
-			key: '3',
-			name: 'Joe Black',
-			age: 32,
-			address: 'Sydney No. 1 Lake Park',
-			tags: ['cool', 'teacher'],
+			key: '3#',
+			name: '55',
+			address: '73',
+			status: '未充电',
 		},
 	];
 	const status: any = [
 		{
-			'01': '空闲',
+			'01': '正在入库',
 		},
 		{
-			'02': '正在入库',
+			'02': '充电中',
 		},
 		{
-			'03': '正在充电',
+			'03': '正在出库',
 		},
 	];
 	return (
 		<div className='h-full'>
-			<table className='w-full text-white border-collapse font-mono'>
-				<thead className='w-full hot-header'>
-					<tr>
-						<th>四项车号</th>
-						<th>姓名</th>
-						<th>年龄</th>
-						<th>城市</th>
+			<table className='w-full border-collapse'>
+				<thead>
+					<tr className='text-[14px] text-orange-400'>
+						<th className='w-[180px] text-center'>四项车号</th>
+						<th className='w-[170px]  text-center'>自动充电（低于）</th>
+						<th className='w-[190px]  text-center'>当前电量</th>
+						<th className='w-[290px]  text-center'>充电状态</th>
+						{/* <th className='w-[90px]'>物流位置</th> */}
+						{/* <th className='w-[90px]'>呼叫小车</th> */}
 					</tr>
 				</thead>
-				<tbody className='text-center'>
-					{dataSource.map((value: any) => {
-						return (
-							<tr className='hot-header'>
-								<td>{value.key}</td>
-								<td>{value.name}</td>
-								<td>{value.age}</td>
-								<td>{value.address}</td>
-							</tr>
-						);
-					})}
-				</tbody>
 			</table>
+
+			{/* 滚动区域 */}
+			<div className='max-h-[300px] overflow-y-auto'>
+				<table className='w-full border-collapse'>
+					<tbody>
+						{dataSource.length != 0 ? (
+							dataSource.map((value: any, index: number) => (
+								<tr key={index} className=' text-[14px] text-white'>
+									<td className='w-[180px] text-center'>{value.key}</td>
+									<td className='w-[170px] text-center'>{value.name}</td>
+									<td className='w-[190px] text-center '>{value.address}</td>
+									<td className='w-[290px] text-center'>{value.status}</td>
+									{/* <td className='w-[90px] text-center'>{loc[value.logic_site__c]}</td>
+									<td className='w-[90px] text-center'>{car[value.shuttle_call__c]}</td>
+									<td className='w-[90px] text-center'>{car[value.shuttle_fetch__c]}</td>
+									<td className='w-[90px] text-center'>{car[value.shuttle_release__c]}</td>
+									<td className='w-[180px] text-center'>{formatTimeToUTC8(value.modified)}</td> */}
+								</tr>
+							))
+						) : (
+							<div className='flex justify-center mt-[30px]'>
+								<Empty description={<div className='text-[#fba926] text-[18px]'>暂无待出库托盘</div>} />
+							</div>
+						)}
+					</tbody>
+				</table>
+			</div>
 			<div className='flex justify-center  text-[18px]   font-black text-white'>
 				{status.map((value: any) => {
 					console.log('value', value['1#']);

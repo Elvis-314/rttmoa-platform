@@ -3,13 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { HOME_URL } from '@/config';
 import titleIcon from './images/dataScreen-title.png';
 import HeaderTime from './components/HeaderTime';
-import RealTimeAccessChart from './components/RealTimeAccessChart';
 import MaleFemaleRatioChart from './components/MaleFemaleRatioChart';
-import ChinaMapChart from './components/ChinaMapChart';
 import HotPlateChart from './components/HotPlateChart';
-import OverNext30Chart from './components/OverNext30Chart';
 import AgeRatioChart from './components/AgeRatioChart';
-import AnnualUseChart from './components/AnnualUseChart';
 import PlatformSourceChart from './components/PlatformSourceChart';
 import './index.less';
 
