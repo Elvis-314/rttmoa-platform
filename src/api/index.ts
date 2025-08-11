@@ -171,7 +171,7 @@ export const httpApi = new RequestHttp({
 });
 
 export const httpUpack = new RequestHttp({
-	baseURL: 'upack',
+	baseURL: import.meta.env.VITE_UPACK_URL as string,
 });
 
 // export default new RequestHttp(config);

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Button, Card, Descriptions, Tag, Typography } from 'antd';
 import TestUtil from './test-util';
 import Link from 'antd/lib/typography/Link';
@@ -7,12 +7,18 @@ import { Is } from '@/utils/is';
 import { Compute } from '@/utils/compute';
 import { randomHex } from '@/utils/color';
 import { connectInfo, getGeolocation, mediaDevicesObj } from '@/utils/navigator';
+import useViewport from '@/hooks/useWinViewport';
+import useMousePosition from '@/hooks/useWinMouse';
+import useThrottle from '@/hooks/useThrottle';
+import useClipboard from '@/hooks/useClipboard';
 // import { suffix } from '@/utils/public';
 
 const About: React.FC = () => {
 	const { pkg, lastBuildTime } = __APP_INFO__;
 	const { dependencies, devDependencies, version } = pkg;
 
+	// const { x, y } = useMousePosition();
+	// console.log('width, height', x, y);
 	// useEffect(() => {
 	// 	console.log('Is', Is.isString(123));
 	// 	console.log('Is', Is.checkStr(123, '123'));
@@ -20,14 +26,23 @@ const About: React.FC = () => {
 
 	// 	console.log('Compute', Compute.add(3123, 123.2222, 0));
 	// });
-
+	const [inputText, setInputText] = useState('');
+	const { copyToClipboard, isCopied, textareaRef } = useClipboard();
+	const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setInputText(e.target.value);
+	};
+	const handleClickCopy = () => {
+		copyToClipboard(inputText);
+	};
 	const onClick = async (_: any) => {
 		// copyTextToClipboard('adsaf1231sssss23');
 		// mediaDevicesObj.startMediaInput({ video: true, audio: true });
+		// useThrottle(() => {}, 2000)
 	};
+	console.log('copyResult', isCopied, textareaRef);
 	return (
 		<>
-			<TestUtil />
+			{/* <TestUtil /> */}
 			{/* <TestForm /> */}
 			<Card className='mb10'>
 				<Alert
