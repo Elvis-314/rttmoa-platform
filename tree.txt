@@ -1,0 +1,82 @@
+rttmoa-platform/
+├── 项目结构目录.txt
+├── vite.config.ts
+├── tsconfig.json
+├── tree.txt
+├── tailwind.config.js
+├── src/
+│   ├── vite-env.d.ts
+│   ├── views/
+│   ├── utils/
+│   ├── typings/
+│   ├── styles/
+│   ├── routers/
+│   ├── redux/
+│   ├── main.tsx
+│   ├── layouts/
+│   ├── languages/
+│   ├── hooks/
+│   ├── enums/
+│   ├── context/
+│   ├── config/
+│   ├── components/
+│   ├── assets/
+│   ├── apiFetch/
+│   ├── api/
+│   └── App.tsx
+├── service/
+│   ├── yarn.lock
+│   ├── tsconfig.json
+│   ├── src/
+│   ├── sql/
+│   ├── public/
+│   ├── packages/
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── objectql/
+│   ├── errorLog.log
+│   ├── _、desc.txt
+│   ├── _start_server.bat
+│   └── README.md
+├── public/
+│   ├── vite.svg
+│   ├── rttmoa.svg
+│   ├── rttmoa-512x512.png
+│   ├── rttmoa-192x192.png
+│   ├── rttmoa-128x128.png
+│   ├── react.svg
+│   └── favicon.ico
+├── postcss.config.cjs
+├── package.json
+├── lint-staged.config.cjs
+├── index.html
+├── index.css
+├── example.http
+├── dist/
+│   ├── workbox-5ffe50d4.js.map
+│   ├── workbox-5ffe50d4.js
+│   ├── vite.svg
+│   ├── sw.js.map
+│   ├── sw.js
+│   ├── rttmoa.svg
+│   ├── rttmoa-512x512.png
+│   ├── rttmoa-192x192.png
+│   ├── rttmoa-128x128.png
+│   ├── registerSW.js
+│   ├── react.svg
+│   ├── manifest.webmanifest
+│   ├── index.html
+│   ├── favicon.ico
+│   └── assets/
+├── commitlint.config.cjs
+├── build.css
+├── build/
+│   ├── proxy.ts
+│   ├── plugins.ts
+│   └── getEnv.ts
+├── _start__client.bat
+├── _file.md
+├── README.md
+├── OAuth
+├── LICENSE
+└── CHANGELOG.md

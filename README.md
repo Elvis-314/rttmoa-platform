@@ -463,8 +463,10 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 
 1. npm install -g tree-node-cli
 2. Mac: tree -L 2 -I "node_modules" -r -F
-3. Win: treee -L 2 -I "node_modules" -r -F
-4. tree node
+3. Win: treee -L 2 -I "node_modules" -r -F > tree.txt
+4. Win: treee -L 2 -I "node_modules" -s -r -F > tree2.txt
+5. Win: treee -L 3 -I "node_modules" -r -F > tree3.txt
+6. tree node
 
 ## Webpack Analyse
 

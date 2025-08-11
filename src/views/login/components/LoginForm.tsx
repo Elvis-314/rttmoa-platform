@@ -6,13 +6,14 @@ import { useDispatch } from '@/redux';
 import { setToken } from '@/redux/modules/user';
 import { setTabsList } from '@/redux/modules/tabs';
 import { notification } from '@/hooks/useMessage';
-import { loginApi, userLogin, userRegister } from '@/api/modules/login';
+// import { loginApi, userLogin, userRegister } from '@/api/modules/login';
 import { ReqLogin } from '@/api/interface';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { message } from '@/hooks/useMessage';
 import type { FormInstance, FormProps } from 'antd/es/form';
 import { LockOutlined, UserOutlined, CheckCircleFilled, PhoneOutlined, UserAddOutlined, BulbOutlined } from '@ant-design/icons';
 import usePermissions from '@/hooks/usePermissions';
+import { loginAPI } from '@/api/modules/login';
 
 /* 自定义表单校验规则 （手机号、验证码） */
 const validate = {
@@ -67,7 +68,7 @@ const LoginForm: React.FC = () => {
 			setLoading(true);
 			message.open({ type: 'loading', content: '登录中...' });
 
-			const { code, data }: any = type === 'account' ? await userLogin(getValues) : await userRegister(getValues);
+			const { code, data }: any = type === 'account' ? await loginAPI.userLogin(getValues) : await loginAPI.userRegister(getValues);
 			console.log('data', data);
 			if (code != 200) {
 				message.error('请求失败');

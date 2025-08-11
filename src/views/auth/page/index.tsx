@@ -1,4 +1,4 @@
-import { logoutApi } from '@/api/modules/login';
+import { loginAPI } from '@/api/modules/login';
 import { TeamOutlined } from '@ant-design/icons';
 import { Alert, Button, Card, Divider } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ const AuthPage: React.FC = () => {
 
 	const handleToLogin = async () => {
 		// 执行退出接口
-		await logoutApi();
+		await loginAPI.logoutApi();
 
 		// Set token to empty
 		dispatch(setToken(''));

@@ -3,7 +3,7 @@ import { HomeOutlined, UserOutlined, FormOutlined, LoginOutlined, ExclamationCir
 import { type MenuProps, Dropdown, Avatar } from 'antd';
 import { HOME_URL, LOGIN_URL } from '@/config';
 import { useNavigate } from 'react-router-dom';
-import { logoutApi } from '@/api/modules/login';
+import { loginAPI } from '@/api/modules/login';
 import { useDispatch } from '@/redux';
 import { setToken } from '@/redux/modules/user';
 import { setAuthMenuList } from '@/redux/modules/auth';
@@ -37,7 +37,7 @@ const AvatarIcon: React.FC = () => {
 				//    4.跳转至 登录页面
 				//    5.提示 退出成功
 				//    ？ 要不要清除Redux持久化数据
-				await logoutApi();
+				await loginAPI.logoutApi();
 				dispatch(setToken(''));
 				dispatch(setAuthMenuList([]));
 				navigate(LOGIN_URL, { replace: true });

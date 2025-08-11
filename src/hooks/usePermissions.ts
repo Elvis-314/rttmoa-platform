@@ -2,7 +2,7 @@ import { notification } from '@/hooks/useMessage';
 import { useDispatch } from '@/redux';
 import { setToken } from '@/redux/modules/user';
 import { setAuthButtonList, setAuthMenuList } from '@/redux/modules/auth';
-import { getAuthMenuListApi, getAuthButtonListApi } from '@/api/modules/login';
+import { loginAPI } from '@/api/modules/login';
 import { FindAllMenu } from '@/api/modules/system';
 
 // * 登陆/刷新页面时；将用户按钮权限和菜单权限存到 redux
@@ -17,7 +17,7 @@ const usePermissions = () => {
 	const initPermissions = async (token: string) => {
 		if (token) {
 			try {
-				const { data: buttonList } = await getAuthButtonListApi(); // 用户按钮权限
+				const { data: buttonList } = await loginAPI.getAuthButtonListApi(); // 用户按钮权限
 				// const { data: menuList } = await getAuthMenuListApi() // 用户菜单权限【假数据】
 
 				const newMenu: any = await FindAllMenu({}); // 用户菜单权限【接口数据】

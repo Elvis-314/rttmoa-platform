@@ -14,10 +14,12 @@ export class moduleAPI {
 
 	static PEFRESH_API_URL = `${this.AUTH_API_PREFIX}/refresh`;
 
+	// 库位库存报表
 	static getStock(params: Params) {
 		return httpUpack.get(`/shelf/Warehouse_Report`, params);
 	}
 
+	// 库位库存报表
 	static getShelf(params: Params) {
 		return httpUpack.get(`/shelf/Warehouse_All_Shelf`, params);
 	}
