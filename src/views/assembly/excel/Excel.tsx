@@ -15,6 +15,7 @@ export default function Excel(Props: any) {
 		ExportTableData, // 导出表格数据
 		tableHeaders, // 表头名称：['序号', '学科', '项目名称', '端', '账号', '密码'];  需传递此种格式
 		fakeData,
+		children,
 	} = Props;
 	// console.log('Props', Props);
 
@@ -76,9 +77,11 @@ export default function Excel(Props: any) {
 			// ! 将数据传过去、传至接口中
 			// 取消表格加载状态
 			setTableLoading(false);
+			return true;
 		};
 		reader.readAsArrayBuffer(file);
 	};
+
 	const ImportAdvanced = () => {
 		message.info('正在开发中');
 	};
@@ -188,8 +191,8 @@ export default function Excel(Props: any) {
 				trigger={['click']}
 			>
 				<div className='more-button-item'>
-					{/* <IconFont style={{ fontSize: 22 }} type='icon-xiala' /> */}
-					<SettingOutlined className='hover:cursor-pointer' />
+					{/* <SettingOutlined className='hover:cursor-pointer' /> */}
+					{Props.children}
 				</div>
 			</Dropdown>
 		</>

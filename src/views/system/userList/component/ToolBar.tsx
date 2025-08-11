@@ -1,4 +1,4 @@
-import { ArrowsAltOutlined, FullscreenOutlined, PlusOutlined, SearchOutlined, SecurityScanTwoTone, ShrinkOutlined } from '@ant-design/icons';
+import { ArrowsAltOutlined, FullscreenOutlined, PlusOutlined, SearchOutlined, SecurityScanTwoTone, SettingOutlined, ShrinkOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
 import Search from 'antd/lib/input/Search'; // ! antd/lib/input
 import { useDispatch } from '@/redux';
@@ -19,12 +19,12 @@ const ToolBarRender = (Params: any) => {
 		<Button icon={<PlusOutlined />} onClick={CreateBtn}>
 			新建
 		</Button>,
-		<Button icon={<ArrowsAltOutlined />} onClick={ExportBtn}>
-			导出EXCEL
+		<Button icon={<SettingOutlined className='hover:cursor-pointer' />} onClick={ExportBtn}>
+			Excel Setting
 		</Button>,
-		<Button icon={<ShrinkOutlined />} onClick={ImportBtn}>
-			导入EXCEL
-		</Button>,
+		// <Button icon={<ShrinkOutlined />} onClick={ImportBtn}>
+		// 	导入EXCEL
+		// </Button>,
 		<Tooltip title={!openSearch ? '关闭表单搜索' : '开启表单搜索'} className='text-lg'>
 			<span onClick={() => SetOpenSearch(!openSearch)}>
 				<SearchOutlined />

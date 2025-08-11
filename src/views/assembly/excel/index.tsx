@@ -1,9 +1,10 @@
-import { Table } from 'antd';
+import { Button, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import './index.less';
 import Config from './config';
 import Excel from './Excel';
 import { Is } from '@/utils/is';
+import { SettingOutlined } from '@ant-design/icons';
 
 const expectedHeaders = ['序号', '学科', '项目名称', '端', '账号', '密码'];
 
@@ -35,13 +36,17 @@ const TableDataImport = () => {
 			<div className='fileUpDiv '>
 				<div className='mr-[40px]'>文件名称：</div>
 				<span className='fileName'>{fileName}</span>
+
+				{/* https://ant.design/components/upload-cn#uploadfile */}
 				<Excel
 					TableName='用户管理'
 					setFileName={setFileName}
 					ExportTableData={dataSource} // 接口数据：所有表数据
 					tableHeaders={column.map((value: any) => value.title)} // 表头数据
 					fakeData={FakeData}
-				/>
+				>
+					<Button icon={<SettingOutlined className='hover:cursor-pointer' />}>Excel Setting</Button>
+				</Excel>
 			</div>
 			<Table
 				scroll={{ x: '100%', y: 'calc( 100vh - 270px )' }}

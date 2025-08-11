@@ -27,6 +27,10 @@ rttmoa-platform
 │   ├── rttmoa-512x512.png
 │   ├── rttmoa.svg
 │   └── vite.svg
+
+
+
+
 ├── service                               # 服务端代码
 │   ├── README.md
 │   ├── _start_server.bat
@@ -70,6 +74,10 @@ rttmoa-platform
 │   ├── tanhua 20200630 0858.sql
 │   ├── tsconfig.json
 │   └── yarn.lock
+
+
+
+
 ├── src                                     # 前端代码               
 │   ├── App.tsx                             # 项目根目录
 │   ├── api
@@ -196,8 +204,7 @@ rttmoa-platform
 │   │   ├── themeHook.tsx
 │   │   └── transition.less
 │   ├── typings
-│   │   ├── asset.d.ts
-│   │   ├── declaration.d.ts
+│   │   ├── asset.d.ts 
 │   │   ├── global.d.ts
 │   │   ├── plugins.d.ts
 │   │   ├── react-app-env.d.ts

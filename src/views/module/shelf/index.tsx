@@ -11,7 +11,7 @@ import UpdateForm from './component/_UpdateForm';
 import './index.less';
 import TableColumnsConfig, { TableColumnsParams } from './component/Table_Column_Config';
 import ToolBarRender from './component/ToolBarRender';
-import { GetAllShelf, GetShelfStock } from '@/api/modules/module';
+import { moduleAPI } from '@/api/modules/module';
 
 export type FormValueType = {
 	target?: string;
@@ -155,7 +155,7 @@ const useProTable = () => {
 					// const { data } = await getUserList(params)
 					// console.log('api === request == data', data)
 					// return formatDataForProTable<UserList>(data)
-					const { data }: any = await GetAllShelf(params);
+					const { data }: any = await moduleAPI.getShelf(params);
 					console.log('请求数据：', data);
 					return formatDataForProTable<UserList>(data);
 				}}

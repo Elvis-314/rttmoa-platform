@@ -6,12 +6,12 @@ import { message } from '@/hooks/useMessage';
  * @return void
  */
 
-// todo 检测 error.response.status
-// todo status：100-199 表示服务器成功接收部分请求，需要客户端继续提交其余请求才能完成整个处理过程
-// todo status：200-299 表示服务器已经成功接收请求，并完成整个处理过程
-// todo status：300-399 表示为完成请求，需要客户端进一步细化请求
-// todo status：400-499 表示客户端请求有误
-// todo status：500-599 表示服务端出现错误
+// * 检测 error.response.status
+// * status：100-199 表示服务器成功接收部分请求，需要客户端继续提交其余请求才能完成整个处理过程
+// * status：200-299 表示服务器已经成功接收请求，并完成整个处理过程
+// * status：300-399 表示为完成请求，需要客户端进一步细化请求
+// * status：400-499 表示客户端请求有误
+// * status：500-599 表示服务端出现错误
 
 // @ 维基百科 Http状态码：https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81
 export const checkStatus = (status: number, data?: any) => {

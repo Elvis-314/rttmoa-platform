@@ -1,6 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
-import http from '@/api/upack';
+
+import { httpApi } from '@/api';
 
 /** 发送验证码 POST /api/login/captcha */
 export async function getFakeCaptcha(
@@ -9,7 +10,7 @@ export async function getFakeCaptcha(
 	},
 	options?: { [key: string]: any }
 ) {
-	return http.get<API.FakeCaptcha>('/api/login/captcha', {
+	return httpApi.get<API.FakeCaptcha>('/api/login/captcha', {
 		method: 'GET',
 		params: {
 			...params,

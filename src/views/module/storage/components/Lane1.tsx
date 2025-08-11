@@ -3,9 +3,9 @@ import { Button, Space, Table, Tag, Tooltip } from 'antd';
 import type { TableProps } from 'antd';
 import './index.less';
 import axios from 'axios';
-import { GetShelfStock } from '@/api/modules/module';
 import { ProSkeleton } from '@ant-design/pro-components';
 import { RedoOutlined } from '@ant-design/icons';
+import { moduleAPI } from '@/api/modules/module';
 
 // ! http://localhost:9527/#/module/storage
 
@@ -404,7 +404,7 @@ const Lane: React.FC = () => {
 		try {
 			// const { data } = await axios.get('http://127.0.0.1:6300/shelf/Warehouse_Report')
 			setLoading(true);
-			const { data }: any = await GetShelfStock({ zone__c: '原料库' });
+			const { data }: any = await moduleAPI.getStock({ zone__c: '原料库' });
 			console.log('data =====', data);
 			const rawData = data.stock;
 			// console.log('rawData', rawData);

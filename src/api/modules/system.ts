@@ -1,7 +1,6 @@
 import { PORT1 } from '@/api/config/servicePort';
-import httpUpack from '@/api/upack';
-import httpIndex from '@/api/api';
 import { Params } from '@/api/interface';
+import { httpApi, httpUpack } from '..';
 
 // * httpUpack://localhost:9527/upack/shelf/Warehouse_Report // upack为代理地址
 
@@ -38,8 +37,8 @@ export const addRole = (params: Params) => httpUpack.post(`/role/addRole`, param
 export const modifyRole = (params: Params) => httpUpack.post(`/role/modifyRole`, params);
 export const delRole = (id: string) => httpUpack.delete(`/role/delRole`, { id });
 
-export const roleList = () => httpIndex.get(PORT1 + `/role/list`); // 获取角色列表
-export const roleTransferList = (id: number) => httpIndex.get(PORT1 + `/role/transfer/list`); // 获取角色转换列表
+export const roleList = () => httpApi.get(PORT1 + `/role/list`); // 获取角色列表
+export const roleTransferList = (id: number) => httpApi.get(PORT1 + `/role/transfer/list`); // 获取角色转换列表
 
 // * 系统管理 — 部门管理
 export const findDept = (params: Params) => httpUpack.get(`/dept/departments`, params);
@@ -49,12 +48,12 @@ export const delDept = (id: string) => httpUpack.delete(`/dept/department/${id}`
 
 const categoryList = (parentId: string) => httpUpack.get(`/category/list?parentId=${parentId}`); // 获取分类列表
 
-export const fetchUserDepttList = (params = {}) => httpIndex.get(PORT1 + `/dept/list`, params); // 获取用户管理左侧分类列表（杭州,上海地区）
-export const fetchUserList = (params = {}) => httpIndex.get(PORT1 + `/user/list2`, params); // 获取用户列表
-export const fetchUserDetail = (params = {}) => httpIndex.get(PORT1 + `/user/detail`, params); // 获取用户详情
-export const fetchUserDelete = (params = {}) => httpIndex.get(PORT1 + `/user/delete`, params); // 删除
-export const fetchRoleList = (params = {}) => httpIndex.get(PORT1 + `/rolelist`, params); // 角色 List
-export const fetchChangeUserStatus = (params = {}) => httpIndex.get(PORT1 + `/user/changeStatus`, params); // 用户 Status
-export const fetchUserDetailUpdate = (params = {}) => httpIndex.post(PORT1 + `/user/detailUpdate`, params); // 弹窗: 修改人员信息
-export const fetchUserAdd = (params = {}) => httpIndex.post(PORT1 + `/user/add`, params); // 弹窗: 新增人员信息
-export const fetchUserSetRole = (params = {}) => httpIndex.post(PORT1 + `/user/set/role`, params); // 角色：修改角色信息
+export const fetchUserDepttList = (params = {}) => httpApi.get(PORT1 + `/dept/list`, params); // 获取用户管理左侧分类列表（杭州,上海地区）
+export const fetchUserList = (params = {}) => httpApi.get(PORT1 + `/user/list2`, params); // 获取用户列表
+export const fetchUserDetail = (params = {}) => httpApi.get(PORT1 + `/user/detail`, params); // 获取用户详情
+export const fetchUserDelete = (params = {}) => httpApi.get(PORT1 + `/user/delete`, params); // 删除
+export const fetchRoleList = (params = {}) => httpApi.get(PORT1 + `/rolelist`, params); // 角色 List
+export const fetchChangeUserStatus = (params = {}) => httpApi.get(PORT1 + `/user/changeStatus`, params); // 用户 Status
+export const fetchUserDetailUpdate = (params = {}) => httpApi.post(PORT1 + `/user/detailUpdate`, params); // 弹窗: 修改人员信息
+export const fetchUserAdd = (params = {}) => httpApi.post(PORT1 + `/user/add`, params); // 弹窗: 新增人员信息
+export const fetchUserSetRole = (params = {}) => httpApi.post(PORT1 + `/user/set/role`, params); // 角色：修改角色信息

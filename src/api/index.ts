@@ -8,15 +8,18 @@ import { message } from '@/hooks/useMessage';
 import { setToken } from '@/redux/modules/user'; // 用户：Token
 import { checkStatus } from './helper/checkStatus'; // 状态码：checkStatus
 import { store } from '@/redux'; // redux：Store
+import { getBrowserLang } from '@/utils';
 
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 	loading?: boolean;
 }
-// const config: AxiosRequestConfig = {
-// 	baseURL: 'upack', // development: /upack
-// 	timeout: ResultEnum.TIMEOUT as number,
-// 	withCredentials: false, // 跨域时候允许携带凭证
-// };
+const defaultConfig: AxiosRequestConfig = {
+	timeout: ResultEnum.TIMEOUT as number,
+	withCredentials: false,
+	headers: {
+		'Content-Type': 'application/json;charset=utf-8',
+	},
+};
 
 // 注意点：
 // 1..env文件，是开发还是生产环境
@@ -26,8 +29,10 @@ class RequestHttp {
 	// 服务实例
 	service: AxiosInstance;
 	public constructor(config: AxiosRequestConfig) {
+		const mergedConfig = { ...defaultConfig, ...config };
+
 		// 实例化
-		this.service = axios.create(config);
+		this.service = axios.create(mergedConfig);
 		/**
 		 * @description request interceptor
 		 * Client sends request -> [request interceptor] -> server
@@ -56,6 +61,7 @@ class RequestHttp {
 						config.headers['Authorization'] = `Bearer ${token}`;
 					}
 				}
+				config.headers['Accept-Language'] = getBrowserLang();
 				// console.log('请求拦截', config);
 				return config;
 			},
@@ -69,6 +75,7 @@ class RequestHttp {
 		 * @description response interceptor
 		 *  The server returns the information -> [intercept unified processing] -> the client JS gets the information
 		 */
+		// 响应：如何处理refresh_token、自动发起请求，getRefreshToken，setAccessToken，setRefreshToken
 		this.service.interceptors.response.use(
 			(response: AxiosResponse) => {
 				const { data, config, headers, status, statusText } = response;
@@ -131,6 +138,7 @@ class RequestHttp {
 
 				// 根据服务器响应的错误状态代码进行不同处理
 				if (response) checkStatus(response.status, error.response?.data);
+
 				// 服务器不返回任何结果（可能是服务器出错或客户端断开了网络连接），断开连接处理：您可以跳转到断开连接页面
 				if (!window.navigator.onLine) window.$navigate('/500');
 				return Promise.reject(error);
@@ -158,5 +166,27 @@ class RequestHttp {
 	}
 }
 
+export const httpApi = new RequestHttp({
+	baseURL: import.meta.env.VITE_API_URL as string,
+});
+
+export const httpUpack = new RequestHttp({
+	baseURL: 'upack',
+});
+
 // export default new RequestHttp(config);
-export default RequestHttp;
+// export default RequestHttp;
+
+// // 导出核心功能
+// export * from './core';
+
+// // 导出工具函数
+// export * from './utils/axiosCancel';
+// export * from './utils/checkStatus';
+
+// // 导出业务模块 API
+// export * as authApi from './modules/auth';
+// export * as systemApi from './modules/system';
+
+// // 导出类型定义
+// export * from './types';

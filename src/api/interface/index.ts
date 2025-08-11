@@ -1,3 +1,5 @@
+// * NOTE: 优化：将interface文件名称修改为types
+
 // Request response parameters (excluding data)
 export interface Result {
 	code: number;

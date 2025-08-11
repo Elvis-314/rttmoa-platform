@@ -1,11 +1,11 @@
 // @ts-ignore
 /* eslint-disable */
 
-import http from '@/api/upack';
+import { httpApi } from '@/api';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
-	return http.get<{
+	return httpApi.get<{
 		data: API.CurrentUser;
 	}>('/api/currentUser', {
 		method: 'GET',
@@ -15,7 +15,7 @@ export async function currentUser(options?: { [key: string]: any }) {
 
 /** 退出登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
-	return http.post<Record<string, any>>('/api/login/outLogin', {
+	return httpApi.post<Record<string, any>>('/api/login/outLogin', {
 		method: 'POST',
 		...(options || {}),
 	});
@@ -23,7 +23,7 @@ export async function outLogin(options?: { [key: string]: any }) {
 
 /** 登录接口 POST /api/login/account */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-	return http.post<API.LoginResult>('/api/login/account', {
+	return httpApi.post<API.LoginResult>('/api/login/account', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
 
 /** 此处后端没有提供注释 GET /api/notices */
 export async function getNotices(options?: { [key: string]: any }) {
-	return http.get<API.NoticeIconList>('/api/notices', {
+	return httpApi.get<API.NoticeIconList>('/api/notices', {
 		method: 'GET',
 		...(options || {}),
 	});
@@ -52,7 +52,7 @@ export async function rule(
 	},
 	options?: { [key: string]: any }
 ) {
-	return http.get<API.RuleList>('/api/rule', {
+	return httpApi.get<API.RuleList>('/api/rule', {
 		method: 'GET',
 		params: {
 			...params,
@@ -64,7 +64,7 @@ export async function rule(
 /** 更新规则 PUT /api/rule */
 // await updateRule({ name: fields.name, desc: fields.desc, key: fields.key,	});
 export async function updateRule(options?: { [key: string]: any }) {
-	return http.post<API.RuleListItem>('/api/rule', {
+	return httpApi.post<API.RuleListItem>('/api/rule', {
 		method: 'POST',
 		data: {
 			method: 'update',
@@ -76,7 +76,7 @@ export async function updateRule(options?: { [key: string]: any }) {
 /** 新建规则 POST /api/rule */
 // await addRule({ ...formValues });
 export async function addRule(options?: { [key: string]: any }) {
-	return http.post<API.RuleListItem>('/api/rule', {
+	return httpApi.post<API.RuleListItem>('/api/rule', {
 		method: 'POST',
 		data: {
 			method: 'post',
@@ -87,7 +87,7 @@ export async function addRule(options?: { [key: string]: any }) {
 
 /** 删除规则 DELETE /api/rule */
 export async function removeRule(options?: { [key: string]: any }) {
-	return http.post<Record<string, any>>('/api/rule', {
+	return httpApi.post<Record<string, any>>('/api/rule', {
 		method: 'POST',
 		data: {
 			method: 'delete',

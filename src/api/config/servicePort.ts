@@ -3,4 +3,4 @@ export const PORT1 = '/hooks';
 
 export const PORT2 = '/geek';
 
-export const PORT3 = '/api/v1/admin';
+export const PORT3 = '/api/v1/admins';
