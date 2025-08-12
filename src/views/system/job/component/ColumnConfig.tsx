@@ -3,8 +3,9 @@ import { UserList } from '@/api/interface';
 import { Button, Dropdown, Input, Popconfirm, Switch, Tag } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import { IconFont } from '@/components/Icon';
+import { Link } from 'react-router-dom';
 
-const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColumns<UserList>[] => {
+export const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColumns<UserList>[] => {
 	return [
 		{
 			title: '岗位名称',
@@ -19,12 +20,12 @@ const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColumns<Use
 			// hideInTable: true,
 			// hideInForm: true,
 			// hideInDescriptions: true,
+			ellipsis: true,
 			sorter: true,
 			render: (dom, entity) => {
 				return (
-					<a
-						href='javascript:void(0)'
-						// className="divide-x-2"
+					<Link
+						to={''}
 						onClick={() => {
 							// setCurrentRow(entity);
 							// setShowDetail(true);
@@ -33,7 +34,7 @@ const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColumns<Use
 						}}
 					>
 						{dom}
-					</a>
+					</Link>
 				);
 			},
 			// 自定义筛选项功能具体实现请参考 https://ant.design/components/table-cn/#components-table-demo-custom-filter-panel
@@ -81,7 +82,7 @@ const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColumns<Use
 	];
 };
 
-const action = (entity: UserList, modalOperate: any, modalResult: any) => {
+const action = (entity: any, modalOperate: any, modalResult: any) => {
 	const OnView = () => {
 		modalOperate('detail', entity);
 	};
@@ -111,7 +112,15 @@ const action = (entity: UserList, modalOperate: any, modalResult: any) => {
 		{
 			key: '3',
 			label: (
-				<Popconfirm title='删除任务！' description='你确定要删除这条任务?' onConfirm={OnDelete} okText='确认' cancelText='取消' placement='top' trigger='hover'>
+				<Popconfirm
+					title='删除任务！'
+					description={`你确定要删除： ${entity.postName}`}
+					onConfirm={OnDelete}
+					okText='确认'
+					cancelText='取消'
+					placement='top'
+					trigger='hover'
+				>
 					<Button key='delete' type='link' size='small' danger icon={<DeleteOutlined />}>
 						删除
 					</Button>
@@ -120,7 +129,7 @@ const action = (entity: UserList, modalOperate: any, modalResult: any) => {
 		},
 	];
 	return [
-		<div className='more-button'>
+		<div className='more-button' key={1}>
 			<Dropdown
 				menu={{
 					items: menuList,

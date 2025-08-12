@@ -19,10 +19,12 @@ const useProTable = () => {
 
 	const [form] = Form.useForm();
 
+	const [tableName, setTableName] = useState<string>('岗位管理');
+
 	const [openSearch, SetOpenSearch] = useState<boolean>(false); // 工具栏：开启关闭表单搜索
 	const [loading, SetLoading] = useState<boolean>(false); // Loading：加载Loading
 	const [pagination, SetPagination] = useState<any>({ page: 1, pageSize: 10, total: 0 }); // 分页数据
-	// const [selectedRows, setSelectedRows] = useState<any[]>([]); // 表格：选择行数据
+	const [tableData, setTableData] = useState<any[]>([]); // 表格数据
 	const [selectedRows, setSelectedRows] = useState<any[]>([]); // 表格：选择行数据
 
 	// Drawer
@@ -63,10 +65,12 @@ const useProTable = () => {
 		// 2、字段值传递接口、获取接口结果、并提示出信息
 		// 3、重置Modal信息
 		// 4、重新请求，根据页码等条件
+		console.log('type', type);
 		if (type == 'create' || type == 'edit') {
 			const hide = message.loading(type == 'create' ? '正在添加' : '正在编辑');
 			try {
 				let res = type === 'create' ? await addJob(item) : await modifyJob(item._id, item);
+				console.log('新建，编辑结果：', res);
 				if (res) {
 					hide();
 					form.resetFields();
@@ -119,25 +123,26 @@ const useProTable = () => {
 		openSearch,
 		SetOpenSearch, // 工具栏：开启表单搜索
 		modalOperate,
+		tableData,
+		tableName,
 	};
 
 	return (
 		<>
-			<ProTable<UserList>
+			<ProTable<any>
 				rowKey='_id'
 				className='ant-pro-table-scroll'
-				// scroll={{ x: 2500, y: '100vh' }} // 100vh
 				bordered
 				cardBordered
 				dateFormatter='string'
-				headerTitle='使用 ProTable'
+				headerTitle={tableName}
 				defaultSize='small'
 				loading={loading}
 				columns={TableColumnsConfig(modalOperate, modalResult)}
 				toolBarRender={() => ToolBarRender(ToolBarParams)} // 渲染工具栏
 				actionRef={actionRef} // Table action 的引用，便于自定义触发 actionRef.current.reset()
 				formRef={formRef} // 可以获取到查询表单的 form 实例
-				search={openSearch ? false : { labelWidth: 'auto', filterType: 'query', span: 6 }} // 搜索表单配置
+				search={openSearch ? false : { labelWidth: 'auto', filterType: 'query', span: 6, resetText: '重置', searchText: '查询' }} // 搜索表单配置
 				request={async (params, sort, filter) => {
 					SetLoading(true);
 					// console.log('request请求参数：', params, sort, filter);
@@ -145,6 +150,7 @@ const useProTable = () => {
 					// console.log('data', data);
 					SetLoading(false);
 					SetPagination({ ...pagination, total: data.total });
+					setTableData(data.list);
 					return formatDataForProTable<any>({ ...data, page: params.current });
 				}}
 				pagination={{

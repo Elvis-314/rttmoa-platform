@@ -3,7 +3,7 @@ import TextArea from 'antd/es/input/TextArea';
 import { useEffect } from 'react';
 
 const ModalComponent = (Params: any) => {
-	const { form, modalIsVisible, setModalIsVisible, modalTitle, modalType, modalUserInfo, handleModalSubmit } = Params;
+	const { form, modalIsVisible, setModalIsVisible, modalTitle, modalType, modalUserInfo, modalResult } = Params;
 
 	useEffect(() => {
 		form.setFieldsValue({
@@ -25,7 +25,7 @@ const ModalComponent = (Params: any) => {
 		if (modalType == 'edit') {
 			formList._id = modalUserInfo._id;
 		}
-		handleModalSubmit && handleModalSubmit(modalType, formList);
+		modalResult && modalResult(modalType, formList);
 	};
 	const Submit = () => {
 		form.submit();

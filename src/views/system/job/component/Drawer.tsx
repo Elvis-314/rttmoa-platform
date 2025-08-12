@@ -13,6 +13,7 @@ type DrawerComponentProps = {
 };
 const DrawerComponent: React.FC<DrawerComponentProps> = Params => {
 	const { drawerIsVisible, drawerCurrentRow, setDrawerCurrentRow, setDrawerIsVisible, modalOperate, modalResult } = Params;
+	// console.log('drawerCurrentRow', drawerCurrentRow);
 
 	return (
 		<Drawer
@@ -24,19 +25,19 @@ const DrawerComponent: React.FC<DrawerComponentProps> = Params => {
 			}}
 			closable={true}
 		>
-			{drawerCurrentRow?.name && (
+			{drawerCurrentRow?.postName && (
 				<ProDescriptions<UserList>
 					// extra='extra'
 					bordered
 					size='small'
 					layout='horizontal'
 					column={1}
-					title={drawerCurrentRow?.name}
+					title={drawerCurrentRow?.postName}
 					request={async () => ({
 						data: drawerCurrentRow || {},
 					})}
 					params={{
-						id: drawerCurrentRow?.name,
+						id: drawerCurrentRow?.postName,
 					}}
 					columns={TableColumnsConfig(modalOperate, modalResult) as ProDescriptionsItemProps<UserList>[]}
 				/>
