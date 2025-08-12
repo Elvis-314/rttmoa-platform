@@ -4,7 +4,7 @@ import { Button, Dropdown, Input, Popconfirm, Switch, Tag } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import { IconFont } from '@/components/Icon';
 
-const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
+const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColumns<UserList>[] => {
 	return [
 		{
 			title: '岗位名称',
@@ -28,7 +28,7 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 						onClick={() => {
 							// setCurrentRow(entity);
 							// setShowDetail(true);
-							handleOperator('detail', entity);
+							modalOperate('detail', entity);
 							// message.info(`点击了 ${entity.username}`);
 						}}
 					>
@@ -76,20 +76,20 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 			fixed: 'right',
 			width: 50,
 			hideInSearch: true,
-			render: (data, entity) => action(entity, handleOperator),
+			render: (data, entity) => action(entity, modalOperate, modalResult),
 		},
 	];
 };
 
-const action = (entity: UserList, handleOperator: any) => {
+const action = (entity: UserList, modalOperate: any, modalResult: any) => {
 	const OnView = () => {
-		handleOperator('detail', entity);
+		modalOperate('detail', entity);
 	};
 	const OnEdit = () => {
-		handleOperator('edit', entity);
+		modalOperate('edit', entity);
 	};
 	const OnDelete = () => {
-		handleOperator('delete', entity);
+		modalResult('delete', entity);
 	};
 	const menuList = [
 		{
@@ -111,7 +111,7 @@ const action = (entity: UserList, handleOperator: any) => {
 		{
 			key: '3',
 			label: (
-				<Popconfirm title='删除任务！' description='你确定要删除这条任务?' onConfirm={OnDelete} okText='确认' cancelText='取消' placement='bottom' trigger='hover'>
+				<Popconfirm title='删除任务！' description='你确定要删除这条任务?' onConfirm={OnDelete} okText='确认' cancelText='取消' placement='top' trigger='hover'>
 					<Button key='delete' type='link' size='small' danger icon={<DeleteOutlined />}>
 						删除
 					</Button>
@@ -125,7 +125,7 @@ const action = (entity: UserList, handleOperator: any) => {
 				menu={{
 					items: menuList,
 				}}
-				placement='bottom'
+				placement='bottom' // bottom
 				arrow={{ pointAtCenter: true }}
 				trigger={['click']}
 			>

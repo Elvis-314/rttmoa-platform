@@ -26,7 +26,7 @@ export const unprotect = (app: any) => {
 	router.use("/menu", Menu.routes());
 	router.use("/userp", User.routes());
 	router.use("/monitor", Monitor.routes());
-	router.use("/jb", Job.routes()); // * 模板
+	router.use("/jb", Job.routes()); // * 岗位模板
  	router.use("/role", Role.routes());
 	app.use(router.routes()).use(router.allowedMethods());
 };

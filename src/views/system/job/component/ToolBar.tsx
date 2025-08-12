@@ -8,16 +8,16 @@ type ToolBarProps = {
 	quickSearch: () => void;
 	openSearch: string;
 	SetOpenSearch: any;
-	handleOperator: (type: string, data: any) => void;
+	modalOperate: (type: string, data: any) => void;
 };
 
 // * 渲染工具栏 组件
 const ToolBarRender = (props: ToolBarProps) => {
-	let { quickSearch, openSearch, SetOpenSearch, handleOperator } = props;
+	let { quickSearch, openSearch, SetOpenSearch, modalOperate } = props;
 	const dispatch = useDispatch();
 
 	const CreateBtn = () => {
-		handleOperator('create', null);
+		modalOperate('create', null);
 	};
 	const ExportBtn = () => {};
 	const ImportBtn = () => {};

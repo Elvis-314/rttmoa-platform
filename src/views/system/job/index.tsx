@@ -13,14 +13,6 @@ import ModalComponent from './component/Modal';
 import DrawerComponent from './component/Drawer';
 import FooterComponent from './component/Footer';
 
-export type FormValueType = {
-	target?: string;
-	template?: string;
-	type?: string;
-	time?: string;
-	frequency?: string;
-} & Partial<UserList>;
-
 const useProTable = () => {
 	const actionRef = useRef<ActionType>(); // 表格 ref
 	const formRef = useRef<FormInstance>(); // 表单 ref
@@ -45,9 +37,9 @@ const useProTable = () => {
 
 	const quickSearch = () => {};
 
-	// * 操作 — 员工： 新建、编辑、详情、删除  按钮
-	const handleOperator = async (type: string, item: any) => {
-		// console.log('handleOperator', type, item);
+	// * 操作 — 员工： 新建、编辑、详情  按钮
+	const modalOperate = async (type: string, item: any) => {
+		// console.log('modalOperate', type, item);
 		if (type === 'detail') {
 			setDrawerIsVisible(true);
 			setDrawerCurrentRow(item);
@@ -61,6 +53,34 @@ const useProTable = () => {
 			setModalTitle(type === 'edit' ? '编辑用户' : '查看详情');
 			setModalType(type);
 			setModalUserInfo(item);
+		}
+	};
+
+	// * 操作 — 员工： 新建、编辑、详情  弹窗内容提交
+	const modalResult = async (type: string, item: any) => {
+		console.log('Modal 提交：', type, item);
+		// 1、获取form字段值 并 过滤出有值的字段
+		// 2、字段值传递接口、获取接口结果、并提示出信息
+		// 3、重置Modal信息
+		// 4、重新请求，根据页码等条件
+		if (type == 'create' || type == 'edit') {
+			const hide = message.loading(type == 'create' ? '正在添加' : '正在编辑');
+			try {
+				let res = type === 'create' ? await addJob(item) : await modifyJob(item._id, item);
+				if (res) {
+					hide();
+					form.resetFields();
+					setModalTitle('');
+					setModalType('');
+					setModalIsVisible(false);
+					setModalUserInfo({});
+					if (actionRef.current) actionRef.current.reload();
+					message.success(type == 'create' ? '添加成功' : '编辑成功');
+				}
+			} catch (error: any) {
+				hide();
+				message.error(error.message || error.msg);
+			}
 		} else if (type === 'delete') {
 			const hide = message.loading('正在删除');
 			try {
@@ -93,38 +113,12 @@ const useProTable = () => {
 		}
 	};
 
-	// * 操作 — 员工： 新建、编辑、详情  弹窗内容提交
-	const handleModalSubmit = async (type: string, item: any) => {
-		console.log('Modal 提交：', type, item);
-		// 1、获取form字段值 并 过滤出有值的字段
-		// 2、字段值传递接口、获取接口结果、并提示出信息
-		// 3、重置Modal信息
-		// 4、重新请求，根据页码等条件
-		const hide = message.loading(type == 'create' ? '正在添加' : '正在编辑');
-		try {
-			let res = type === 'create' ? await addJob(item) : await modifyJob(item._id, item);
-			if (res) {
-				hide();
-				form.resetFields();
-				setModalTitle('');
-				setModalType('');
-				setModalIsVisible(false);
-				setModalUserInfo({});
-				if (actionRef.current) actionRef.current.reload();
-				message.success(type == 'create' ? '添加成功' : '编辑成功');
-			}
-		} catch (error: any) {
-			hide();
-			message.error(error.message || error.msg);
-		}
-	};
-
 	// * 工具栏 ToolBar
 	let ToolBarParams: any = {
 		quickSearch, // 工具栏：快捷搜索
 		openSearch,
 		SetOpenSearch, // 工具栏：开启表单搜索
-		handleOperator,
+		modalOperate,
 	};
 
 	return (
@@ -139,7 +133,7 @@ const useProTable = () => {
 				headerTitle='使用 ProTable'
 				defaultSize='small'
 				loading={loading}
-				columns={TableColumnsConfig(handleOperator)}
+				columns={TableColumnsConfig(modalOperate, modalResult)}
 				toolBarRender={() => ToolBarRender(ToolBarParams)} // 渲染工具栏
 				actionRef={actionRef} // Table action 的引用，便于自定义触发 actionRef.current.reset()
 				formRef={formRef} // 可以获取到查询表单的 form 实例
@@ -176,7 +170,7 @@ const useProTable = () => {
 					persistenceType: 'localStorage',
 				}}
 			/>
-			{selectedRows?.length > 0 && <FooterComponent actionRef={actionRef} selectedRows={selectedRows} setSelectedRows={setSelectedRows} handleOperator={handleOperator} />}
+			{selectedRows?.length > 0 && <FooterComponent actionRef={actionRef} selectedRows={selectedRows} setSelectedRows={setSelectedRows} modalResult={modalResult} />}
 			<ModalComponent
 				form={form}
 				modalIsVisible={modalIsVisible}
@@ -184,14 +178,15 @@ const useProTable = () => {
 				modalTitle={modalTitle}
 				modalType={modalType}
 				modalUserInfo={modalUserInfo}
-				handleModalSubmit={handleModalSubmit}
+				modalResult={modalResult}
 			/>
 			<DrawerComponent
 				drawerIsVisible={drawerIsVisible}
 				drawerCurrentRow={drawerCurrentRow}
 				setDrawerCurrentRow={setDrawerCurrentRow}
 				setDrawerIsVisible={setDrawerIsVisible}
-				handleOperator={handleOperator}
+				modalOperate={modalOperate}
+				modalResult={modalResult}
 			/>
 		</>
 	);

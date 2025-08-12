@@ -7,7 +7,7 @@
 ├── 216B tailwind.config.js
 ├── 28.2MB src/
 │   ├── 39B vite-env.d.ts
-│   ├── 8.48MB views/
+│   ├── 8.48MB views/         @8.48
 │   ├── 50.8kB utils/
 │   ├── 4.59kB typings/
 │   ├── 14.8kB styles/
@@ -21,7 +21,7 @@
 │   ├── 1.34kB context/
 │   ├── 4.14kB config/
 │   ├── 94.8kB components/
-│   ├── 19.3MB assets/
+│   ├── 19.3MB assets/            @19.3
 │   ├── 12.8kB apiFetch/
 │   ├── 32.8kB api/
 │   └── 3.05kB App.tsx
@@ -53,7 +53,7 @@
 ├── 1.82kB index.html
 ├── 1.99kB index.css
 ├── 473B example.http
-├── 53.5MB dist/
+├── 53.5MB dist/                        @53.5
 │   ├── 148kB workbox-5ffe50d4.js.map
 │   ├── 15.1kB workbox-5ffe50d4.js
 │   ├── 1.5kB vite.svg

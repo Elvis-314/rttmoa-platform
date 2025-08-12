@@ -8,10 +8,11 @@ type DrawerComponentProps = {
 	drawerCurrentRow: any;
 	setDrawerCurrentRow: React.Dispatch<React.SetStateAction<any | null>>;
 	setDrawerIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-	handleOperator: (type: string, item: any) => void;
+	modalOperate: (type: string, item: any) => void;
+	modalResult: any;
 };
 const DrawerComponent: React.FC<DrawerComponentProps> = Params => {
-	const { drawerIsVisible, drawerCurrentRow, setDrawerCurrentRow, setDrawerIsVisible, handleOperator } = Params;
+	const { drawerIsVisible, drawerCurrentRow, setDrawerCurrentRow, setDrawerIsVisible, modalOperate, modalResult } = Params;
 
 	return (
 		<Drawer
@@ -37,7 +38,7 @@ const DrawerComponent: React.FC<DrawerComponentProps> = Params => {
 					params={{
 						id: drawerCurrentRow?.name,
 					}}
-					columns={TableColumnsConfig(handleOperator) as ProDescriptionsItemProps<UserList>[]}
+					columns={TableColumnsConfig(modalOperate, modalResult) as ProDescriptionsItemProps<UserList>[]}
 				/>
 			)}
 		</Drawer>

@@ -1,6 +1,6 @@
 GET https://jsonplaceholder.typicode.com/posts/1 HTTP/1.1
 
-# 使用：在要访问的数据后面 按F1 输入Rest Client：Send Request即可得到响应内容
+# 使用：在要访问的数据后面 按F1 输入 Rest Client: Send Request即可得到响应内容
 
 ###
 

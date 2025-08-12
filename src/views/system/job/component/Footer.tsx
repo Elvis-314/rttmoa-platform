@@ -6,10 +6,10 @@ type FooterComponentProps = {
 	actionRef: any;
 	selectedRows: any;
 	setSelectedRows: any;
-	handleOperator: any;
+	modalResult: any;
 };
 const FooterComponent: React.FC<FooterComponentProps> = props => {
-	const { actionRef, selectedRows, setSelectedRows, handleOperator } = props;
+	const { actionRef, selectedRows, setSelectedRows, modalResult } = props;
 	return (
 		<FooterToolbar
 			extra={
@@ -22,14 +22,13 @@ const FooterComponent: React.FC<FooterComponentProps> = props => {
 			}
 		>
 			<Popconfirm
-				className=''
 				title='删除多个任务！'
 				description={`是否要删除这 ${selectedRows.length} 个任务`}
 				onConfirm={() => {
 					// 	await handle.handleRemove(selectedRows);
 					// 	setSelectedRows([]);
 					// 	actionRef.current?.reloadAndRest?.();
-					handleOperator('moreDelete', null);
+					modalResult('moreDelete', null);
 				}}
 				okText='确认'
 				cancelText='取消'

@@ -1,3 +1,6 @@
+treee -L 2 -I "node_modules" -s -r -F > tree2.txt
+
+
 rttmoa-platform
 ├── CHANGELOG.md                          # 提交代码的提交内容
 ├── LICENSE                               # 许可证文件
