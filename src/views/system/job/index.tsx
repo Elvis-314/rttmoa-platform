@@ -1,13 +1,12 @@
 import { useRef, useState } from 'react';
 import { Form } from 'antd';
 import { formatDataForProTable } from '@/utils';
-import { UserList } from '@/api/interface';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, FormInstance } from '@ant-design/pro-components';
 import { message } from '@/hooks/useMessage';
 import TableColumnsConfig from './component/ColumnConfig';
 import ToolBarRender from './component/ToolBar';
-import { addJob, delJob, delMoreJob, findJob, modifyJob } from '@/api/modules/system';
+import { addJob, delJob, delMoreJob, ExJob, findJob, modifyJob } from '@/api/modules/system';
 import './index.less';
 import ModalComponent from './component/Modal';
 import DrawerComponent from './component/Drawer';
@@ -20,7 +19,6 @@ const useProTable = () => {
 	const [form] = Form.useForm();
 
 	const [tableName, setTableName] = useState<string>('岗位管理');
-
 	const [openSearch, SetOpenSearch] = useState<boolean>(false); // 工具栏：开启关闭表单搜索
 	const [loading, SetLoading] = useState<boolean>(false); // Loading：加载Loading
 	const [pagination, SetPagination] = useState<any>({ page: 1, pageSize: 10, total: 0 }); // 分页数据
@@ -36,8 +34,6 @@ const useProTable = () => {
 	const [modalTitle, setModalTitle] = useState<string>('');
 	const [modalType, setModalType] = useState<string>('');
 	const [modalUserInfo, setModalUserInfo] = useState({});
-
-	const quickSearch = () => {};
 
 	// * 操作 — 员工： 新建、编辑、详情  按钮
 	const modalOperate = async (type: string, item: any) => {
@@ -60,17 +56,17 @@ const useProTable = () => {
 
 	// * 操作 — 员工： 新建、编辑、详情  弹窗内容提交
 	const modalResult = async (type: string, item: any) => {
-		console.log('Modal 提交：', type, item);
+		// console.log('Modal 提交：', type, item);
 		// 1、获取form字段值 并 过滤出有值的字段
 		// 2、字段值传递接口、获取接口结果、并提示出信息
 		// 3、重置Modal信息
 		// 4、重新请求，根据页码等条件
-		console.log('type', type);
+		// console.log('type', type);
 		if (type == 'create' || type == 'edit') {
 			const hide = message.loading(type == 'create' ? '正在添加' : '正在编辑');
 			try {
 				let res = type === 'create' ? await addJob(item) : await modifyJob(item._id, item);
-				console.log('新建，编辑结果：', res);
+				// console.log('新建，编辑结果：', res);
 				if (res) {
 					hide();
 					form.resetFields();
@@ -78,7 +74,7 @@ const useProTable = () => {
 					setModalType('');
 					setModalIsVisible(false);
 					setModalUserInfo({});
-					if (actionRef.current) actionRef.current.reload();
+					actionRef?.current?.reload();
 					message.success(type == 'create' ? '添加成功' : '编辑成功');
 				}
 			} catch (error: any) {
@@ -102,7 +98,7 @@ const useProTable = () => {
 			const hide = message.loading('正在删除');
 			try {
 				const selectIds = selectedRows.map(value => value?._id);
-				console.log('selectIds', selectIds);
+				// console.log('selectIds', selectIds);
 				const res: any = await delMoreJob(selectIds || []);
 				if (res) {
 					hide();
@@ -117,14 +113,31 @@ const useProTable = () => {
 		}
 	};
 
+	const quickSearch = () => {};
+	const ImportData = async (data: any) => {
+		// console.log('导入表格数据：', data);
+		const hide = message.loading('数据正在导入中');
+		try {
+			let res = await ExJob(data);
+			if (res) {
+				hide();
+				actionRef?.current?.reload();
+				message.success('导入完成');
+			}
+		} catch (error: any) {
+			hide();
+			message.error(error.message || error.msg);
+		}
+	};
 	// * 工具栏 ToolBar
 	let ToolBarParams: any = {
 		quickSearch, // 工具栏：快捷搜索
 		openSearch,
 		SetOpenSearch, // 工具栏：开启表单搜索
 		modalOperate,
-		tableData,
 		tableName,
+		tableData,
+		ImportData,
 	};
 
 	return (
@@ -138,15 +151,41 @@ const useProTable = () => {
 				headerTitle={tableName}
 				defaultSize='small'
 				loading={loading}
+				// params={{}}
 				columns={TableColumnsConfig(modalOperate, modalResult)}
 				toolBarRender={() => ToolBarRender(ToolBarParams)} // 渲染工具栏
 				actionRef={actionRef} // Table action 的引用，便于自定义触发 actionRef.current.reset()
 				formRef={formRef} // 可以获取到查询表单的 form 实例
 				search={openSearch ? false : { labelWidth: 'auto', filterType: 'query', span: 6, resetText: '重置', searchText: '查询' }} // 搜索表单配置
+				locale={{
+					// 搜索框 placeholder
+					emptyText: '暂无数据',
+					triggerDesc: '点击降序排序',
+					triggerAsc: '点击升序排序',
+					cancelSort: '取消排序',
+				}}
 				request={async (params, sort, filter) => {
 					SetLoading(true);
-					// console.log('request请求参数：', params, sort, filter);
-					const { data }: any = await findJob({ ...params, page: params.current });
+					console.log('request请求参数：', params, sort, filter);
+
+					// 搜索条件
+					const searchParams = { ...params };
+					delete searchParams.current;
+					delete searchParams.pageSize;
+					const mappedSort = Object.fromEntries(Object.entries(sort).map(([field, order]) => [field, order === 'ascend' ? 'asc' : 'desc']));
+					console.log('mappedSort', mappedSort);
+					// 拼装后端需要的参数
+					const payload = {
+						pagination: {
+							page: params.current, // 当前页
+							pageSize: params.pageSize, // 每页条数
+						},
+						sort: mappedSort, // 排序字段
+						filter, // 过滤条件
+						search: searchParams, // 其他搜索条件
+					};
+
+					const { data }: any = await findJob(payload);
 					// console.log('data', data);
 					SetLoading(false);
 					SetPagination({ ...pagination, total: data.total });

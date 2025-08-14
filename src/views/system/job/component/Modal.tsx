@@ -9,16 +9,13 @@ const ModalComponent = (Params: any) => {
 		form.setFieldsValue({
 			job_name: modalType == 'create' ? '' : modalUserInfo.postName,
 			job_sort: modalType == 'create' ? '' : modalUserInfo.postSort,
-			status: modalType == 'create' ? false : modalUserInfo.status == '0' ? false : true,
+			status: modalType == 'create' ? '启用' : modalUserInfo.status,
 			desc: modalType == 'create' ? '' : modalUserInfo.desc,
 		});
 	}, [modalType, modalUserInfo]);
 
 	const OnCancel = () => {
 		setModalIsVisible(false);
-	};
-	const OnReset = () => {
-		form.resetFields();
 	};
 	const FormOnFinish = () => {
 		const formList = form.getFieldsValue();
@@ -67,7 +64,8 @@ const ModalComponent = (Params: any) => {
 					</Col>
 					<Col span={24}>
 						<Form.Item label='状态' name='status' rules={[{ required: false }]}>
-							<Switch />
+							{/* <Switch /> */}
+							<Radio.Group options={['启用', '停用']} />
 						</Form.Item>
 					</Col>
 					<Col span={24}>

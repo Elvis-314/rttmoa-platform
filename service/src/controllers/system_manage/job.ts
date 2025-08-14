@@ -1,12 +1,12 @@
 import { Context } from 'koa';
 import Basic from '../basic';
 
-type Parmas = {
+interface JobParams {
 	job_name?: string;
 	job_sort?: string;
-	status?: boolean;
+	status?: string;
 	desc?: string;
-};
+}
 
 // * 岗位管理
 // 字段：
@@ -25,19 +25,114 @@ class Job extends Basic {
 	constructor() {
 		super();
 	}
+	// 优化：添加更详细的验证
+	private validateJobData = (data: JobParams) => {
+		const errors: string[] = [];
+
+		if (!data?.job_name?.trim()) {
+			errors.push('岗位名称不能为空');
+		} else if (data.job_name.length > 50) {
+			errors.push('岗位名称长度不能超过50个字符');
+		}
+
+		if (!data?.job_sort) {
+			errors.push('岗位排序不能为空');
+		} else if (isNaN(Number(data.job_sort)) || Number(data.job_sort) < 0) {
+			errors.push('岗位排序必须是大于等于0的数字');
+		}
+
+		if (!data?.status?.trim()) {
+			errors.push('状态不能为空');
+		}
+
+		return errors;
+	};
+
+	// 岗位代码应该自动生成
+	private generatePostCode = (postName: string) => {
+		// 简单的拼音首字母生成
+		return postName
+			.split('')
+			.map(char => (char.charCodeAt(0) > 255 ? char.charAt(0) : char))
+			.join('')
+			.toLowerCase()
+			.replace(/\s+/g, '_');
+	};
+	// 当前：新增和修改都有重复的数据构建逻辑
+	// buildJobData = (data: JobParams, isUpdate = false) => {
+	// 	const baseData = {
+	// 		postCode: this.generatePostCode(data.job_name?.trim() || ''), // 这里应该是动态生成的
+	// 		postName: data.job_name?.trim(),
+	// 		postSort: Number(data.job_sort),
+	// 		status: data.status || '1',
+	// 		flag: false,
+	// 		desc: data.desc?.trim() || '',
+	// 	};
+
+	// 	if (isUpdate) {
+	// 		return {
+	// 			...baseData,
+	// 			updateBy: null as string | null, // 应该从session获取
+	// 			updateTime: new Date(),
+	// 		};
+	// 	}
+
+	// 	return {
+	// 		...baseData,
+	// 		createBy: 'admin', // 应该从session获取
+	// 		createTime: new Date(),
+	// 		updateBy: null as string | null,
+	// 		updateTime: null as string | null,
+	// 	};
+	// };
+
+	// 检查岗位名称是否已存在
+	private checkPostName = async (ctx: Context, postName: string) => {
+		const existing = await ctx.mongo.find('__job', { query: { postName: postName } });
+		// console.log('existing', existing);
+		return !!existing.length;
+	};
 
 	// * 查询岗位
-	allJob = async (ctx: Context) => {
+	findJob = async (ctx: Context) => {
 		try {
-			const data = ctx.request.query;
+			const data: any = ctx.request.body;
+			console.log('查询参数：', data);
 
-			const count = await ctx.mongo.count('__job');
-			const job = await ctx.mongo.find('__job');
+			const { postName, postSort, status } = data?.search || {};
+			const query: Record<string, any> = {};
+			if (postName?.trim()) {
+				query.postName = { $regex: postName.trim(), $options: 'i' }; // 不区分大小写
+			}
+			if (postSort?.toString().trim()) {
+				const sortNum = Number(postSort);
+				if (!isNaN(sortNum)) {
+					query.postSort = sortNum;
+				}
+			}
+
+			if (status?.trim()) {
+				query.status = new RegExp(status.trim());
+			}
+
+			// 添加分页和排序的默认值
+			const page = Math.max(1, Number(data.pagination?.page) || 1);
+			const pageSize = Math.min(100, Math.max(1, Number(data.pagination?.pageSize) || 10));
+
+			const [count, list] = await Promise.all([
+				ctx.mongo.count('__job', query),
+				ctx.mongo.find('__job', {
+					query,
+					page,
+					pageSize,
+					sort: data.sort || { postSort: 1, createTime: -1 },
+				}),
+			]);
 
 			return ctx.send({
-				list: job,
-				page: 1,
-				pageSize: 10,
+				list,
+				page,
+				pageSize,
 				total: count,
 			});
 		} catch (err) {
@@ -47,18 +142,21 @@ class Job extends Basic {
 	// * 新增岗位
 	addJob = async (ctx: Context) => {
 		try {
-			const data: Parmas = ctx.request.body;
+			const data: JobParams = ctx.request.body;
 			console.log('新增岗位参数：', data);
-			if (!data) return ctx.sendError(400, `新增岗位操作：未获取到参数`, 400);
-			if (!data?.job_name) return ctx.sendError(400, `新增岗位操作：未获取到岗位名称`, 400);
-			if (!data?.job_sort) return ctx.sendError(400, `新增岗位操作：未获取到岗位排序`, 400);
+
+			const check = await this.checkPostName(ctx, data?.job_name);
+			if (check) return ctx.sendError(400, '已存在岗位名称');
+
+			const errInfo = this.validateJobData(data);
+			if (errInfo.length) return ctx.sendError(400, errInfo[0]);
 
 			// * 先查询岗位名称是否重复
 			const newJob: any = {
-				postCode: 'ceo',
+				postCode: this.generatePostCode(data?.job_name),
 				postName: data?.job_name, // 产品经理 | 前端开发 | 会计
 				postSort: +data?.job_sort, // 排序
-				status: data?.status == true ? '1' : '0', // 开关：开启/关闭  0：关、1：开
+				status: data?.status, // 开关：开启/关闭  0：关、1：开
 				flag: false,
 				desc: data?.desc || '',
 
@@ -78,19 +176,24 @@ class Job extends Basic {
 	modifyJob = async (ctx: Context) => {
 		try {
 			const id = ctx.params.id;
-			const data: Parmas = ctx.request.body;
+			const data: JobParams = ctx.request.body;
 			console.log('修改岗位参数：', data);
-			if (!data) return ctx.sendError(400, `修改岗位操作：未获取到参数`, 400);
-			if (!id) return ctx.sendError(400, `修改岗位操作：无iD`, 400);
-			if (!data?.job_name) return ctx.sendError(400, `修改岗位操作：未获取到岗位名称`, 400);
-			if (typeof Number(data?.job_sort) != 'number') return ctx.sendError(400, `修改岗位操作：岗位排序不是数字`, 400);
+			if (!id) return ctx.sendError(400, `修改岗位操作：无iD`);
+
+			
+			const check = await this.checkPostName(ctx, data?.job_name);
+			if (check) return ctx.sendError(400, '已存在岗位名称');
+
+			
+			const errInfo = this.validateJobData(data);
+			if (errInfo.length) return ctx.sendError(400, errInfo[0]);
 
 			// * 先查询岗位名称是否重复
 			const newJob: any = {
-				postCode: 'ceo',
+				postCode: this.generatePostCode(data?.job_name),
 				postName: data?.job_name, // 产品经理 | 前端开发 | 会计
 				postSort: +data.job_sort, // 排序
-				status: data?.status == true ? '1' : '0', // 开关：开启/关闭  0：关、1：开
+				status: data?.status, // 开关：开启/关闭  0：关、1：开
 				flag: false,
 				desc: data?.desc || '',
 
@@ -108,10 +211,12 @@ class Job extends Basic {
 	delJob = async (ctx: Context) => {
 		try {
 			const id = ctx.params.id;
-			if (!id) return ctx.sendError(400, `删除岗位操作：前端未传递id！`, 400);
-
-			const ins = await ctx.mongo.deleteOne('__job', id);
-			return ctx.send(ins);
+			if (id) {
+				const ins = await ctx.mongo.deleteOne('__job', id);
+				return ctx.send(ins);
+			} else {
+				return ctx.sendError(400, `删除岗位操作：前端未传递id！`);
+			}
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}
@@ -121,13 +226,46 @@ class Job extends Basic {
 	delMoreJob = async (ctx: Context) => {
 		try {
 			const data: any = ctx.request.body;
-			if (!data.length) {
-				return ctx.sendError(400, `删除岗位操作：前端传递的参数不正确！`, 400);
+			if (data && data.length) {
+				for (const _id of data) {
+					await ctx.mongo.deleteOne('__job', _id);
+				}
+				return ctx.send('全部删除完成');
+			} else {
+				return ctx.sendError(400, `删除岗位操作：前端传递的参数不正确！`);
 			}
-			for (const _id of data) {
-				await ctx.mongo.deleteOne('__job', _id);
+		} catch (err) {
+			return ctx.sendError(500, err.message, 500);
+		}
+	};
+
+	// * Excel 表格数据导入
+	ExJob = async (ctx: Context) => {
+		try {
+			const data: any = ctx.request.body;
+			// console.log('Excel 数据', data);
+
+			if (data && data.length) {
+				for (const element of data) {
+					const newJob: any = {
+						postCode: 'ceo',
+						postName: String(element.postName).trim(), // 产品经理 | 前端开发 | 会计
+						postSort: Number(element.postSort), // 排序
+						status: String(element.status).trim(), // 开关：开启/关闭  0：关、1：开
+						flag: false,
+						desc: element?.desc || '',
+
+						createBy: 'admin',
+						createTime: new Date(),
+						updateBy: null,
+						updateTime: null,
+					};
+					const ins = await ctx.mongo.insertOne('__job', newJob);
+				}
+				return ctx.send('岗位数据导入成功');
+			} else {
+				return ctx.sendError(400, `服务端未获取到数据`);
 			}
-			return ctx.send('全部删除完成');
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}

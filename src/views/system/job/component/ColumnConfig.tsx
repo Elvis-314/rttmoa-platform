@@ -4,47 +4,52 @@ import { Button, Dropdown, Input, Popconfirm, Switch, Tag } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import { IconFont } from '@/components/Icon';
 import { Link } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 export const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColumns<UserList>[] => {
+	const detail = (entity: any) => {
+		modalOperate('detail', entity);
+	};
+	const onChange = (event: any) => {
+		// console.log(event.target.value);
+	};
 	return [
 		{
 			title: '岗位名称',
 			dataIndex: 'postName',
-			copyable: true,
-			// width: 150,
-			fixed: 'left',
+			copyable: true, // 表格数据可复制？
+			width: 150,
+			fixed: 'left', // 固定？
 			tooltip: '用户的名字',
-			// initialValue: 'zhangsan',
-			onFilter: false,
-			// hideInSearch: true,
-			// hideInTable: true,
-			// hideInForm: true,
-			// hideInDescriptions: true,
+			onFilter: false, // 筛选？
+			fieldProps: {
+				placeholder: '请输入岗位名称',
+			},
+			// hideInSearch: true, // 搜索 Search
+			// hideInTable: true, // 在 Table 中不展示此列
+			// hideInForm: true, // 在 Form 中不展示此列
+			// hideInSetting: true, // 在 Setting 中
+			// hideInDescriptions: true, // 详情中
 			ellipsis: true,
-			sorter: true,
+			sorter: true, // 排序
+			// readonly: true,
 			render: (dom, entity) => {
 				return (
-					<Link
-						to={''}
-						onClick={() => {
-							// setCurrentRow(entity);
-							// setShowDetail(true);
-							modalOperate('detail', entity);
-							// message.info(`点击了 ${entity.username}`);
-						}}
-					>
+					<Link to={''} onClick={() => detail(entity)}>
 						{dom}
 					</Link>
 				);
 			},
 			// 自定义筛选项功能具体实现请参考 https://ant.design/components/table-cn/#components-table-demo-custom-filter-panel
 			filterDropdown: () => (
-				<div style={{ padding: 2 }}>
-					<Input style={{ width: 150, marginBlockEnd: 8, display: 'block', fontSize: '14px' }} placeholder='请输入' />
+				<div style={{ padding: 4 }}>
+					<Input style={{ width: 150, marginBlockEnd: 8, display: 'block', fontSize: '14px' }} placeholder='请输入' onChange={onChange} />
 				</div>
 			),
 			filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-			fieldProps: (form, config) => {}, // 查询表单的 props，会透传给表单项，
+			// fieldProps: (form, config) => {
+			// 	console.log('form, config', form, config);
+			// }, // 查询表单的 props，会透传给表单项，
 		},
 		{
 			title: '岗位排序',
@@ -52,15 +57,26 @@ export const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColu
 			// width: 150,
 			filters: true,
 			onFilter: true,
+			sorter: true,
+			fieldProps: {
+				placeholder: '请输入岗位排序',
+			},
 		},
 		{
 			title: '岗位状态',
 			dataIndex: 'status',
 			sorter: true,
 			tooltip: '指代用户的年纪大小',
+			// filters: [
+			// 	{ text: '启用', value: '启用' },
+			// 	{ text: '停用', value: '停用' },
+			// ],
+			fieldProps: {
+				placeholder: '请输入岗位状态',
+			},
 			render: (dom, entity) => {
-				if (dom == '1') return <Tag color='blue'>启用</Tag>;
-				if (dom == '0') return <Tag color='red'>停用</Tag>;
+				if (dom == '启用') return <Tag color='blue'>启用</Tag>;
+				if (dom == '停用') return <Tag color='red'>停用</Tag>;
 			},
 		},
 		{
@@ -70,6 +86,10 @@ export const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColu
 			filters: true,
 			onFilter: true,
 			hideInSearch: true,
+			render: (dom: any, entity) => {
+				const time = dayjs(dom).format('YYYY-MM-DD HH:mm:ss');
+				return <span>{time}</span>;
+			},
 		},
 		{
 			title: '操作',

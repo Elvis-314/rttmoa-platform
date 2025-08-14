@@ -227,7 +227,7 @@ class User extends Basic {
 
 			// 排序参数：age、status
 			let sortParam = {};
-			const count = await ctx.mongo.count('__user');
+			const count = await ctx.mongo.count('__user', query);
 			const result = await ctx.mongo.find('__user', { query: query, sort: {}, page: +param.page || 1, pageSize: +param.pageSize || 10 });
 			// throw new Error("失败；；；；；")
 

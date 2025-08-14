@@ -32,7 +32,7 @@ const baseInfo = {
 // 查询文档：https://docs.mongoing.com/mongodb-crud-operations/query-documents
 export type MongoType = {
 	find: (table: string, option?: { query: any; page?: number; pageSize?: number; sort?: any }) => Promise<any[]>;
-	count: (table: string) => Promise<number>;
+	count: (table: string, query?:  Record<string, any>) => Promise<number>;
 	insertOne: (table: string, data: Record<string, any>) => Promise<string>;
 	insertMany: (table: string, data: Array<any>) => Promise<any>;
 	updateOne: (table: string, id: string, updateData: Record<string, any>) => Promise<boolean | string>;
@@ -78,11 +78,11 @@ class MongoService {
 		return Object.prototype.toString.call(val) === `[object ${type}]`;
 	}
 	// & count
-	async count(table: string) {
-		const db = await this.connect();
-		const collection = db.collection(table);
-		return await collection.countDocuments();
-	}
+	async count(table: string, query: Record<string, any> = {}) {
+    const db = await this.connect();
+    const collection = db.collection(table);
+    return await collection.countDocuments(query);
+}
 	// & find
 	async find(table: string, options: { query?: any; page?: number; pageSize?: number; sort?: any }): Promise<{ success: boolean; data?: any[]; message?: string }> {
 		console.log("options", typeof options);

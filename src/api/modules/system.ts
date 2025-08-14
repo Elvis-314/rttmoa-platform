@@ -25,11 +25,15 @@ export const DelMoreUser = (ids: string[]) => httpUpack.post(`/userp/delMoreUser
 export const DelMoreProTableUser = (ids: Params) => httpUpack.post('/userp/delMoreUsers', { data: ids });
 
 // * 系统管理 — 岗位管理
-export const findJob = (params: Params) => httpUpack.get(`/jb/job`, params);
-export const addJob = (params: Params) => httpUpack.post(`/jb/job`, params);
+export const findJob = (params: Params) => {
+	console.log('参数 params：', params);
+	return httpUpack.post(`/jb/job`, params);
+};
+export const addJob = (params: Params) => httpUpack.post(`/jb/jobAdd`, params);
 export const delJob = (id: string) => httpUpack.delete(`/jb/job/${id}`);
-export const delMoreJob = (data: string[]) => httpUpack.post(`/jb/jobs`, data);
+export const delMoreJob = (data: string[]) => httpUpack.post(`/jb/jobDel`, data);
 export const modifyJob = (id: string, params: Params) => httpUpack.put(`/jb/job/${id}`, params);
+export const ExJob = (params: Params) => httpUpack.post(`/jb/jobEx`, params);
 
 // * 系统管理 — 角色管理
 export const findRole = (params: Params) => httpUpack.get(`/role/findRole`, params);

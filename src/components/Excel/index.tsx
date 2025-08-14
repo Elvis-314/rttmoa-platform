@@ -1,4 +1,4 @@
-import { Button, Dropdown, Tooltip, Upload } from 'antd';
+import { Button, Dropdown, Tooltip, Upload, UploadFile } from 'antd';
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
@@ -38,13 +38,24 @@ export default function Excel(Props: ExcelProps) {
 
 	const [tableLoading, setTableLoading] = useState<boolean>(false); // 加载状态：Loading
 	const [fileName, setFileName] = useState<string>(''); // 文件名称： __EXCEL__黑马账号信息.xlsx
+	const [fileList, setFileList] = useState<UploadFile[]>([]);
 
 	// ! 导入表格数据
 	// 参数设置   (file:文件 Blob类型,sheetName:工作区名称 string类型)
 	const handleUpload = (file: any) => {
+		// console.log('file', file);
+
+		let fileObj = {
+			uid: file.uid,
+			name: file.name,
+			size: file.size,
+			type: file.type,
+		};
+
 		const isExcel = /\.(xlsx|xls)$/.test(file?.name.toLowerCase());
 		if (!isExcel) {
 			message.error('请上传Excel文件（.xlsx 或 .xls）');
+			setFileList([...fileList, { ...fileObj, status: 'error' }]);
 			return false;
 		}
 		setFileName(file.name);
@@ -55,10 +66,12 @@ export default function Excel(Props: ExcelProps) {
 			const workbook = XLSX.read(data, { type: 'array' }); // 读取文件内容
 			const worksheet = workbook.Sheets[workbook.SheetNames[0]]; //  ['Sheet1']: 指的是工作区一
 			const jsonData: any = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // 将工作表数据转换为 JSON 格式
-			console.log('jsonData', jsonData); // ! 这里就是所有的表格数据了
+			// console.log('jsonData', jsonData); // ! 这里就是所有的表格数据了
+
 			if (jsonData == 0) {
 				message.warning('导入错误：表格无数据');
 				setTableLoading(false);
+				setFileList([...fileList, { ...fileObj, status: 'error' }]);
 				return false;
 			}
 			// 验证表头字段
@@ -66,6 +79,7 @@ export default function Excel(Props: ExcelProps) {
 			const missingHeaders = tableHeaders.filter((h: any) => !headers.includes(h));
 			if (missingHeaders.length > 0) {
 				message.error(`导入失败：缺少字段：${missingHeaders.join('、')}`);
+				setFileList([...fileList, { ...fileObj, status: 'error' }]);
 				return false;
 			}
 			const tableDataRes: any[] = [];
@@ -83,9 +97,11 @@ export default function Excel(Props: ExcelProps) {
 			if (tableDataRes.length == 0) {
 				message.warning('导入错误：表格无数据');
 				setTableLoading(false);
+				setFileList([...fileList, { ...fileObj, status: 'error' }]);
 				return false;
 			} else {
 				ImportData && ImportData(tableDataRes);
+				setFileList([...fileList, { ...fileObj, status: 'done' }]);
 			}
 			// // 设置表头
 			// setColumns(columns);
@@ -141,7 +157,7 @@ export default function Excel(Props: ExcelProps) {
 			key: '1',
 			label: (
 				<div>
-					<Upload beforeUpload={handleUpload}>
+					<Upload beforeUpload={handleUpload} fileList={fileList}>
 						{/* 提示：只导入工作区是 Sheet1 的数据 */}
 						<Button key='view' type='text' size='middle' icon={<EyeOutlined />}>
 							导入表格数据
