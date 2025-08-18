@@ -173,7 +173,7 @@ const useProTable = () => {
 					delete searchParams.current;
 					delete searchParams.pageSize;
 					const mappedSort = Object.fromEntries(Object.entries(sort).map(([field, order]) => [field, order === 'ascend' ? 'asc' : 'desc']));
-					console.log('mappedSort', mappedSort);
+					// console.log('mappedSort', mappedSort);
 					// 拼装后端需要的参数
 					const payload = {
 						pagination: {
@@ -190,14 +190,18 @@ const useProTable = () => {
 					SetLoading(false);
 					SetPagination({ ...pagination, total: data.total });
 					setTableData(data.list);
-					return formatDataForProTable<any>({ ...data, page: params.current });
+					return formatDataForProTable<any>({ ...data, current: params.current });
 				}}
 				pagination={{
+					size: 'default',
+					showQuickJumper: true,
+					showSizeChanger: true,
 					...pagination,
-					pageSizeOptions: [10, 20, 30, 50, 100],
+					pageSizeOptions: [10, 20, 30, 50],
 					onChange: (page, pageSize) => {
 						SetPagination({ ...pagination, page, pageSize });
 					},
+					showTotal: () => `第 ${pagination.page} 页，共 ${pagination.total} 条`,
 				}}
 				rowSelection={{
 					onChange: (selectedRowKeys, selectedRows) => {
