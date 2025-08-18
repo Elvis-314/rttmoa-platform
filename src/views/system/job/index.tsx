@@ -139,12 +139,14 @@ const useProTable = () => {
 		tableData,
 		ImportData,
 	};
+	const allWidth = TableColumnsConfig(modalOperate, modalResult).reduce((sum: any, col: any) => sum + (col.width || 0), 0);
 
 	return (
 		<>
 			<ProTable<any>
 				rowKey='_id'
 				className='ant-pro-table-scroll'
+				scroll={{ x: allWidth, y: '100vh' }} // 100vh
 				bordered
 				cardBordered
 				dateFormatter='string'

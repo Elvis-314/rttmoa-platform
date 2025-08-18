@@ -12,7 +12,7 @@ class User extends Basic {
 		super();
 	}
 
-	Login = async (ctx: Context) => {
+	login = async (ctx: Context) => {
 		try {
 			const { username, password } = ctx.request.body as any;
 			if (!username) return ctx.sendError(400, '登陆操作：无用户名');
@@ -51,7 +51,7 @@ class User extends Basic {
 		}
 	};
 
-	Logout = async (ctx: Context) => {
+	logout = async (ctx: Context) => {
 		// 查询用户、将用户token为空
 		const user = ctx.state.user;
 		// const up = await ctx.mongo.updateOne('__user', findUser[0]._id, { token });
@@ -106,12 +106,13 @@ class User extends Basic {
 		}
 	};
 
-	InsFakeUser = async (ctx: Context) => {
+	// 假数据接口
+	addFakeUser = async (ctx: Context) => {
 		try {
 			const catHead = () => catArr[Math.floor(Math.random() * catArr.length)];
 			// ! 26万条
 			const users = Mock.mock({
-				'data|27500': [
+				'data|360': [
 					// 27500 | 267500
 					{
 						'id|+1': 1,
@@ -146,7 +147,7 @@ class User extends Basic {
 		}
 	};
 
-	InsUser = async (ctx: Context) => {
+	addUser = async (ctx: Context) => {
 		try {
 			let query = ctx.request.query;
 			let user = {
@@ -173,7 +174,7 @@ class User extends Basic {
 			return ctx.sendError(config.resCodes.serverError, err.message);
 		}
 	};
-	UpUser = async (ctx: Context) => {
+	upUser = async (ctx: Context) => {
 		try {
 			let query: any = ctx.request.query;
 			console.log('query', query);
@@ -206,7 +207,7 @@ class User extends Basic {
 	};
 
 	// * ProTable 查询参数
-	FindProTableUser = async (ctx: Context) => {
+	findProTableUser = async (ctx: Context) => {
 		try {
 			const currentUser = ctx.state.user;
 			console.log('当前用户：', currentUser);
@@ -238,7 +239,7 @@ class User extends Basic {
 	};
 
 	// * UserManager 查询参数
-	FindUserManager = async (ctx: Context) => {
+	findUserManager = async (ctx: Context) => {
 		return this.handle(ctx, async () => {
 			const param = ctx.query;
 			console.log('UserManager Params: ', param);
@@ -268,7 +269,7 @@ class User extends Basic {
 	};
 
 	// * 删除用户
-	DelUser = async (ctx: Context) => {
+	delUser = async (ctx: Context) => {
 		return this.handle(ctx, async () => {
 			let { id } = ctx.request.query;
 			if (!id) return { message: '失败：id 错误' };
@@ -283,7 +284,7 @@ class User extends Basic {
 	};
 
 	// * 删除多个用户
-	DelMoreUser = async (ctx: Context) => {
+	delMoreUser = async (ctx: Context) => {
 		// http.post("/userp/del_more_User/123", { body: params })
 		return this.handle(ctx, async () => {
 			// console.log('request-id', ctx.params.id);
