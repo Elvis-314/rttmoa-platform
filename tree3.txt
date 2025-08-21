@@ -1,4 +1,4 @@
-1.26GB rttmoa-platform/
+1.23GB rttmoa-platform/
 ├── 546kB yarn.lock
 ├── 3.5kB vite.config.ts
 ├── 12.2kB tsconfig.json
@@ -7,9 +7,10 @@
 ├── 2.12kB tree.txt
 ├── 8.71kB tre.txt
 ├── 216B tailwind.config.js
-├── 28.2MB src/
+├── 3.5MB stats.html
+├── 6.89MB src/
 │   ├── 39B vite-env.d.ts
-│   ├── 8.49MB views/
+│   ├── 3.43MB views/
 │   │   ├── 223kB system/
 │   │   ├── 1.12kB no-layout/
 │   │   ├── 290kB monitor/
@@ -19,9 +20,9 @@
 │   │   ├── 135kB list/
 │   │   ├── 12.5kB home/
 │   │   ├── 103kB form/
-│   │   ├── 5.08MB feat/               @5
+│   │   ├── 25.2kB feat/
 │   │   ├── 763kB dataScreenHouse/
-│   │   ├── 1.54MB dataScreen/         @1.5
+│   │   ├── 1.54MB dataScreen/
 │   │   ├── 4.91kB auth/
 │   │   └── 81.5kB assembly/
 │   ├── 50.8kB utils/
@@ -56,7 +57,7 @@
 │   │   ├── 6.71kB modules/
 │   │   ├── 1.89kB interface/
 │   │   └── 1.87kB index.ts
-│   ├── 906B main.tsx
+│   ├── 844B main.tsx
 │   ├── 101kB layouts/
 │   │   ├── 1.03kB indexAsync.tsx
 │   │   ├── 1.35kB index.tsx
@@ -131,15 +132,13 @@
 │   │   ├── 5.93kB Common/
 │   │   ├── 1.04kB AuthButton/
 │   │   └── 14.3kB AdvancedSearchForm/
-│   ├── 19.3MB assets/                        @19.3
+│   ├── 3.06MB assets/
 │   │   ├── 123kB json/
-│   │   ├── 2.08MB images/
+│   │   ├── 943kB images/
 │   │   ├── 406kB icons/
-│   │   ├── 15.1MB iconfont-Fonts/            @15
 │   │   ├── 6.62kB iconfont/
 │   │   ├── 1.52MB fonts/
-│   │   ├── 13.8kB documents/
-│   │   ├── 22.6kB dangerouslySetInnerHTML/
+│   │   ├── 13.7kB documents/
 │   │   └── 49.2kB api/
 │   ├── 12.8kB apiFetch/
 │   │   ├── 1.61kB useFetch.ts
@@ -156,15 +155,15 @@
 │   │   ├── 5.09kB core/
 │   │   ├── 135B config/
 │   │   └── 1.58kB _optimization_plan.md
-│   └── 3.05kB App.tsx
-├── 117MB service/
+│   └── 3.02kB App.tsx
+├── 113MB service/
 │   ├── 115kB yarn.lock
 │   ├── 6.02kB tsconfig.json
 │   ├── 260kB src/
 │   │   ├── 9.21kB utils/
 │   │   ├── 1.48kB status.ts
 │   │   ├── 698B schedule/
-│   │   ├── 10.8kB routes/
+│   │   ├── 10.9kB routes/
 │   │   ├── 14.5kB prototype/
 │   │   ├── 8.84kB model/
 │   │   ├── 44.9kB middlewares/
@@ -173,9 +172,9 @@
 │   │   ├── 135kB controllers/
 │   │   ├── 32.1kB config/
 │   │   └── 1.5kB app.ts
-│   ├── 3.7MB sql/
+│   ├── 195kB sql/
 │   │   ├── 14kB tanhua 20200630 0858.rar
-│   │   ├── 3.69MB steedos_nbzy_v2.rar
+│   │   ├── 181kB steedos_nbzy_v2.rar
 │   │   └── 67B Backup.sql
 │   ├── 2.12MB public/
 │   │   ├── 638kB upload/
@@ -208,12 +207,12 @@
 ├── 1.82kB index.html
 ├── 1.99kB index.css
 ├── 473B example.http
-├── 53.5MB dist/
+├── 46.5MB dist/
 │   ├── 148kB workbox-5ffe50d4.js.map
 │   ├── 15.1kB workbox-5ffe50d4.js
 │   ├── 1.5kB vite.svg
-│   ├── 41.4kB sw.js.map
-│   ├── 19.2kB sw.js
+│   ├── 40.9kB sw.js.map
+│   ├── 18.9kB sw.js
 │   ├── 1.59kB rttmoa.svg
 │   ├── 67.9kB rttmoa-512x512.png
 │   ├── 14.6kB rttmoa-192x192.png
@@ -223,22 +222,23 @@
 │   ├── 362B manifest.webmanifest
 │   ├── 1.43kB index.html
 │   ├── 1.15kB favicon.ico
-│   └── 53.2MB assets/
-│       ├── 6.78MB ttf/
+│   └── 46.1MB assets/
+│       ├── 1.53MB ttf/
 │       ├── 71.1kB svg/
 │       ├── 1.21MB png/
-│       ├── 43.7MB js/
-│       ├── 1.06MB jpg/
+│       ├── 43MB js/
 │       ├── 97.9kB gif/
-│       └── 205kB css/
+│       └── 201kB css/
 ├── 6.23kB commitlint.config.cjs
 ├── 9.67kB build.css
 ├── 6.78kB build/
 │   ├── 1.33kB proxy.ts
 │   ├── 3.55kB plugins.ts
 │   └── 1.89kB getEnv.ts
+├── 153B _优化.txt
 ├── 77B _start__client.bat
 ├── 23B _file.md
+├── 193B _dest.txt
 ├── 17.6kB README.md
 ├── 5.31kB OAuth
 ├── 1.08kB LICENSE

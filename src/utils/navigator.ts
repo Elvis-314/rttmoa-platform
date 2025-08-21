@@ -1,4 +1,7 @@
 //navigator 拓宽前端视野  https://blog.csdn.net/qq_38974163/article/details/129713507
+
+export class Navigator_Tool {}
+
 /**
  * navigator 9.其他属性/方法
  */

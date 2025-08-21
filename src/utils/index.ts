@@ -438,10 +438,11 @@ export class Method {
 	}
 }
 
-// ?? StorageHandler
-const CookieKey = 'globalCookie';
-class StorageHandler {
+// ! StorageHandler
+export class StorageHandler {
 	[x: string]: any;
+
+	CookieKey = 'globalCookie';
 	constructor() {
 		this.ls = window.localStorage;
 		this.ss = window.sessionStorage;
@@ -483,13 +484,13 @@ class StorageHandler {
 
 	/*-----------------  cookie call  ---------------------*/
 	getCookieToken() {
-		return this.getCookie(CookieKey);
+		return this.getCookie(this.CookieKey);
 	}
 	setCookieToken(token: string) {
-		return this.setCookie(CookieKey, token, 1);
+		return this.setCookie(this.CookieKey, token, 1);
 	}
 	removeCookieToken() {
-		return this.removeCookie(CookieKey);
+		return this.removeCookie(this.CookieKey);
 	}
 
 	/*-----------------  localStorage  ---------------------*/
@@ -550,4 +551,37 @@ class StorageHandler {
 		this.ss.clear();
 	}
 }
-export default StorageHandler;
+
+export const getRandomId = () => {
+	let text = '';
+	const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	for (let i = 0; i < 32; i++) {
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+	}
+	return text;
+};
+
+export const sleep = (time: number | undefined) => new Promise<void>(resolve => setTimeout(() => resolve(), time));
+
+/*
+ ** 判断用户是否离开当前页面
+ */
+export const checkIsLocalPage = () => {
+	document.addEventListener('visibilitychange', () => {
+		if (document.visibilityState === 'hidden') {
+			return false;
+		}
+		if (document.visibilityState === 'visible') {
+			return true;
+		}
+		window.addEventListener(
+			'pagehide',
+			event => {
+				if (event.persisted) {
+					/* the page isn't being discarded, so it can be reused later */
+				}
+			},
+			false
+		);
+	});
+};

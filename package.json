@@ -23,8 +23,8 @@
 	"scripts": {
 		"start": "vite",
 		"serve": "serve -s dist -l 9889",
-		"preview_Dev": "npm run build:dev && vite preview",
-		"preview_Prod": "npm run build:production && vite preview",
+		"preview_dev": "npm run build:dev && vite preview",
+		"preview_prod": "npm run build:production && vite preview",
 		"build": "vite build",
 		"build:dev": "tsc && vite build --mode development",
 		"build:test": "tsc && vite build --mode test",

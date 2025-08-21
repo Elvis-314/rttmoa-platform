@@ -17,6 +17,7 @@ class User extends Basic {
 			const { username, password } = ctx.request.body as any;
 			if (!username) return ctx.sendError(400, '登陆操作：无用户名');
 			if (!password) return ctx.sendError(400, '登陆操作：无密码');
+			console.log('username', username);
 			const findUser = await ctx.mongo.find('__user', { query: { username: username } });
 			if (!findUser.length) {
 				return ctx.sendError(400, '登陆操作：用户名错误');

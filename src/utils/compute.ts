@@ -2,6 +2,9 @@ interface ComputeParams {
 	(a: number, b: number, digits: number, op?: string): number | undefined;
 }
 
+/**
+ * 加法(add)、减法(subtract)、乘法(multiply)、除法(divide)
+ */
 export class Compute {
 	/*** method **
 	 *  add / subtract / multiply / divide

@@ -4,12 +4,10 @@ import { Provider } from 'react-redux';
 import { store, persistor } from '@/redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import 'antd/dist/reset.css';
-import '@/styles/tailwind.css';
+import '@/styles/index.css';
 import '@/styles/index.less';
-import '@/assets/fonts/font.less'; // font
-import '@/assets/iconfont/iconfont.less'; // iconfont
+import '@/assets/iconfont/iconfont.less'; // iconfont 字体图标
 import 'virtual:svg-icons-register'; // svg
-import '@/assets/iconfont-Fonts/iconfontFonts.less';
 
 // #region
 // *
