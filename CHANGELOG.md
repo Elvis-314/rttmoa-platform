@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.67](https://github.com/rttmoa/rttmoa-platform/compare/v2.3.66...v2.3.67) (2025-08-21)
+
+
+### Features
+
+* 🚀 优化job表格、前后台代码 ([d846d65](https://github.com/rttmoa/rttmoa-platform/commit/d846d654448b8fc57048caa501000183f60bbacc))
+
+
+### Bug Fixes
+
+* 🧩 更新字体、修正pagination参数 ([0ba2c40](https://github.com/rttmoa/rttmoa-platform/commit/0ba2c401a11541386f3769768eb37ce057613847))
+* 🧩 删除图片、删除assets下文件 ([27cf6b0](https://github.com/rttmoa/rttmoa-platform/commit/27cf6b06c13cb8886f3f41eda904dacc3ac9baae))
+* 🧩 优化 /api ([da81201](https://github.com/rttmoa/rttmoa-platform/commit/da8120130fa58f80c245727eae7041bda7228036))
+* 🧩 优化文件 ([4125b97](https://github.com/rttmoa/rttmoa-platform/commit/4125b97f4cc04d5482f70b7f3e5357f37f409afa))
+* 🧩 优化table表格 ([ae4efde](https://github.com/rttmoa/rttmoa-platform/commit/ae4efdea8cf3b009e25757f7bd1bd167c67c75c9))
+* 🧩 del service file ([d03637d](https://github.com/rttmoa/rttmoa-platform/commit/d03637d28a9e4875028f6972b9a32df9694eeee8))
+* 🧩 fix ([1b4787f](https://github.com/rttmoa/rttmoa-platform/commit/1b4787f6c05a8fada33e5c3da90dbebe66cfd9ca))
+* 🧩 Optimize the project ([576230d](https://github.com/rttmoa/rttmoa-platform/commit/576230df322ddea19a6868b60bb4ffdb893f4b3e))
+
 ### [2.3.66](https://github.com/rttmoa/rttmoa-platform/compare/v2.3.65...v2.3.66) (2025-08-11)
 
 
