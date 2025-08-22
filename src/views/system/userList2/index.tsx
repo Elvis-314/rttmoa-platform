@@ -3,7 +3,7 @@ import { message, Modal, Form, Pagination } from 'antd';
 import MultiTable from '@/components/Tables';
 import UserFormModal from './components/UserFormModal';
 import { newFormList } from './components/Form_Config';
-import { selectdProps } from '@/components/SelectFilter';
+import { selectdProps } from '@/components/Abandon/SelectFilter';
 import useExportExcle from '@/hooks/useExportExcle';
 import './index.less';
 import { columnConfig } from './components/Table_Column_Config';

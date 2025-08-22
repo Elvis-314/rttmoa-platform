@@ -2,9 +2,9 @@
  * Fetch Hooks
  */
 import { useCallback, useEffect, useState } from 'react';
-import { reqFetch } from '.';
+import { reqFetch } from './fetch';
 
-export const useReqFetch = (url: string, opts: any) => {
+const useReqFetch = (url: string, opts: any) => {
 	const [res, setRes] = useState<any>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<boolean>(false);
@@ -42,13 +42,13 @@ export const useReqFetch = (url: string, opts: any) => {
 };
 
 // GET 请求时，将payload对象解析成地址栏请求参数
-export const useGetFetch = (url: string, opts: any) => useReqFetch(url, { ...opts, method: 'GET' });
+const useGetFetch = (url: string, opts: any) => useReqFetch(url, { ...opts, method: 'GET' });
 
 // POST 请求时，将payload对象解析成请求体body
-export const usePostFetch = (url: string, opts: any) => useReqFetch(url, { ...opts, method: 'POST' });
+const usePostFetch = (url: string, opts: any) => useReqFetch(url, { ...opts, method: 'POST' });
 
-export const usePutFetch = (url: string, opts: any) => useReqFetch(url, { ...opts, method: 'PUT' });
+const usePutFetch = (url: string, opts: any) => useReqFetch(url, { ...opts, method: 'PUT' });
 
-export const useDeleteFetch = (url: string, opts: any) => useReqFetch(url, { ...opts, method: 'DELETE' });
+const useDeleteFetch = (url: string, opts: any) => useReqFetch(url, { ...opts, method: 'DELETE' });
 
-export const usePatchFetch = (url: string, opts: any) => useReqFetch(url, { ...opts, method: 'PATCH' });
+const usePatchFetch = (url: string, opts: any) => useReqFetch(url, { ...opts, method: 'PATCH' });

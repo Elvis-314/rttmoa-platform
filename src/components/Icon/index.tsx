@@ -19,7 +19,7 @@ export const Icon: React.FC<IconProps> = React.memo(({ name, className }) => {
 			return null;
 		}
 	} catch (error) {
-		console.log('Icon组件：error', error);
+		console.log('⚠️ Icon组件 catch error: ', error);
 		return null;
 	}
 });

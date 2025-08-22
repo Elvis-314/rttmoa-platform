@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSet } from 'ahooks';
 
 // 1. Fetch on mount
 // 2. Fetch on the button click
@@ -37,4 +36,3 @@ const useAsyncFetch = (asyncFunction: any, args = [], deps = [], immediate = tru
 	}, []);
 	return { execute, loading, response, error };
 };
-export default useAsyncFetch;

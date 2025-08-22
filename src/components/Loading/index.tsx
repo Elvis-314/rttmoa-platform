@@ -1,23 +1,23 @@
-import { useEffect } from 'react'
-import { Spin } from 'antd'
-import NProgress from '@/config/nprogress'
-import './index.less'
+import { useEffect } from 'react';
+import { Spin } from 'antd';
+import NProgress from '@/config/nprogress';
+import './index.less';
 
 export const Loading = () => {
 	return (
-		<div className="loading-box">
-			<Spin size="large" />
+		<div id='loading' className='loading-box'>
+			<Spin size='large' />
 		</div>
-	)
-}
+	);
+};
 
 export const PageLoader = () => {
 	useEffect(() => {
-		NProgress.start()
+		NProgress.start();
 		return () => {
-			NProgress.done()
-		}
-	}, [])
+			NProgress.done();
+		};
+	}, []);
 
-	return <Loading />
-}
+	return <Loading />;
+};

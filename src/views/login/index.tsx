@@ -1,11 +1,11 @@
 import LoginForm from './components/LoginForm';
 import LoginLogo from './components/LoginLogo';
-import SwitchDark from '@/components/SwitchDark';
 import loginIllustration from '@/assets/images/login_illustration.svg';
 import logo from '@/assets/images/rttmoa-128x128.png';
 import upack2 from '@/assets/images/upack2.png';
 import ReactCanvas from './components/ReactCanvas';
 import './index.less';
+import SwitchDark from './components/SwitchDark';
 
 const Login: React.FC = () => {
 	return (
