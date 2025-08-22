@@ -11,11 +11,11 @@ router.get('/mongo/delete_shelf', Shelf.delete_shelf);
 
 
 // * 功能模块 —— 库存库位报表接口 1880个货位
-router.get('/stock', Shelf.Warehouse_Report); 
+router.get('/storages', Shelf.Storages); 
 
 
 // * 功能模块 —— 仓库货架表 所有数据
-router.get('/stocks', Shelf.WarehouseAllShelf); 
+router.get('/shelfs', Shelf.Shelfs); 
 
 
 export default router;

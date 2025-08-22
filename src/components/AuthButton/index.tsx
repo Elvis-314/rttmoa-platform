@@ -9,7 +9,7 @@ type AuthButtonProps = {
 	children: React.ReactNode;
 };
 
-// 按钮权限
+// 按钮权限： 新增、编辑、删除、导入数据、导出数据
 const AuthButton: React.FC<AuthButtonProps> = ({ authority, children }) => {
 	const authButtonList = useSelector(state => state.auth.authButtonList) ?? [];
 

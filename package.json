@@ -21,6 +21,9 @@
 		"node": ">=12"
 	},
 	"scripts": {
+		"start:server": "cd service && yarn start",
+		"start:client": "cd . && yarn start",
+		"dev": "concurrently \"yarn start:server\" \"yarn start:client\"",
 		"start": "vite",
 		"serve": "serve -s dist -l 9889",
 		"preview_dev": "npm run build:dev && vite preview",
@@ -154,6 +157,7 @@
 		"@vitejs/plugin-legacy": "^5.3.1",
 		"@vitejs/plugin-react": "^4.0.4",
 		"autoprefixer": "^10.4.15",
+		"concurrently": "^9.2.0",
 		"cssnano": "^6.0.5",
 		"cz-git": "^1.7.1",
 		"czg": "^1.7.1",

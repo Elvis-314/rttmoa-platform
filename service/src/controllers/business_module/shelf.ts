@@ -4,7 +4,7 @@ import { config } from "../../config/config";
 
 class Shelf {
 	//* 宁波1880个库位、库存报表
-	static async Warehouse_Report(ctx: Context) {
+	static async Storages(ctx: Context) {
 		try {
 			const data = ctx.request.query
 
@@ -18,7 +18,7 @@ class Shelf {
 	}
 
 	//* 仓库货架表 所有数据
-	static async WarehouseAllShelf(ctx: Context) {
+	static async Shelfs(ctx: Context) {
 		try {
 			// 获取 query 数据、处理数据、
 			const result = await ctx.mongo.find("nb_storage_shelf__c", { query: {}, sort: {} });
