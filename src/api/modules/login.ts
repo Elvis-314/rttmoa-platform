@@ -1,9 +1,9 @@
 import { AuthState } from '@/redux/interface';
 import { PORT1 } from '@/api/config/servicePort';
 import { Params, ReqLogin, ReqPage, ResLogin, ResPage, UserList } from '@/api/interface/index';
+import loginJSON from '@/assets/api/login.json';
 import authMenuList from '@/assets/api/authMenuList.json';
 import authButtonList from '@/assets/api/authButtonList.json';
-import loginJSON from '@/assets/api/login.json';
 import { httpApi, httpUpack } from '..';
 
 export class loginAPI {

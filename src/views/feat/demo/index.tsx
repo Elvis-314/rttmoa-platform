@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Card, Upload } from 'antd';
-import useAsyncFetch from '@/apiFetch/useAsyncFetch';
+import { Card } from 'antd';
 import FileUpload from './components/fileUpload';
 import UserList from './components/userList';
 
