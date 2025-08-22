@@ -44,7 +44,7 @@ const About: React.FC = () => {
 		<>
 			{/* <TestUtil /> */}
 			{/* <TestForm /> */}
-			<Card className='mb10'>
+			<Card className='mb-[10px]'>
 				<Alert
 					message={
 						<span className='text-base text-gray-500'>
@@ -64,7 +64,7 @@ const About: React.FC = () => {
 				</div>
 			</Card>
 
-			<Card className='mb10'>
+			<Card className='mb-[10px]'>
 				<Typography.Title level={4} className='mb15'>
 					项目信息
 				</Typography.Title>
@@ -93,7 +93,7 @@ const About: React.FC = () => {
 				</Descriptions>
 			</Card>
 
-			<Card className='mb10 '>
+			<Card className='mb-[10px] '>
 				<Typography.Title level={4} className='mb15'>
 					生产环境依赖
 				</Typography.Title>

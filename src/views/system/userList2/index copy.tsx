@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { message, Modal, Form, Pagination, Card } from 'antd';
+import { message, Modal, Form, Pagination } from 'antd';
 import MultiTable from '@/components/Tables';
 import UserFormModal from './components/UserFormModal';
 import { newFormList } from './components/Form_Config';
@@ -191,7 +191,7 @@ const UserManage: React.FC = () => {
 	console.log('表单高度: ', formRef.current?.clientHeight);
 	console.log('表格高度：', scrollY);
 	return (
-		<div className='TableCSS  ' ref={containerRef}>
+		<div className='h-full flex flex-col overflow-hidden' ref={containerRef}>
 			<AdvancedSearchForm
 				formRef={formRef}
 				loading={loading}
@@ -206,56 +206,53 @@ const UserManage: React.FC = () => {
 				}}
 				SetIsExpand={SetIsExpand}
 			/>
-			<Card>
-				<div className='h-full flex-1  mt-[12px] px-[24px] rounded-lg bg-white'>
-					<div className='flex justify-between px-[18px] py-[10px]' ref={toolBarRef}>
-						<span className='text-[14px] font-mono'>用户列表</span>
-						<TableHeader {...TableHeaderConfig} />
-					</div>
-					<MultiTable<any> // Table 👈
-						id='cart-scrollTable'
-						size='small' // small | default
-						loading={loading}
-						xScroll
-						scroll={{ x: 'max-content', y: scrollY }} // 550   '100%'
-						// scroll={{ x: 'max-content', y: '100%' }} // 550   '100%'
-						sticky={{ offsetHeader: 0 }}
-						rowSelection='checkbox' // checkbox | radio
-						columns={fakeData ? columnConfig(fakeData, roleObj, handleOperator) : columnConfig()}
-						updateSelectedItem={(selectedRowKeys: any, selectedRows: any, selectedIds: any) => {
-							setSelectRowItem({
-								selectedRowKeys,
-								selectedIds: selectedIds && selectedIds.length > 0 ? selectedIds : [],
-								selectedRows,
-							});
-						}}
-						updatePage={(page, pageSize) => {
-							setPagination((state: Pagination) => ({ ...state, page, pageSize }));
-						}}
-						dataSource={userList}
-						pagination={pagination}
-						selectedRowKeys={selectRowItem.selectedRowKeys}
-						selectedIds={selectRowItem.selectedIds}
-						selectedItem={selectRowItem.selectedItem}
-					/>
+			<div className='h-full flex-1  mt-[12px] px-[24px] rounded-lg bg-white'>
+				<div className='flex justify-between px-[18px] py-[10px]' ref={toolBarRef}>
+					<span className='text-[14px] font-mono'>用户列表</span>
+					<TableHeader {...TableHeaderConfig} />
 				</div>
+				<MultiTable<any> // Table 👈
+					id='cart-scrollTable'
+					size='small' // small | default
+					loading={loading}
+					xScroll
+					scroll={{ x: 'max-content', y: scrollY }} // 550   '100%'
+					sticky={{ offsetHeader: 0 }}
+					rowSelection='checkbox' // checkbox | radio
+					columns={fakeData ? columnConfig(fakeData, roleObj, handleOperator) : columnConfig()}
+					updateSelectedItem={(selectedRowKeys: any, selectedRows: any, selectedIds: any) => {
+						setSelectRowItem({
+							selectedRowKeys,
+							selectedIds: selectedIds && selectedIds.length > 0 ? selectedIds : [],
+							selectedRows,
+						});
+					}}
+					updatePage={(page, pageSize) => {
+						setPagination((state: Pagination) => ({ ...state, page, pageSize }));
+					}}
+					dataSource={userList}
+					pagination={pagination}
+					selectedRowKeys={selectRowItem.selectedRowKeys}
+					selectedIds={selectRowItem.selectedIds}
+					selectedItem={selectRowItem.selectedItem}
+				/>
+			</div>
 
-				<div className='flex justify-end rounded-lg px-[20px] py-[10px] bg-white' ref={paginationRef}>
-					<Pagination
-						size='small'
-						showQuickJumper
-						showSizeChanger
-						onChange={(page: number, pageSize: number) => {
-							setPagination({ ...pagination, page, pageSize });
-						}}
-						current={pagination.page}
-						pageSize={pagination.pageSize}
-						pageSizeOptions={[5, 10, 15, 20, 50, 100, 500, 1000]}
-						total={pagination.totalCount}
-						showTotal={() => `第 ${pagination.page} 页， 共 ${pagination.totalCount} 条`} // 	第 31-40 条 || 总共 27469 条
-					/>
-				</div>
-			</Card>
+			<div className='flex justify-end rounded-lg px-[20px] pb-[12px] bg-white' ref={paginationRef}>
+				<Pagination
+					size='default'
+					showQuickJumper
+					showSizeChanger
+					onChange={(page: number, pageSize: number) => {
+						setPagination({ ...pagination, page, pageSize });
+					}}
+					current={pagination.page}
+					pageSize={pagination.pageSize}
+					pageSizeOptions={[5, 10, 15, 20, 50, 100, 500, 1000]}
+					total={pagination.totalCount}
+					showTotal={() => `第 ${pagination.page} 页， 共 ${pagination.totalCount} 条`} // 	第 31-40 条 || 总共 27469 条
+				/>
+			</div>
 
 			<Modal
 				width={800}

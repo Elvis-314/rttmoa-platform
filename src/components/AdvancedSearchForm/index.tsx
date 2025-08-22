@@ -149,7 +149,7 @@ const AdvancedSearchForm = (Props: FormPropsType) => {
 	};
 	let maxWidth = { maxWidth: 600 };
 	return (
-		<Card id={'AdvancedSearchForm'} size='small' hoverable ref={formRef}>
+		<Card className='AdvancedSearchForm' size='small' hoverable ref={formRef}>
 			<Form size='middle' layout='horizontal' disabled={loading} name={name} form={form} variant='outlined' onFinish={OnFinish} onFinishFailed={OnFailed}>
 				<Row gutter={24}>{FormFields}</Row>
 			</Form>
