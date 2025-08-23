@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Form } from 'antd';
 import { formatDataForProTable } from '@/utils';
 import { ProTable } from '@ant-design/pro-components';
@@ -15,12 +15,11 @@ import FooterComponent from './component/Footer';
 const useProTable = () => {
 	const actionRef = useRef<ActionType>(); // 表格 ref
 	const formRef = useRef<FormInstance>(); // 表单 ref
-
 	const [form] = Form.useForm();
 
 	const [tableName, setTableName] = useState<string>('岗位管理');
 	const [openSearch, SetOpenSearch] = useState<boolean>(false); // 工具栏：开启关闭表单搜索
-	const [loading, SetLoading] = useState<boolean>(false); // Loading：加载Loading
+	const [loading, setLoading] = useState<boolean>(false); // Loading：加载Loading
 	const [pagination, SetPagination] = useState<any>({ page: 1, pageSize: 10, total: 0 }); // 分页数据
 	const [tableData, setTableData] = useState<any[]>([]); // 表格数据
 	const [selectedRows, setSelectedRows] = useState<any[]>([]); // 表格：选择行数据
@@ -32,7 +31,7 @@ const useProTable = () => {
 	// Modal
 	const [modalIsVisible, setModalIsVisible] = useState<boolean>(false);
 	const [modalTitle, setModalTitle] = useState<string>('');
-	const [modalType, setModalType] = useState<string>('');
+	const [modalType, setModalType] = useState<'create' | 'edit' | 'detail'>('create');
 	const [modalUserInfo, setModalUserInfo] = useState({});
 
 	// * 操作 — 员工： 新建、编辑、详情  按钮
@@ -49,7 +48,7 @@ const useProTable = () => {
 		} else if (['edit'].includes(type)) {
 			setModalIsVisible(true);
 			setModalTitle(type === 'edit' ? '编辑用户' : '查看详情');
-			setModalType(type);
+			setModalType('edit');
 			setModalUserInfo(item);
 		}
 	};
@@ -71,7 +70,7 @@ const useProTable = () => {
 					hide();
 					form.resetFields();
 					setModalTitle('');
-					setModalType('');
+					setModalType('create');
 					setModalIsVisible(false);
 					setModalUserInfo({});
 					actionRef?.current?.reload();
@@ -114,21 +113,64 @@ const useProTable = () => {
 	};
 
 	const quickSearch = () => {};
-	const ImportData = async (data: any) => {
-		// console.log('导入表格数据：', data);
-		const hide = message.loading('数据正在导入中');
-		try {
-			let res = await ExJob(data);
-			if (res) {
+	const ImportData = useCallback(
+		async (data: any) => {
+			// console.log('导入表格数据：', data);
+			const hide = message.loading('数据正在导入中');
+			try {
+				await ExJob(data);
 				hide();
 				actionRef?.current?.reload();
 				message.success('导入完成');
+			} catch (error: any) {
+				hide();
+				message.error(error.message || error.msg || '导入失败');
 			}
-		} catch (error: any) {
-			hide();
-			message.error(error.message || error.msg);
-		}
-	};
+		},
+		[ExJob]
+	);
+
+	// * 发请求：当表格参数变化
+	const handleRequest = useCallback(
+		async (params: any, sort: any, filter: any) => {
+			setLoading(true);
+			try {
+				const searchParams = { ...params };
+				delete searchParams.current;
+				delete searchParams.pageSize;
+
+				const mappedSort = Object.fromEntries(Object.entries(sort).map(([field, order]) => [field, order === 'ascend' ? 'asc' : 'desc']));
+
+				const payload = {
+					pagination: {
+						page: params.current,
+						pageSize: params.pageSize,
+					},
+					sort: mappedSort,
+					filter,
+					search: searchParams,
+				};
+
+				const { data }: any = await findJob(payload);
+				SetPagination((prev: any) => ({ ...prev, total: data.total }));
+				return {
+					data: data.list,
+					success: true,
+					total: data.total,
+				};
+			} catch (error) {
+				return {
+					data: [],
+					success: false,
+					total: 0,
+				};
+			} finally {
+				setLoading(false);
+			}
+		},
+		[findJob]
+	);
+
 	// * 工具栏 ToolBar
 	let ToolBarParams: any = {
 		quickSearch, // 工具栏：快捷搜索
@@ -166,34 +208,7 @@ const useProTable = () => {
 					triggerAsc: '点击升序排序',
 					cancelSort: '取消排序',
 				}}
-				request={async (params, sort, filter) => {
-					SetLoading(true);
-					console.log('request请求参数：', params, sort, filter);
-
-					// 搜索条件
-					const searchParams = { ...params };
-					delete searchParams.current;
-					delete searchParams.pageSize;
-					const mappedSort = Object.fromEntries(Object.entries(sort).map(([field, order]) => [field, order === 'ascend' ? 'asc' : 'desc']));
-					// console.log('mappedSort', mappedSort);
-					// 拼装后端需要的参数
-					const payload = {
-						pagination: {
-							page: params.current, // 当前页
-							pageSize: params.pageSize, // 每页条数
-						},
-						sort: mappedSort, // 排序字段
-						filter, // 过滤条件
-						search: searchParams, // 其他搜索条件
-					};
-
-					const { data }: any = await findJob(payload);
-					// console.log('data', data);
-					SetLoading(false);
-					SetPagination({ ...pagination, total: data.total });
-					setTableData(data.list);
-					return formatDataForProTable<any>({ ...data, current: params.current });
-				}}
+				request={handleRequest}
 				pagination={{
 					size: 'default',
 					showQuickJumper: true,
