@@ -1,14 +1,20 @@
 
+√ 01、删除项目多余文件
 
-/dist 包文件大小
+03、更新打包文件
+
+04、查看项目文件大小 - treee -L 3 -I "node_modules" -s -r -F > tree3.txt
+
+05、优化 Table 表格
+
+
 
 /assets/js  |  41.0 MB (43,023,420 字节)    .js / .map
-
+/dist 包文件大小
 50.3 MB (52,768,295 字节)
 50.3 MB (52,768,198 字节)
 49.3 MB (51,707,693 字节) - 删除了两张图片
 44.3 MB (46,455,916 字节) - 删除 iconfont-Fonts
-42.8 MB (44,908,714 字节) - 删除 @components下tsx文件
-42.9 MB (44,996,439 字节)
+42.8 MB (44,908,714 字节) - 删除 @components下tsx文件 
 10.5 MB (11,078,585 字节) - 关闭source map 文件
 9.53 MB (9,996,221 字节) - 删除了video包、react-player包、删除views/feat/video目录
