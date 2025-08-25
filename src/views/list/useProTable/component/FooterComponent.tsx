@@ -2,7 +2,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { FooterToolbar } from '@ant-design/pro-components';
 import { Button, Popconfirm } from 'antd';
 
-const FooterComponent = (Params: any) => {
+const UseProTableFooter = (Params: any) => {
 	const { actionRef, selectedRowsState, setSelectedRows, handleOperator } = Params;
 
 	return (
@@ -23,21 +23,10 @@ const FooterComponent = (Params: any) => {
 				onConfirm={() => {
 					handleOperator('moreDelete', null);
 				}}
-				// onCancel={cancel}
 				okText='确认'
 				cancelText='取消'
 			>
-				<Button
-					key='deleteAll'
-					size='middle'
-					icon={<DeleteOutlined />}
-					danger
-					// onClick={async () => {
-					// 	// await handle.handleRemove(selectedRowsState);
-					// 	setSelectedRows([]);
-					// 	actionRef.current?.reloadAndRest?.();
-					// }}
-				>
+				<Button key='deleteAll' size='middle' icon={<DeleteOutlined />} danger>
 					批量删除
 				</Button>
 			</Popconfirm>
@@ -46,4 +35,4 @@ const FooterComponent = (Params: any) => {
 		</FooterToolbar>
 	);
 };
-export default FooterComponent;
+export default UseProTableFooter;

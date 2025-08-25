@@ -1,11 +1,12 @@
-import echarts, { ECOption } from '@/components/Echarts/config'
+import echarts, { ECOption } from '@/components/Echarts/config';
 
 export const overviewTabs = [
 	{ label: 'Today', key: '1' },
 	{ label: 'Past Month', key: '2' },
 	{ label: 'All Time', key: '3' },
-]
+];
 
+// Product Sale Overview
 export const overviewOptionsFn = (isDark: boolean): ECOption => {
 	return {
 		grid: { top: 30, left: 75, right: 50, bottom: 60 },
@@ -44,5 +45,5 @@ export const overviewOptionsFn = (isDark: boolean): ECOption => {
 				lineStyle: { width: 4, color: '#2fce9e' },
 			},
 		],
-	}
-}
+	};
+};

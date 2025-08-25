@@ -1,12 +1,12 @@
-import React from 'react'
-import { Button, Space, Tag } from 'antd'
-import type { ColumnsType } from 'antd/es/table'
+import React from 'react';
+import { Button, Space, Tag } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 
 interface DataType {
-	key: string
-	name: string
-	address: string
-	tags: string[]
+	key: string;
+	name: string;
+	address: string;
+	tags: string[];
 }
 
 export const columns: ColumnsType<DataType> = [
@@ -30,7 +30,7 @@ export const columns: ColumnsType<DataType> = [
 		render: (_, { tags }) => (
 			<React.Fragment>
 				{tags.map(tag => (
-					<Tag color="processing" key={tag}>
+					<Tag color='processing' key={tag}>
 						{tag}
 					</Tag>
 				))}
@@ -42,17 +42,17 @@ export const columns: ColumnsType<DataType> = [
 		key: 'action',
 		ellipsis: true,
 		render: (_, record) => (
-			<Space size="middle">
-				<Button type="text" size="small">
+			<Space size='large' className='flex justify-between'>
+				<Button type='text' size='small'>
 					Invite {record.name}
 				</Button>
-				<Button type="text" size="small">
+				<Button type='text' size='small'>
 					Delete
 				</Button>
 			</Space>
 		),
 	},
-]
+];
 
 export const data: DataType[] = [
 	{
@@ -97,4 +97,4 @@ export const data: DataType[] = [
 		address: 'London No. 1 Lake Park',
 		tags: ['nice', 'developer'],
 	},
-]
+];

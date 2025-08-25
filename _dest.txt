@@ -8,4 +8,7 @@
 50.3 MB (52,768,198 字节)
 49.3 MB (51,707,693 字节) - 删除了两张图片
 44.3 MB (46,455,916 字节) - 删除 iconfont-Fonts
-42.8 MB (44,908,714 字节) - 删除@components下tsx文件
+42.8 MB (44,908,714 字节) - 删除 @components下tsx文件
+42.9 MB (44,996,439 字节)
+10.5 MB (11,078,585 字节) - 关闭source map 文件
+9.53 MB (9,996,221 字节) - 删除了video包、react-player包、删除views/feat/video目录

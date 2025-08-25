@@ -15,38 +15,38 @@ import {
 	ProFormText,
 	ProFormUploadButton,
 	ProFormUploadDragger,
-} from '@ant-design/pro-components'
-import { Switch } from 'antd'
-import Mock from 'mockjs'
-import { useState } from 'react'
+} from '@ant-design/pro-components';
+import { Switch } from 'antd';
+import { useState } from 'react';
 
 export const waitTime = (time: number = 100) => {
 	return new Promise(resolve => {
 		setTimeout(() => {
-			resolve(true)
-		}, time)
-	})
-}
+			resolve(true);
+		}, time);
+	});
+};
 
 const Demo = () => {
-	const [readonly, setReadonly] = useState(false)
+	const [readonly, setReadonly] = useState(false);
 	return (
 		<div
 			style={{
 				padding: 24,
-			}}>
+			}}
+		>
 			<Switch
 				style={{
 					marginBlockEnd: 16,
 				}}
 				checked={readonly}
-				checkedChildren="Edit"
-				unCheckedChildren="Read Only"
+				checkedChildren='Edit'
+				unCheckedChildren='Read Only'
 				onChange={setReadonly}
 			/>
 			<ProForm
 				readonly={readonly}
-				name="validate_other"
+				name='validate_other'
 				initialValues={{
 					name: 'qixian',
 					password: '1ixian',
@@ -67,57 +67,66 @@ const Demo = () => {
 					segmented2: 'open',
 				}}
 				onValuesChange={(_, values) => {
-					console.log(values)
+					console.log(values);
 				}}
-				onFinish={async value => console.log(value)}>
-				<ProFormGroup title="Text Types">
-					<ProFormText width="md" name="name" label="Name" />
-					<ProFormText.Password width="md" name="password" label="Password" />
+				onFinish={async value => console.log(value)}
+			>
+				<ProFormGroup title='Text Types'>
+					<ProFormText width='md' name='name' label='Name' />
+					<ProFormText.Password width='md' name='password' label='Password' />
 				</ProFormGroup>
 				<ProFormGroup
-					title="Selection Types"
+					title='Selection Types'
 					collapsible
 					style={{
 						gap: '0 32px',
-					}}>
+					}}
+				>
 					<ProFormSelect
-						name="select"
-						label="Select"
+						name='select'
+						label='Select'
 						valueEnum={{
 							china: 'China',
 							usa: 'U.S.A',
 						}}
-						placeholder="Please select a country"
+						placeholder='Please select a country'
 						rules={[{ required: true, message: 'Please select your country!' }]}
 					/>
 					<ProFormSelect
-						name="select2"
-						label="Select with Search"
+						name='select2'
+						label='Select with Search'
 						showSearch
 						debounceTime={300}
 						request={async ({ keyWords }) => {
-							await waitTime(100)
-							console.log(
-								Mock.mock({
-									'data|1-10': [
-										{
-											value: '@id',
-											label: '@name',
-										},
-									],
-								}).data.concat({
-									value: keyWords,
-									label: 'Target',
-								})
-							)
-							return Mock.mock({
-								'data|1-10': [
-									{
-										value: '@id',
-										label: '@name',
-									},
-								],
-							}).data.concat([
+							await waitTime(100);
+
+							let A1 = [
+								{
+									value: '14000019860812646X',
+									label: 'Scott Harris',
+								},
+								{
+									value: '230000200403210387',
+									label: 'Angela Harris',
+								},
+								{
+									value: '450000202208300934',
+									label: 'Michelle Wilson',
+								},
+								{
+									value: '640000200008086386',
+									label: 'Jose Young',
+								},
+								{
+									value: '230000197606086967',
+									label: 'Jeffrey Gonzalez',
+								},
+								{
+									value: '420000198210016452',
+									label: 'Amy Young',
+								},
+							];
+							const RESULT = A1.concat([
 								{
 									value: keyWords,
 									label: 'Target',
@@ -129,14 +138,16 @@ const Demo = () => {
 								{ value: '500000198703236285', label: 'George Jackson' },
 								{ value: '610000199906148074', label: 'Linda Hernandez' },
 								{ value: '150000197210168659', label: 'Sandra Hall' },
-								{ label: 'Target' },
-							])
+								{ value: '1500001972101682359', label: 'Target' },
+							]);
+							// console.log('RESULT', RESULT);
+							return RESULT;
 						}}
-						placeholder="Please select a country"
+						placeholder='Please select a country'
 						rules={[{ required: true, message: 'Please select your country!' }]}
 					/>
 					<ProFormSelect
-						width="md"
+						width='md'
 						fieldProps={{
 							labelInValue: true,
 						}}
@@ -146,12 +157,12 @@ const Demo = () => {
 							{ label: 'Resolved', value: 'closed' },
 							{ label: 'In Progress', value: 'processing' },
 						]}
-						name="useMode"
-						label="Contract Agreed Effective Method"
+						name='useMode'
+						label='Contract Agreed Effective Method'
 					/>
 					<ProFormSelect
-						name="select-multiple"
-						label="Select[multiple]"
+						name='select-multiple'
+						label='Select[multiple]'
 						valueEnum={{
 							red: 'Red',
 							green: 'Green',
@@ -160,7 +171,7 @@ const Demo = () => {
 						fieldProps={{
 							mode: 'multiple',
 						}}
-						placeholder="Please select favorite colors"
+						placeholder='Please select favorite colors'
 						rules={[
 							{
 								required: true,
@@ -170,7 +181,7 @@ const Demo = () => {
 						]}
 					/>
 					<ProFormCascader
-						label="Address"
+						label='Address'
 						request={async () => [
 							{
 								value: 'zhejiang',
@@ -208,12 +219,12 @@ const Demo = () => {
 						fieldProps={{
 							changeOnSelect: true,
 						}}
-						name="area"
+						name='area'
 					/>
 
 					<ProFormRadio.Group
-						name="radio"
-						label="Radio.Group"
+						name='radio'
+						label='Radio.Group'
 						options={[
 							{
 								label: 'item 1',
@@ -230,9 +241,9 @@ const Demo = () => {
 						]}
 					/>
 					<ProFormRadio.Group
-						name="radio-vertical"
-						layout="vertical"
-						label="Radio.Group"
+						name='radio-vertical'
+						layout='vertical'
+						label='Radio.Group'
 						options={[
 							{
 								label: 'item 1',
@@ -249,9 +260,9 @@ const Demo = () => {
 						]}
 					/>
 					<ProFormRadio.Group
-						name="radio-button"
-						label="Radio.Button"
-						radioType="button"
+						name='radio-button'
+						label='Radio.Button'
+						radioType='button'
 						options={[
 							{
 								label: 'item 1',
@@ -267,17 +278,17 @@ const Demo = () => {
 							},
 						]}
 					/>
-					<ProFormCheckbox.Group name="checkbox-group" label="Checkbox.Group" options={['A', 'B', 'C', 'D', 'E', 'F']} />
-					<ProFormColorPicker label="Color Picker" name="color" />
+					<ProFormCheckbox.Group name='checkbox-group' label='Checkbox.Group' options={['A', 'B', 'C', 'D', 'E', 'F']} />
+					<ProFormColorPicker label='Color Picker' name='color' />
 				</ProFormGroup>
-				<ProFormGroup label="Number Types">
-					<ProFormDigitRange label="InputNumberRange" name="input-number-range" separator="-" placeholder={['Min', 'Max']} separatorWidth={60} />
-					<ProFormDigit label="InputNumber" name="input-number" width="sm" min={1} max={10} />
-					<ProFormSwitch name="switch" label="Switch" />
+				<ProFormGroup label='Number Types'>
+					<ProFormDigitRange label='InputNumberRange' name='input-number-range' separator='-' placeholder={['Min', 'Max']} separatorWidth={60} />
+					<ProFormDigit label='InputNumber' name='input-number' width='sm' min={1} max={10} />
+					<ProFormSwitch name='switch' label='Switch' />
 					<ProFormSlider
-						name="slider"
-						label="Slider"
-						width="lg"
+						name='slider'
+						label='Slider'
+						width='lg'
 						marks={{
 							0: 'A',
 							20: 'B',
@@ -287,20 +298,20 @@ const Demo = () => {
 							100: 'F',
 						}}
 					/>
-					<ProFormRate name="rate" label="Rate" />
-					<ProFormUploadButton name="pic" label="Upload" />
-					<ProFormUploadDragger name="drag-pic" label="Drag and Drop Upload" />
+					<ProFormRate name='rate' label='Rate' />
+					<ProFormUploadButton name='pic' label='Upload' />
+					<ProFormUploadDragger name='drag-pic' label='Drag and Drop Upload' />
 					<ProFormSegmented
-						name="segmented"
-						label="Segmented Control"
+						name='segmented'
+						label='Segmented Control'
 						valueEnum={{
 							open: 'Unresolved',
 							closed: 'Resolved',
 						}}
 					/>
 					<ProFormSegmented
-						name="segmented2"
-						label="Segmented Control - Remote Data"
+						name='segmented2'
+						label='Segmented Control - Remote Data'
 						request={async () => [
 							{ label: 'All', value: 'all' },
 							{ label: 'Unresolved', value: 'open' },
@@ -311,7 +322,7 @@ const Demo = () => {
 				</ProFormGroup>
 			</ProForm>
 		</div>
-	)
-}
+	);
+};
 
-export default Demo
+export default Demo;

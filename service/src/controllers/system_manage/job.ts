@@ -1,5 +1,6 @@
 import { Context } from 'koa';
 import Basic from '../basic';
+import _ from 'lodash'
 
 interface JobParams {
 	job_name?: string;
@@ -57,34 +58,7 @@ class Job extends Basic {
 			.join('')
 			.toLowerCase()
 			.replace(/\s+/g, '_');
-	};
-	// 当前：新增和修改都有重复的数据构建逻辑
-	// buildJobData = (data: JobParams, isUpdate = false) => {
-	// 	const baseData = {
-	// 		postCode: this.generatePostCode(data.job_name?.trim() || ''), // 这里应该是动态生成的
-	// 		postName: data.job_name?.trim(),
-	// 		postSort: Number(data.job_sort),
-	// 		status: data.status || '1',
-	// 		flag: false,
-	// 		desc: data.desc?.trim() || '',
-	// 	};
-
-	// 	if (isUpdate) {
-	// 		return {
-	// 			...baseData,
-	// 			updateBy: null as string | null, // 应该从session获取
-	// 			updateTime: new Date(),
-	// 		};
-	// 	}
-
-	// 	return {
-	// 		...baseData,
-	// 		createBy: 'admin', // 应该从session获取
-	// 		createTime: new Date(),
-	// 		updateBy: null as string | null,
-	// 		updateTime: null as string | null,
-	// 	};
-	// };
+	}; 
 
 	// 检查岗位名称是否已存在
 	private checkPostName = async (ctx: Context, postName: string) => {
@@ -152,18 +126,17 @@ class Job extends Basic {
 			if (errInfo.length) return ctx.sendError(400, errInfo[0]);
 
 			// * 先查询岗位名称是否重复
-			const newJob: any = {
-				postCode: this.generatePostCode(data?.job_name),
-				postName: data?.job_name, // 产品经理 | 前端开发 | 会计
-				postSort: +data?.job_sort, // 排序
-				status: data?.status, // 开关：开启/关闭  0：关、1：开
-				flag: false,
-				desc: data?.desc || '',
-
+			const newJob: any = {  
+				postCode:  this.generatePostCode(data?.job_name),
+				postName: _.trim(_.toString(data?.job_name)), // 产品经理 | 前端开发 | 会计
+				postSort: _.toNumber(data.job_sort), // 排序
+				status: _.trim(_.toString(data.status)), // 开关：开启/关闭  
+				desc: _.trim(_.toString(data?.desc)),
+				flag: false, 
 				createBy: 'admin',
-				createTime: new Date(),
+				createTime: new Date(), 
 				updateBy: null,
-				updateTime: null,
+				updateTime: new Date(),
 			};
 			const ins = await ctx.mongo.insertOne('__job', newJob);
 			return ctx.send(`新增 ${data?.job_name} 成功!`);
@@ -189,16 +162,16 @@ class Job extends Basic {
 			if (errInfo.length) return ctx.sendError(400, errInfo[0]);
 
 			// * 先查询岗位名称是否重复
-			const newJob: any = {
-				postCode: this.generatePostCode(data?.job_name),
-				postName: data?.job_name, // 产品经理 | 前端开发 | 会计
-				postSort: +data.job_sort, // 排序
-				status: data?.status, // 开关：开启/关闭  0：关、1：开
-				flag: false,
-				desc: data?.desc || '',
-
-				updateBy: null,
+			const newJob: any = {  
+				postCode:  this.generatePostCode(data?.job_name),
+				postName: _.trim(_.toString(data?.job_name)), // 产品经理 | 前端开发 | 会计
+				postSort: _.toNumber(data.job_sort), // 排序
+				status: _.trim(_.toString(data.status)), // 开关：开启/关闭  
+				desc: _.trim(_.toString(data?.desc)),
+				flag: false, 
+				updateBy: "admin",
 				updateTime: new Date(),
+
 			};
 			const ins = await ctx.mongo.updateOne('__job', id, newJob);
 			return ctx.send(ins);
@@ -247,15 +220,14 @@ class Job extends Basic {
 
 			if (data && data.length) {
 				for (const element of data) {
-					const newJob: any = {
-						postCode: 'ceo',
-						postName: String(element.postName).trim(), // 产品经理 | 前端开发 | 会计
-						postSort: Number(element.postSort), // 排序
-						status: String(element.status).trim(), // 开关：开启/关闭  0：关、1：开
+					const newJob: any = { 
+						postCode: "ceo",
+						postName: _.trim(_.toString(element.postName)), // 产品经理 | 前端开发 | 会计
+						postSort: _.toNumber(element.postSort), // 排序
+						status: _.trim(_.toString(element.status)), // 开关：开启/关闭  
+						desc: _.trim(_.toString(element?.desc)),
 						flag: false,
-						desc: element?.desc || '',
-
-						createBy: 'admin',
+						createBy: "admin",
 						createTime: new Date(),
 						updateBy: null,
 						updateTime: null,

@@ -1,17 +1,17 @@
-import { defineConfig, loadEnv, ConfigEnv, UserConfig } from 'vite'
-import { createVitePlugins } from './build/plugins'
-import { createProxy } from './build/proxy'
-import { wrapperEnv } from './build/getEnv'
-import { resolve } from 'path'
-import pkg from './package.json'
-import dayjs from 'dayjs'
+import { defineConfig, loadEnv, ConfigEnv, UserConfig } from 'vite';
+import { createVitePlugins } from './build/plugins';
+import { createProxy } from './build/proxy';
+import { wrapperEnv } from './build/getEnv';
+import { resolve } from 'path';
+import pkg from './package.json';
+import dayjs from 'dayjs';
 
 // 获取 package 信息
-const { dependencies, devDependencies, name, version } = pkg
+const { dependencies, devDependencies, name, version } = pkg;
 const __APP_INFO__ = {
 	pkg: { dependencies, devDependencies, name, version },
 	lastBuildTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-}
+};
 
 // @see: https://vitejs.dev/config/
 // @see: cdn优化 https://blog.csdn.net/m0_68324632/article/details/126828350
@@ -19,9 +19,9 @@ const __APP_INFO__ = {
 // @see: vite插件 https://zhuanlan.zhihu.com/p/660064289
 // @see: vite优化 https://juejin.cn/post/7263341982408212536
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
-	const root = process.cwd()
-	const env = loadEnv(mode, root) // 读取目录，读取模式。  加载 .env.development 文件
-	const viteEnv = wrapperEnv(env) // 处理 env 文件
+	const root = process.cwd();
+	const env = loadEnv(mode, root); // 读取目录，读取模式。  加载 .env.development 文件
+	const viteEnv = wrapperEnv(env); // 处理 env 文件
 
 	return {
 		base: viteEnv.VITE_PUBLIC_PATH,
@@ -66,13 +66,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 			// 	}
 			// },
 
-			// * 构建后是否生成source map文件 【用于开发环境查看源文件而不是chunk-RC7UN3OL.js文件】
-			// 这个生产环境一定要关闭，不然打包的产物会很大
-			sourcemap: true,
+			// * 构建后是否生成source map文件 -- 用于开发环境查看源文件而不是 index-1a966e9c.js.map 文件, 文件很大、生产环境需要关闭
+			sourcemap: false,
 			// 关闭文件计算
 			reportCompressedSize: false,
-			// 确定触发警告的块大小
-			chunkSizeWarningLimit: 2000,
+			// 确定触发警告的块大小,  默认2000，改成3M
+			chunkSizeWarningLimit: 3000,
 			// 自定义底层的 Rollup 打包配置。
 			rollupOptions: {
 				output: {
@@ -80,12 +79,32 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 					chunkFileNames: 'assets/js/[name]-[hash].js', // 引入文件名的名称
 					entryFileNames: 'assets/js/[name]-[hash].js', // 包的入口文件名称
 					assetFileNames: 'assets/[ext]/[name]-[hash].[ext]', // 资源文件像：字体、图片、mp4、css等
-					// manualChunks(id) {  	// iD 为文件的绝对路径
-					// 	if (id.includes("node_modules")) {
-					// 		console.log("ChunkId;:", id);
-					// 		return id.toString().split("node_modules/")[1].split("/")[0].toString();
-					// 	}
-					// }
+					manualChunks(id) {
+						// 🔹 react 相关
+						if (id.includes('react')) {
+							return 'react';
+						}
+
+						// 🔹 antd 主包
+						if (id.includes('antd') && !id.includes('@ant-design/pro-')) {
+							return 'antd';
+						}
+
+						// 🔹 lodash
+						if (id.includes('lodash')) {
+							return 'lodash';
+						}
+
+						// 🔹 pro 系列（避免循环依赖）
+						if (id.includes('@ant-design/pro-form') || id.includes('@ant-design/pro-utils') || id.includes('@ant-design/pro-table')) {
+							return 'antd-pro';
+						}
+					},
+				},
+
+				onwarn(warning, warn) {
+					if (warning.code === 'CIRCULAR_DEPENDENCY') return;
+					warn(warning);
 				},
 			},
 		},
@@ -94,5 +113,5 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 		preview: {
 			port: 9999,
 		},
-	}
-})
+	};
+});

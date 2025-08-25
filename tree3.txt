@@ -1,37 +1,36 @@
-1.23GB rttmoa-platform/
-├── 546kB yarn.lock
-├── 3.5kB vite.config.ts
+1.21GB rttmoa-platform/
+├── 547kB yarn.lock
+├── 3.95kB vite.config.ts
 ├── 12.2kB tsconfig.json
 ├── 0B tree3.txt
 ├── 2.71kB tree2.txt
 ├── 2.12kB tree.txt
 ├── 8.71kB tre.txt
 ├── 216B tailwind.config.js
-├── 3.5MB stats.html
-├── 6.89MB src/
+├── 3.7MB stats.html
+├── 5.37MB src/
 │   ├── 39B vite-env.d.ts
-│   ├── 3.43MB views/
-│   │   ├── 223kB system/
+│   ├── 3.46MB views/
+│   │   ├── 257kB system/
 │   │   ├── 1.12kB no-layout/
 │   │   ├── 290kB monitor/
 │   │   ├── 233kB module/
 │   │   ├── 1.57kB menu/
-│   │   ├── 15.7kB login/
-│   │   ├── 135kB list/
+│   │   ├── 16.3kB login/
+│   │   ├── 134kB list/
 │   │   ├── 12.5kB home/
-│   │   ├── 103kB form/
+│   │   ├── 96kB form/
 │   │   ├── 25.2kB feat/
-│   │   ├── 763kB dataScreenHouse/
+│   │   ├── 770kB dataScreenHouse/
 │   │   ├── 1.54MB dataScreen/
-│   │   ├── 4.91kB auth/
+│   │   ├── 4.89kB auth/
 │   │   └── 81.5kB assembly/
-│   ├── 50.8kB utils/
-│   │   ├── 8.7kB public.ts
-│   │   ├── 7.08kB navigator.ts
+│   ├── 43.2kB utils/
+│   │   ├── 7.12kB navigator.ts
 │   │   ├── 11.1kB is.ts
-│   │   ├── 16.1kB index.ts
-│   │   ├── 2.09kB dom.ts
-│   │   ├── 3.63kB compute.ts
+│   │   ├── 16.9kB index.ts
+│   │   ├── 2.21kB dom.ts
+│   │   ├── 3.71kB compute.ts
 │   │   └── 2.13kB color.ts
 │   ├── 4.18kB typings/
 │   │   ├── 876B window.d.ts
@@ -39,29 +38,28 @@
 │   │   ├── 1.21kB typings.d.ts
 │   │   ├── 951B global.d.ts
 │   │   └── 658B asset.d.ts
-│   ├── 14.8kB styles/
+│   ├── 12.5kB styles/
 │   │   ├── 261B transition.less
 │   │   ├── 934B themeHook.tsx
-│   │   ├── 7.64kB theme/
-│   │   ├── 185B tailwind.css
-│   │   ├── 1.21kB reset.less
-│   │   ├── 1.74kB proTable.less
-│   │   ├── 922B index.less
-│   │   └── 1.89kB common.less
-│   ├── 10.1kB routers/
+│   │   ├── 2.81kB theme/
+│   │   ├── 1.71kB proTable.less
+│   │   ├── 5.7kB less/
+│   │   ├── 892B index.less
+│   │   └── 185B index.css
+│   ├── 10.3kB routers/
 │   │   ├── 1.33kB modules/
 │   │   ├── 397B interface/
 │   │   ├── 2.5kB index.tsx
-│   │   └── 5.87kB helper/
+│   │   └── 6.05kB helper/
 │   ├── 10.5kB redux/
 │   │   ├── 6.71kB modules/
 │   │   ├── 1.89kB interface/
 │   │   └── 1.87kB index.ts
-│   ├── 844B main.tsx
-│   ├── 101kB layouts/
+│   ├── 811B main.tsx
+│   ├── 100kB layouts/
 │   │   ├── 1.03kB indexAsync.tsx
 │   │   ├── 1.35kB index.tsx
-│   │   ├── 71.1kB components/
+│   │   ├── 70.9kB components/
 │   │   ├── 5.41kB LayoutVertical/
 │   │   ├── 4.55kB LayoutTransverse/
 │   │   ├── 8.66kB LayoutColumns/
@@ -104,62 +102,53 @@
 │   │   └── 636B httpEnum.ts
 │   ├── 1.34kB context/
 │   │   └── 1.34kB Refresh.tsx
-│   ├── 4.14kB config/
-│   │   ├── 3.12kB regular.ts
+│   ├── 4.11kB config/
+│   │   ├── 3.08kB regular.ts
 │   │   ├── 191B proTable.ts
 │   │   ├── 397B nprogress.ts
 │   │   └── 440B index.ts
-│   ├── 102kB components/
-│   │   ├── 1.28kB stateless/
+│   ├── 93.2kB components/
 │   │   ├── 413B components.md
-│   │   ├── 18.4kB Tables/
-│   │   ├── 6.04kB TableReducer/
-│   │   ├── 643B SwitchDark/
-│   │   ├── 748B SvgIconLibrary/
-│   │   ├── 617B SvgIcon/
-│   │   ├── 5.09kB SelectFilter/
-│   │   ├── 3.19kB SearchForm/
+│   │   ├── 17.9kB Tables/
+│   │   ├── 5.91kB TableReducer/
+│   │   ├── 615B SvgIcon/
 │   │   ├── 2.77kB ProTable/
 │   │   ├── 11.1kB Modals/
-│   │   ├── 1.53kB Loading/
-│   │   ├── 424B Lazy/
-│   │   ├── 1.07kB Icon/
-│   │   ├── 7.04kB Grid/
-│   │   ├── 5.22kB Forms/
+│   │   ├── 1.54kB Loading/
+│   │   ├── 412B Lazy/
+│   │   ├── 1.06kB Icon/
+│   │   ├── 10.1kB Grid/
 │   │   ├── 7.68kB Excel/
-│   │   ├── 2.7kB Error/
-│   │   ├── 5.21kB Echarts/
-│   │   ├── 5.93kB Common/
-│   │   ├── 1.04kB AuthButton/
-│   │   └── 14.3kB AdvancedSearchForm/
-│   ├── 3.06MB assets/
+│   │   ├── 2.64kB Error/
+│   │   ├── 5.17kB Echarts/
+│   │   ├── 1.1kB AuthButton/
+│   │   ├── 14.1kB AdvancedSearchForm/
+│   │   └── 10.7kB Abandon/
+│   ├── 1.54MB assets/
 │   │   ├── 123kB json/
 │   │   ├── 943kB images/
 │   │   ├── 406kB icons/
 │   │   ├── 6.62kB iconfont/
-│   │   ├── 1.52MB fonts/
 │   │   ├── 13.7kB documents/
 │   │   └── 49.2kB api/
-│   ├── 12.8kB apiFetch/
-│   │   ├── 1.61kB useFetch.ts
-│   │   ├── 1.04kB useAsyncFetch.ts
-│   │   ├── 681B index.ts
-│   │   ├── 7.91kB fetch.ts
-│   │   └── 1.52kB axios.ts
-│   ├── 30.7kB api/
-│   │   ├── 690B types/
-│   │   ├── 11.5kB modules/
+│   ├── 39kB api/
+│   │   ├── 6.3kB service/
+│   │   ├── 11.4kB modules/
 │   │   ├── 1.13kB interface/
-│   │   ├── 7.29kB index.ts
+│   │   ├── 2.52kB index.ts
 │   │   ├── 3.35kB helper/
-│   │   ├── 5.09kB core/
 │   │   ├── 135B config/
+│   │   ├── 12.5kB apiFetch/
 │   │   └── 1.58kB _optimization_plan.md
 │   └── 3.02kB App.tsx
+
+
+
+
 ├── 113MB service/
 │   ├── 115kB yarn.lock
 │   ├── 6.02kB tsconfig.json
-│   ├── 260kB src/
+│   ├── 259kB src/
 │   │   ├── 9.21kB utils/
 │   │   ├── 1.48kB status.ts
 │   │   ├── 698B schedule/
@@ -169,13 +158,13 @@
 │   │   ├── 44.9kB middlewares/
 │   │   ├── 435B koa.d.ts
 │   │   ├── 23B global.d.ts
-│   │   ├── 135kB controllers/
+│   │   ├── 134kB controllers/
 │   │   ├── 32.1kB config/
 │   │   └── 1.5kB app.ts
 │   ├── 195kB sql/
 │   │   ├── 14kB tanhua 20200630 0858.rar
 │   │   ├── 181kB steedos_nbzy_v2.rar
-│   │   └── 67B Backup.sql
+│   │   └── 133B Backup.sql
 │   ├── 2.12MB public/
 │   │   ├── 638kB upload/
 │   │   ├── 1.82kB swagger.html
@@ -191,7 +180,6 @@
 │   ├── 417kB package-lock.json
 │   ├── 0B errorLog.log
 │   ├── 825B _、desc.txt
-│   ├── 82B _start_server.bat
 │   └── 1.29kB README.md
 ├── 98.7kB public/
 │   ├── 1.5kB vite.svg
@@ -202,17 +190,18 @@
 │   ├── 4.13kB react.svg
 │   └── 1.15kB favicon.ico
 ├── 326B postcss.config.cjs
-├── 6.58kB package.json
+├── 6.74kB package.json
 ├── 347B lint-staged.config.cjs
 ├── 1.82kB index.html
 ├── 1.99kB index.css
 ├── 473B example.http
-├── 46.5MB dist/
-│   ├── 148kB workbox-5ffe50d4.js.map
-│   ├── 15.1kB workbox-5ffe50d4.js
+
+
+
+├── 10.8MB dist/
+│   ├── 15kB workbox-5ffe50d4.js
 │   ├── 1.5kB vite.svg
-│   ├── 40.9kB sw.js.map
-│   ├── 18.9kB sw.js
+│   ├── 15.5kB sw.js
 │   ├── 1.59kB rttmoa.svg
 │   ├── 67.9kB rttmoa-512x512.png
 │   ├── 14.6kB rttmoa-192x192.png
@@ -220,26 +209,26 @@
 │   ├── 136B registerSW.js
 │   ├── 4.13kB react.svg
 │   ├── 362B manifest.webmanifest
-│   ├── 1.43kB index.html
+│   ├── 1.8kB index.html
 │   ├── 1.15kB favicon.ico
-│   └── 46.1MB assets/
-│       ├── 1.53MB ttf/
+│   └── 10.7MB assets/
+│       ├── 5.52kB ttf/
 │       ├── 71.1kB svg/
 │       ├── 1.21MB png/
-│       ├── 43MB js/
+│       ├── 9.13MB js/
 │       ├── 97.9kB gif/
-│       └── 201kB css/
+│       └── 176kB css/
 ├── 6.23kB commitlint.config.cjs
 ├── 9.67kB build.css
 ├── 6.78kB build/
 │   ├── 1.33kB proxy.ts
 │   ├── 3.55kB plugins.ts
 │   └── 1.89kB getEnv.ts
-├── 153B _优化.txt
-├── 77B _start__client.bat
-├── 23B _file.md
-├── 193B _dest.txt
+├── 179B _优化.txt
+├── 426B _dest.txt
 ├── 17.6kB README.md
 ├── 5.31kB OAuth
 ├── 1.08kB LICENSE
-└── 36.1kB CHANGELOG.md
+├── 37.4kB CHANGELOG.md
+├── 2.3MB ! rttmoa-platform.vsdx
+└── 437B ! _start__service.bat

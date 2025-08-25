@@ -1,5 +1,6 @@
-import { ECOption } from '@/components/Echarts/config'
+import { ECOption } from '@/components/Echarts/config';
 
+// * 饼状图配置
 export const pieOptionsFn = (isDark: boolean): ECOption => {
 	return {
 		title: {
@@ -105,5 +106,5 @@ export const pieOptionsFn = (isDark: boolean): ECOption => {
 				],
 			},
 		],
-	}
-}
+	};
+};

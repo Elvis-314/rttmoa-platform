@@ -2,8 +2,9 @@
  * Fetch Hooks
  */
 import { useCallback, useEffect, useState } from 'react';
-import { reqFetch } from './fetch';
+// import { reqFetch } from './fetch';
 
+const reqFetch: any = () => {};
 const useReqFetch = (url: string, opts: any) => {
 	const [res, setRes] = useState<any>(null);
 	const [loading, setLoading] = useState(false);

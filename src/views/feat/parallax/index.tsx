@@ -27,7 +27,7 @@ const Perism = () => {
 								opacity: opacity.to({ range: [0.0, 1.0], output: [0, 1] }),
 							}}
 						>
-							<img src={'https://iknow-pic.cdn.bcebos.com/c9fcc3cec3fdfc035ea5383bc63f8794a5c22650'} alt='第一个背景图片' style={{ height: '80vh' }} />
+							<img src={'@/assets/images/notice01.png'} alt='第一个背景图片' style={{ height: '80vh' }} />
 						</animated.div>
 					) : (
 						<animated.div
@@ -36,7 +36,7 @@ const Perism = () => {
 								opacity: opacity.to({ range: [1.0, 0.0], output: [1, 0] }),
 							}}
 						>
-							<img src={'https://iknow-pic.cdn.bcebos.com/caef76094b36acaf0f64e0616ed98d1000e99ca2'} alt='第二个背景图片' style={{ height: '80vh' }} />
+							<img src={'@/assets/images/notice02.png'} alt='第二个背景图片' style={{ height: '80vh' }} />
 						</animated.div>
 					);
 				})}

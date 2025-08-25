@@ -170,7 +170,7 @@ const handleFetchData = (url: string, options: any) => {
 };
 
 // 请求 Nodejs 接口
-export const reqFetch = (url: string, params = { method: 'GET', payload: null, headers: null, isShowError: true, timeout: 20000, controller: null }) => {
+const reqFetch = (url: string, params = { method: 'GET', payload: null, headers: null, isShowError: true, timeout: 20000, controller: null }) => {
 	console.log('参数：', params);
 	const { method = 'GET', payload = {}, headers = {}, isShowError = true, timeout = 20000, controller = null } = params;
 	const defaultOptions = {
@@ -203,12 +203,12 @@ export const reqFetch = (url: string, params = { method: 'GET', payload: null, h
 	return handleFetchData(fetchURL, defOptions);
 };
 
-export const getFetch = (url: string, params: any) => reqFetch(url, { method: 'GET', ...params });
+// export const getFetch = (url: string, params: any) => reqFetch(url, { method: 'GET', ...params });
 
-export const postFetch = (url: string, params: any) => reqFetch(url, { method: 'POST', ...params });
+// export const postFetch = (url: string, params: any) => reqFetch(url, { method: 'POST', ...params });
 
-export const putFetch = (url: string, params: any) => reqFetch(url, { method: 'PUT', ...params });
+// export const putFetch = (url: string, params: any) => reqFetch(url, { method: 'PUT', ...params });
 
-export const deleteFetch = (url: string, params: any) => reqFetch(url, { method: 'DELETE', ...params });
+// export const deleteFetch = (url: string, params: any) => reqFetch(url, { method: 'DELETE', ...params });
 
-export const patchFetch = (url: string, params: any) => reqFetch(url, { method: 'PATCH', ...params });
+// export const patchFetch = (url: string, params: any) => reqFetch(url, { method: 'PATCH', ...params });

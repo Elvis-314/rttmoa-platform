@@ -1,4 +1,4 @@
-import { AlipayCircleOutlined, LockOutlined, PlusOutlined, TaobaoCircleOutlined, UserOutlined, WeiboCircleOutlined } from '@ant-design/icons'
+import { AlipayCircleOutlined, LockOutlined, PlusOutlined, TaobaoCircleOutlined, UserOutlined, WeiboCircleOutlined } from '@ant-design/icons';
 import {
 	DrawerForm,
 	LightFilter,
@@ -11,9 +11,9 @@ import {
 	ProFormText,
 	QueryFilter,
 	StepsForm,
-} from '@ant-design/pro-components'
-import { Button, Card, Space, message } from 'antd'
-import { useState } from 'react'
+} from '@ant-design/pro-components';
+import { Button, Card, Space, message } from 'antd';
+import { useState } from 'react';
 
 const iconStyles = {
 	marginInlineStart: '16px',
@@ -21,15 +21,15 @@ const iconStyles = {
 	fontSize: '24px',
 	verticalAlign: 'middle',
 	cursor: 'pointer',
-}
+};
 
 const waitTime = (time: number = 100) => {
 	return new Promise(resolve => {
 		setTimeout(() => {
-			resolve(true)
-		}, time)
-	})
-}
+			resolve(true);
+		}, time);
+	});
+};
 
 export default () => {
 	const Components = {
@@ -40,8 +40,8 @@ export default () => {
 		LightFilter,
 		StepsForm,
 		LoginForm,
-	}
-	const [type, setType] = useState<keyof typeof Components>('ProForm')
+	};
+	const [type, setType] = useState<keyof typeof Components>('ProForm');
 
 	if (type === 'StepsForm') {
 		return (
@@ -50,7 +50,7 @@ export default () => {
 					style={{
 						margin: 16,
 					}}
-					radioType="button"
+					radioType='button'
 					fieldProps={{
 						value: type,
 						onChange: e => setType(e.target.value),
@@ -59,21 +59,22 @@ export default () => {
 				/>
 				<StepsForm
 					onFinish={async (values: any) => {
-						await waitTime(2000)
-						console.log(values)
-						message.success('Submission successful')
-					}}>
-					<StepsForm.StepForm title="Step One">
+						await waitTime(2000);
+						console.log(values);
+						message.success('Submission successful');
+					}}
+				>
+					<StepsForm.StepForm title='Step One'>
 						<ProForm.Group>
-							<ProFormText width="md" name="name" label="Contract Customer Name" tooltip="Up to 24 characters" placeholder="Please enter a name" />
-							<ProFormText width="md" name="company" label="Our Company Name" placeholder="Please enter a name" />
+							<ProFormText width='md' name='name' label='Contract Customer Name' tooltip='Up to 24 characters' placeholder='Please enter a name' />
+							<ProFormText width='md' name='company' label='Our Company Name' placeholder='Please enter a name' />
 						</ProForm.Group>
 						<ProForm.Group>
-							<ProFormText name={['contract', 'name']} width="md" label="Contract Name" placeholder="Please enter a name" />
-							<ProFormDateRangePicker width="md" name={['contract', 'createTime']} label="Contract Effective Time" />
+							<ProFormText name={['contract', 'name']} width='md' label='Contract Name' placeholder='Please enter a name' />
+							<ProFormDateRangePicker width='md' name={['contract', 'createTime']} label='Contract Effective Time' />
 						</ProForm.Group>
 					</StepsForm.StepForm>
-					<StepsForm.StepForm title="Step Two">
+					<StepsForm.StepForm title='Step Two'>
 						<ProForm.Group>
 							<ProFormSelect
 								options={[
@@ -83,34 +84,34 @@ export default () => {
 									},
 								]}
 								readonly
-								width="xs"
-								name="useMode"
-								label="Contract Agreed Effective Method"
+								width='xs'
+								name='useMode'
+								label='Contract Agreed Effective Method'
 							/>
 							<ProFormSelect
-								width="xs"
+								width='xs'
 								options={[
 									{
 										value: 'time',
 										label: 'Terminate after performance',
 									},
 								]}
-								name="unusedMode"
-								label="Contract Agreed Invalid Method"
+								name='unusedMode'
+								label='Contract Agreed Invalid Method'
 							/>
 						</ProForm.Group>
 					</StepsForm.StepForm>
-					<StepsForm.StepForm title="Step Three">
-						<ProFormText width="sm" name="id" label="Main Contract Number" />
-						<ProFormText name="project" width="md" disabled label="Project Name" initialValue="xxxx Project" />
-						<ProFormText width="xs" name="mangerName" disabled label="Business Manager" initialValue="Qitu" />
+					<StepsForm.StepForm title='Step Three'>
+						<ProFormText width='sm' name='id' label='Main Contract Number' />
+						<ProFormText name='project' width='md' disabled label='Project Name' initialValue='xxxx Project' />
+						<ProFormText width='xs' name='mangerName' disabled label='Business Manager' initialValue='Qitu' />
 					</StepsForm.StepForm>
 				</StepsForm>
 			</Card>
-		)
+		);
 	}
 
-	const FormComponents = Components[type as 'LoginForm']
+	const FormComponents = Components[type as 'LoginForm'];
 
 	if (type === 'LoginForm') {
 		return (
@@ -119,7 +120,7 @@ export default () => {
 					style={{
 						margin: 16,
 					}}
-					radioType="button"
+					radioType='button'
 					fieldProps={{
 						value: type,
 						onChange: e => setType(e.target.value),
@@ -127,7 +128,7 @@ export default () => {
 					options={['LightFilter', 'ProForm', 'ModalForm', 'DrawerForm', 'QueryFilter', 'StepsForm', 'LoginForm']}
 				/>
 				<FormComponents
-					title="Github"
+					title='Github'
 					subTitle="The world's largest code hosting platform"
 					actions={
 						<Space>
@@ -136,9 +137,10 @@ export default () => {
 							<TaobaoCircleOutlined style={iconStyles} />
 							<WeiboCircleOutlined style={iconStyles} />
 						</Space>
-					}>
+					}
+				>
 					<ProFormText
-						name="username"
+						name='username'
 						fieldProps={{
 							size: 'large',
 							prefix: <UserOutlined className={'prefixIcon'} />,
@@ -152,7 +154,7 @@ export default () => {
 						]}
 					/>
 					<ProFormText.Password
-						name="password"
+						name='password'
 						fieldProps={{
 							size: 'large',
 							prefix: <LockOutlined className={'prefixIcon'} />,
@@ -167,7 +169,7 @@ export default () => {
 					/>
 				</FormComponents>
 			</Card>
-		)
+		);
 	}
 
 	return (
@@ -176,7 +178,7 @@ export default () => {
 				style={{
 					margin: 16,
 				}}
-				radioType="button"
+				radioType='button'
 				fieldProps={{
 					value: type,
 					onChange: e => setType(e.target.value),
@@ -186,32 +188,34 @@ export default () => {
 			<div
 				style={{
 					margin: 24,
-				}}>
+				}}
+			>
 				<FormComponents
 					// @ts-ignore
-					labelWidth="auto"
+					labelWidth='auto'
 					trigger={
-						<Button type="primary">
+						<Button type='primary'>
 							<PlusOutlined />
 							表单 浮层表单
 						</Button>
 					}
 					onFinish={async (values: any) => {
-						await waitTime(2000)
-						console.log(values)
-						message.success('Submission successful')
+						await waitTime(2000);
+						console.log(values);
+						message.success('Submission successful');
 					}}
 					initialValues={{
 						name: '蚂蚁设计有限公司',
 						useMode: 'chapter',
-					}}>
+					}}
+				>
 					<ProForm.Group>
-						<ProFormText width="md" name="name" label="合同客户名称" tooltip="Up to 24 characters" placeholder="Please enter a name" />
-						<ProFormText width="md" name="company" label="我们公司名称" placeholder="Please enter a name" />
+						<ProFormText width='md' name='name' label='合同客户名称' tooltip='Up to 24 characters' placeholder='Please enter a name' />
+						<ProFormText width='md' name='company' label='我们公司名称' placeholder='Please enter a name' />
 					</ProForm.Group>
 					<ProForm.Group>
-						<ProFormText name={['contract', 'name']} width="md" label="合同名称" placeholder="Please enter a name" />
-						<ProFormDateRangePicker width="md" name={['contract', 'createTime']} label="Contract Effective Time" />
+						<ProFormText name={['contract', 'name']} width='md' label='合同名称' placeholder='Please enter a name' />
+						<ProFormDateRangePicker width='md' name={['contract', 'createTime']} label='Contract Effective Time' />
 					</ProForm.Group>
 					<ProForm.Group>
 						<ProFormSelect
@@ -222,27 +226,27 @@ export default () => {
 								},
 							]}
 							readonly
-							width="xs"
-							name="useMode"
-							label="合同约定的生效方法"
+							width='xs'
+							name='useMode'
+							label='合同约定的生效方法'
 						/>
 						<ProFormSelect
-							width="xs"
+							width='xs'
 							options={[
 								{
 									value: 'time',
 									label: '执行后终止',
 								},
 							]}
-							name="unusedMode"
-							label="合同约定的无效方法"
+							name='unusedMode'
+							label='合同约定的无效方法'
 						/>
 					</ProForm.Group>
-					<ProFormText width="sm" name="id" label="主要合同编号" />
-					<ProFormText name="project" width="md" disabled label="项目名称" initialValue="xxxx Project" />
-					<ProFormText width="xs" name="mangerName" disabled label="商业管理" initialValue="奇图" />
+					<ProFormText width='sm' name='id' label='主要合同编号' />
+					<ProFormText name='project' width='md' disabled label='项目名称' initialValue='xxxx Project' />
+					<ProFormText width='xs' name='mangerName' disabled label='商业管理' initialValue='奇图' />
 				</FormComponents>
 			</div>
 		</Card>
-	)
-}
+	);
+};

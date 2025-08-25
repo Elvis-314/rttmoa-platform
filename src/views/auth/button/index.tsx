@@ -6,10 +6,11 @@ import { DeleteOutlined, EditOutlined, PlusCircleOutlined, VerticalAlignBottomOu
 const AuthButtonPage: React.FC = () => {
 	const { BUTTONS } = useAuthButton();
 	// console.log('BUTTONS', BUTTONS);
+
 	return (
 		<Card className='h-full'>
 			<Alert message={`当前用户按钮权限：${JSON.stringify(Object.keys(BUTTONS))}`} type='success' showIcon />
-			<Divider orientation='left' plain className='mt30'>
+			<Divider orientation='left' plain>
 				使用 Hooks 绑定按钮权限 —— useAuthButton函数
 			</Divider>
 			<Space>
