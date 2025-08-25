@@ -9,7 +9,7 @@ import message from "./tanhua/message";
 import Shelf from "./business_module/shelf";
 import User from "./system_manage/user";
 import Menu from "./system_manage/menu";
-import Monitor from "./system_monitor/system_monitor";
+import Monitor from "./system_monitor/monitor";
 import Job from "./system_manage/job";
 import Role from "./system_manage/role";
 import Dept from "./system_manage/dept";

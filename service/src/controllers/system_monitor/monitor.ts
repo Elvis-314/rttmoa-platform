@@ -10,7 +10,7 @@ class ServerMonitor extends Basic {
 
 	// 只查询、无增删改
 	// 获取计算机的信息：系统信息、ip地址、项目运行时间、cpu、内存、交换区、磁盘
-	GetMonitor = async (ctx: Context) => {
+	getMonitor = async (ctx: Context) => {
 		return this.handle(ctx, async () => {
 			const uptime = os.uptime(); // 以秒为单位
 			const totalDays = Math.floor(uptime / (60 * 60 * 24));
