@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.68](https://github.com/rttmoa/rttmoa-platform/compare/v2.3.67...v2.3.68) (2025-08-25)
+
+
+### Features
+
+* 🚀 Optimize project files ([d0ffeb3](https://github.com/rttmoa/rttmoa-platform/commit/d0ffeb35c7bbbadabc8de95ccc14244af1105de3))
+* 🚀 Optimize the project ([466e98a](https://github.com/rttmoa/rttmoa-platform/commit/466e98a1aa6dcde055f53246d3758395ed4442b2))
+* 🚀 Repair code, package file optimization ([526c111](https://github.com/rttmoa/rttmoa-platform/commit/526c1114fd0a826699d855950f8d2a6758af5693))
+* 🚀 Update files ([6282d14](https://github.com/rttmoa/rttmoa-platform/commit/6282d14904e320e2b155baa17f3c40474034a429))
+
+
+### Bug Fixes
+
+* 🧩 Optimize the project ([4c56463](https://github.com/rttmoa/rttmoa-platform/commit/4c56463105798d5732bd6b0acb5ebd65b5b530ef))
+* 🧩 update file content ([0b98ec1](https://github.com/rttmoa/rttmoa-platform/commit/0b98ec17871db90b447603dc2b62cbd5c8c643d0))
+
 ### [2.3.67](https://github.com/rttmoa/rttmoa-platform/compare/v2.3.66...v2.3.67) (2025-08-21)
 
 
