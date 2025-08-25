@@ -5,7 +5,7 @@ import { UserList } from '@/api/interface';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, FormInstance } from '@ant-design/pro-components';
 import { message } from '@/hooks/useMessage';
-import TableColumnsConfig from './component/ColumnConfig';
+import TableColumnsConfig from './component/Column';
 import ToolBarRender from './component/ToolBar';
 import { DelMoreUser, DelUser, GetProTableUser } from '@/api/modules/system';
 import './index.less';

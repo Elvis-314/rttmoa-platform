@@ -1,4 +1,4 @@
-import { ProColumns } from '@ant-design/pro-components';
+import { ProColumns, TableDropdown } from '@ant-design/pro-components';
 import { UserList } from '@/api/interface';
 import { Button, Dropdown, Input, Popconfirm, Switch, Tag } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
@@ -10,27 +10,34 @@ export const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColu
 	const detail = (entity: any) => {
 		modalOperate('detail', entity);
 	};
-	const onChange = (event: any) => {
-		// console.log(event.target.value);
-	};
+
 	return [
+		{
+			dataIndex: 'index',
+			valueType: 'indexBorder',
+			width: 40,
+			fixed: 'left',
+			align: 'center',
+		},
 		{
 			title: '岗位名称',
 			dataIndex: 'postName',
 			copyable: true, // 表格数据可复制？
 			width: 150,
-			fixed: 'left', // 固定？
-			tooltip: '用户的名字',
-			onFilter: false, // 筛选？
+			fixed: 'left',
+			align: 'center',
+			tooltip: '岗位名称',
+			onFilter: false, // 筛选
 			fieldProps: {
 				placeholder: '请输入岗位名称',
 			},
-			// hideInSearch: true, // 搜索 Search
+			// hideInSearch: true, // 在 Search 筛选栏中不展示
 			// hideInTable: true, // 在 Table 中不展示此列
 			// hideInForm: true, // 在 Form 中不展示此列
-			// hideInSetting: true, // 在 Setting 中
-			// hideInDescriptions: true, // 详情中
-			ellipsis: true,
+			// hideInSetting: true, // 在 Setting 中不展示
+			// hideInDescriptions: true, // 在 Drawer 查看详情中不展示
+			ellipsis: true, // 省略
+			// tooltip: 'The title will shrink automatically if it is too long', // 省略提示
 			sorter: true, // 排序
 			// readonly: true,
 			render: (dom, entity) => {
@@ -41,20 +48,18 @@ export const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColu
 				);
 			},
 			// 自定义筛选项功能具体实现请参考 https://ant.design/components/table-cn/#components-table-demo-custom-filter-panel
-			filterDropdown: () => (
-				<div style={{ padding: 4 }}>
-					<Input style={{ width: 150, marginBlockEnd: 8, display: 'block', fontSize: '14px' }} placeholder='请输入' onChange={onChange} />
-				</div>
-			),
-			filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-			// fieldProps: (form, config) => {
-			// 	console.log('form, config', form, config);
-			// }, // 查询表单的 props，会透传给表单项，
+			// filterDropdown: () => (
+			// 	<div style={{ padding: 4 }}>
+			// 		<Input style={{ width: 150, marginBlockEnd: 8, display: 'block', fontSize: '14px' }} placeholder='请输入岗位名称' onChange={onChange} />
+			// 	</div>
+			// ),
+			// filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
 		},
 		{
 			title: '岗位排序',
 			dataIndex: 'postSort',
-			// width: 150,
+			align: 'center',
+			width: 120,
 			filters: true,
 			onFilter: true,
 			sorter: true,
@@ -65,6 +70,7 @@ export const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColu
 		{
 			title: '岗位状态',
 			dataIndex: 'status',
+			align: 'center',
 			sorter: true,
 			tooltip: '指代用户的年纪大小',
 			// filters: [
@@ -80,20 +86,36 @@ export const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColu
 			},
 		},
 		{
+			title: '运行状态',
+			dataIndex: 'status',
+			align: 'center',
+			fieldProps: {
+				placeholder: '请输入岗位状态',
+			},
+			valueEnum: {
+				all: { text: '全部', status: 'Default' },
+				close: { text: '关闭', status: 'Default' },
+				1: { text: '运行中', status: 'Processing' },
+				启用: { text: '已上线', status: 'Success' },
+				停用: { text: '异常', status: 'Error' },
+			},
+		},
+		{
 			title: '创建日期',
 			dataIndex: 'createTime',
-			hideInForm: true, // * hideInForm 在Form中不展示此列, 不可搜索
-			filters: true,
-			onFilter: true,
-			hideInSearch: true,
-			render: (dom: any, entity) => {
-				const time = dayjs(dom).format('YYYY-MM-DD HH:mm:ss');
-				return <span>{time}</span>;
+			valueType: 'dateRange',
+			align: 'center',
+			fieldProps: {
+				placeholder: '选择日期',
+			},
+			render: (_, record) => {
+				return <span>{dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss')}</span>;
 			},
 		},
 		{
 			title: '操作',
 			key: 'option',
+			align: 'center',
 			fixed: 'right',
 			width: 50,
 			hideInSearch: true,
@@ -101,7 +123,24 @@ export const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColu
 		},
 	];
 };
-
+const action2: any = () => {
+	return [
+		<TableDropdown
+			key='actionGroup'
+			onSelect={() => {}}
+			menus={[
+				{ key: 'copy', name: '查看' },
+				{ key: 'copy', name: '编辑' },
+				{ key: 'delete', name: '删除' },
+			]}
+			children={
+				<div className='more-button-item'>
+					<IconFont style={{ fontSize: 22 }} type='icon-xiala' />
+				</div>
+			}
+		/>,
+	];
+};
 const action = (entity: any, modalOperate: any, modalResult: any) => {
 	const OnView = () => {
 		modalOperate('detail', entity);

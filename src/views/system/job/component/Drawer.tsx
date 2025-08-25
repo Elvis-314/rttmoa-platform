@@ -1,7 +1,7 @@
 import { UserList } from '@/api/interface';
 import { ProDescriptions, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { Drawer } from 'antd';
-import TableColumnsConfig from './ColumnConfig';
+import TableColumnsConfig from './Column';
 
 type DrawerComponentProps = {
 	drawerIsVisible: boolean;

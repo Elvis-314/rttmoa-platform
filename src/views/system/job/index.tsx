@@ -1,10 +1,9 @@
 import { useCallback, useRef, useState } from 'react';
 import { Form } from 'antd';
-import { formatDataForProTable } from '@/utils';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, FormInstance } from '@ant-design/pro-components';
 import { message } from '@/hooks/useMessage';
-import TableColumnsConfig from './component/ColumnConfig';
+import TableColumnsConfig from './component/Column';
 import ToolBarRender from './component/ToolBar';
 import { addJob, delJob, delMoreJob, ExJob, findJob, modifyJob } from '@/api/modules/system';
 import './index.less';
@@ -191,16 +190,15 @@ const useProTable = () => {
 				scroll={{ x: allWidth, y: '100vh' }} // 100vh
 				bordered
 				cardBordered
-				dateFormatter='string'
+				dateFormatter='number' // string | number | 自定义format格式
 				headerTitle={tableName}
 				defaultSize='small'
 				loading={loading}
-				// params={{}}
 				columns={TableColumnsConfig(modalOperate, modalResult)}
 				toolBarRender={() => ToolBarRender(ToolBarParams)} // 渲染工具栏
 				actionRef={actionRef} // Table action 的引用，便于自定义触发 actionRef.current.reset()
 				formRef={formRef} // 可以获取到查询表单的 form 实例
-				search={openSearch ? false : { labelWidth: 'auto', filterType: 'query', span: 6, resetText: '重置', searchText: '查询' }} // 搜索表单配置
+				search={openSearch ? false : { labelWidth: 'auto', filterType: 'query', span: 6, resetText: '重置', searchText: '查询', showHiddenNum: true }} // 搜索表单配置
 				locale={{
 					// 搜索框 placeholder
 					emptyText: '暂无数据',

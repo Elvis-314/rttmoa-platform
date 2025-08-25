@@ -113,6 +113,8 @@ class Job extends Basic {
 			return ctx.sendError(500, err.message);
 		}
 	};
+
+
 	// * 新增岗位
 	addJob = async (ctx: Context) => {
 		try {
@@ -139,7 +141,7 @@ class Job extends Basic {
 				updateTime: new Date(),
 			};
 			const ins = await ctx.mongo.insertOne('__job', newJob);
-			return ctx.send(`新增 ${data?.job_name} 成功!`);
+			return ctx.send(`新增数据成功!`);
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}
@@ -153,7 +155,6 @@ class Job extends Basic {
 			console.log('修改岗位参数：', data);
 			if (!id) return ctx.sendError(400, `修改岗位操作：无iD`);
 
-			
 			const check = await this.checkPostName(ctx, data?.job_name);
 			if (check) return ctx.sendError(400, '已存在岗位名称');
 

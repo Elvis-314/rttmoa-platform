@@ -418,20 +418,7 @@ export const InitMenuConfig = {
 						"isFull": false,
 						"isAffix": false
 					}
-				},
-				{
-					"path": "/feat/video",
-					"element": "/feat/video/index",
-					"meta": {
-						"key": "video",
-						"icon": "AppstoreOutlined",
-						"title": "Video",
-						"isLink": "",
-						"isHide": false,
-						"isFull": false,
-						"isAffix": false
-					}
-				},
+				}, 
 				{
 					"path": "/feat/three",
 					"element": "/feat/three/index",

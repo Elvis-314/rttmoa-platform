@@ -2,11 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { message, Modal, Form, Pagination, Card } from 'antd';
 import MultiTable from '@/components/Tables';
 import UserFormModal from './components/UserFormModal';
-import { newFormList } from './components/Form_Config';
+import { newFormList } from './components/FormConfig';
 import { selectdProps } from '@/components/Abandon/SelectFilter';
-import useExportExcle from '@/hooks/useExportExcle';
 import './index.less';
-import { columnConfig } from './components/Table_Column_Config';
+import { columnConfig } from './components/ColumnConfig';
 import TableHeader from './components/TableHeader';
 import AdvancedSearchForm from '@/components/AdvancedSearchForm';
 import { DelMoreUser, DelUser, GetUserManagerList } from '@/api/modules/system';
@@ -37,7 +36,6 @@ interface Pagination {
 // 完成： 表格和表头的 高度
 // * 列配置
 const UserManage: React.FC = () => {
-	const { handleExportAll } = useExportExcle();
 	const [form] = Form.useForm();
 	const [multiForm] = Form.useForm();
 
@@ -177,6 +175,7 @@ const UserManage: React.FC = () => {
 		interest: '爱好',
 		isMarried: '婚姻状态',
 	};
+	const handleExportAll: any = () => {};
 	// 表头属性
 	let TableHeaderConfig = {
 		selectRowItem,
@@ -191,7 +190,7 @@ const UserManage: React.FC = () => {
 	console.log('表单高度: ', formRef.current?.clientHeight);
 	console.log('表格高度：', scrollY);
 	return (
-		<div className='TableCSS  ' ref={containerRef}>
+		<div className='TableCSS' ref={containerRef}>
 			<AdvancedSearchForm
 				formRef={formRef}
 				loading={loading}

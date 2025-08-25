@@ -8,5 +8,5 @@ export const jobTableConfig = {
 		deleteMany: '/api/job/deleteMany',
 		import: '/api/job/import',
 	},
-	columns: () => import('../job/component/ColumnConfig').then(m => m.default),
+	columns: () => import('../job/component/Column').then(m => m.default),
 };

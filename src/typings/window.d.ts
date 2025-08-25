@@ -19,9 +19,9 @@ declare global {
 			open(options?: { signal: AbortSignal }): Promise<{ sRGBHex: string }>;
 		};
 	}
-	// 在项目中直接引用、不用import导入
-	const AButton: (typeof import('antd'))['Button'];
-	const Error500: typeof import('../components/Error/500');
+	// * 在项目中直接引用、不用import导入
+	// const AButton: (typeof import('antd'))['Button'];
+	// const Error500: typeof import('../components/Error/500');
 }
 
 export {};

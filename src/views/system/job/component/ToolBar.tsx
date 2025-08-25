@@ -4,7 +4,7 @@ import Search from 'antd/lib/input/Search'; // ! antd/lib/input
 import { useDispatch } from '@/redux';
 import { setGlobalState } from '@/redux/modules/global';
 import Excel from '@/components/Excel';
-import TableColumnsConfig from './ColumnConfig';
+import TableColumnsConfig from './Column';
 
 type ToolBarProps = {
 	quickSearch: () => void;
