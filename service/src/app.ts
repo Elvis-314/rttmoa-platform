@@ -13,15 +13,15 @@ import './schedule';   // # 定时任务
 
 const app = new koa();
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
+_security(app); //* 安全头
+_public(app); //* 静态资源
 app.use(json()); // json中间件
 app.use(bodyparser()); // body参数解析中间价
-app.use(sendHandle()); // 响应中间件
+app.use(sendHandle()); // * 响应中间件
 app.use(dbHandle()); // 数据库处理中间件
 app.use(_middleware); //* 在ctx也可以不用挂载、可以用es6 class的继承方式 this.mongoService
 app.use(_logger(winston)); //* 请求日志
 _crossDomain.INIT(app); //* 跨域
-_public(app); //* 静态资源
-_security(app); //* 安全头
 
 app.use(errorHandle); // 异常中间件
 unprotect(app); // & Router

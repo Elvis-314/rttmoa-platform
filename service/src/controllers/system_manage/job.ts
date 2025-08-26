@@ -71,7 +71,7 @@ class Job extends Basic {
 	findJob = async (ctx: Context) => {
 		try {
 			const data: any = ctx.request.body;
-			console.log('查询参数：', data);
+			// console.log('查询参数：', data);
 
 			const { postName, postSort, status } = data?.search || {};
 			const query: Record<string, any> = {};
@@ -84,7 +84,7 @@ class Job extends Basic {
 					query.postSort = sortNum;
 				}
 			}
-
+			throw new Error("故意报错 error")
 			if (status?.trim()) {
 				query.status = new RegExp(status.trim());
 			}
