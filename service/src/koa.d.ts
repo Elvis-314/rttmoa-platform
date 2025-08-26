@@ -1,6 +1,8 @@
 import { MongoService } from "./middlewares/mongo/mongoService";
 import type { MongoType } from "./middlewares/mongo/mongoService";
 
+
+
 declare module "koa" {
 	interface Context {
 		mongo: MongoType; // ctx.MongoService.find()

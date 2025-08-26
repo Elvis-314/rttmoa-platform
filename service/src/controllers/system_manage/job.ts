@@ -70,6 +70,8 @@ class Job extends Basic {
 	// * 查询岗位
 	findJob = async (ctx: Context) => {
 		try {
+			// console.log('job 获取 username：', ctx.state.user);
+			
 			const data: any = ctx.request.body;
 			// console.log('查询参数：', data);
 

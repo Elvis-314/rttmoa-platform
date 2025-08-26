@@ -18,25 +18,22 @@ import { config } from "../config/config";
  
 
 
-
-
 export const unprotect = (app: any) => {
 	router.use("/restApi", restApi.routes()); // RESTful 格式的 API
 	router.use("/shelf", Shelf.routes());
 	router.use("/menu", Menu.routes());
 	router.use("/userp", User.routes());
 	router.use("/monitor", Monitor.routes());
-	router.use("/jb", Job.routes()); // * 岗位模板
  	router.use("/role", Role.routes());
 	app.use(router.routes()).use(router.allowedMethods());
 };
 
-const jwtMiddleware = koajwt({ secret: config.jwtkey }).unless({
-	path: ['/user/login', '/userp/login', '/user/loginVerification', '/swagger.html'] as any,
-});
+
 // 不保护的路由需要放在 koajwt 前面
 export const protect = (app: any) => {
-
+const jwtMiddleware: any = koajwt({ secret: config.jwtkey }).unless({
+	path: ['/user/login', '/userp/login', '/user/loginVerification', '/swagger.html'] as any,
+});
 	router.use(jwtMiddleware)
 
 
@@ -46,7 +43,8 @@ export const protect = (app: any) => {
 	router.use("/message", message.routes());
 	router.use("/my", my.routes());
 	
-	router.use("/dept", Dept.routes());
+	router.use("/dept", Dept.routes()); // 部门
+	router.use("/jb", Job.routes()); // * 岗位模板
 	
 
 

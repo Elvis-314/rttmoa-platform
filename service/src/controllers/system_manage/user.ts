@@ -39,8 +39,9 @@ class User extends Basic {
 						name: username,
 					},
 					config.jwtkey,
-					{ expiresIn: '1h' } // 有效期365天
+					{ expiresIn: '365d' } // 有效期365天 | 1h
 				);
+				console.log('token', token);
 				const up = await ctx.mongo.updateOne('__user', findUser[0]._id, { token });
 
 				return ctx.send({ list: findUser, token  });

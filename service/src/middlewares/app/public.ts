@@ -1,9 +1,8 @@
-import { Request, Response } from "koa";
 import serve from "koa-static";
 
-// * 静态服务器中间件
-export default (app: any): any => {
-	app.use(
+// * 静态服务器中间件 
+const _Public = (): any => { 
+	return async (ctx: any, next: () => Promise<any>): Promise<void> => {
 		serve("./public", {
 			setHeaders: (res, path, stats) => {
 				let extname = require("path").extname(path);
@@ -21,5 +20,8 @@ export default (app: any): any => {
 				}
 			},
 		})
-	);
+		await next();
+	};
 };
+
+export default _Public

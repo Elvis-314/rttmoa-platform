@@ -8,10 +8,16 @@ import { mongoService } from "./mongo/mongoService";
 // ✅ 2	确保 app.use(dbMongoService) 被调用
 // ✅ 3	使用 TypeScript 类型声明扩展 Koa.Context
 // ✅ 4	控制器中即可使用 ctx.mongoService，IDE 自动提示
-export default async (ctx: any, next: () => Promise<any>): Promise<any> => {
-	// ctx.cookies.get("unique_info")
 
-	ctx.mongo = mongoService; 
-	console.log('中间件 ctx 挂载 mongoService')
-	await next();
+const _Middleware = (): any => {
+	return async (ctx: any, next: () => Promise<any>): Promise<void> => {
+
+		// ctx.cookies.get("unique_info")
+
+		// * 挂载 ctx  ||  可以用es6 class的继承方式 this.mongoService 
+		ctx.mongo = mongoService;
+		console.log('中间件 ctx 挂载 mongoService')
+		await next();
+	};
 };
+export default _Middleware 

@@ -2,6 +2,8 @@ import { Context } from "koa";
 import { transports, format } from "winston";
 import * as path from "path";
 import { config } from '../config/config';
+import { getBrowser, getIpLocation } from "../utils";
+import { mongoService } from "./mongo/mongoService";
 
 //* 将日志写入到文本中
 //* 记录器中间件(在路由之前) ->  status >= 500 || status >= 400 || status >= 200
@@ -40,13 +42,31 @@ const logger = (winstonInstance: any): any => {
 		}
 
 		ctx.set("X-Response-Time", `${ms}ms`)
-		// console.log('middlewares/logger/ctx.message', ctx.message);
-		// console.log('middlewares/logger/ctx.body', ctx.body); 
+		
+		
+
+		// ctx.ip 可能是 "::ffff:127.0.0.1" → 记得处理
+		const ip = (ctx.get("X-Forwarded-For") || ctx.ip).replace('::ffff:', '');
+		const location = await getIpLocation(ip); // 吉林： 111.26.3.255
+
+		const brow = getBrowser(ctx.get("User-Agent"));
+		let requestInfo = {
+			name: ctx?.state?.user?.name || "",
+			ip: ctx.ip, // 真实 IP
+			ip_source: ctx.get("X-Forwarded-For") || ctx.get("x-real-ip") ||  ctx.ip,
+			desc:  ctx.originalUrl,
+			browser:  `${brow.browser} ${brow.version}`,
+			req_time: `${ms}ms`,
+			req_method: ctx.method,
+			req_status: ctx.status,  
+			req_url: ctx.originalUrl,
+			created: new Date(),
+		}
+		// 缺少请求参数、GET、POST
+		const result = await mongoService.insertOne("__operate", requestInfo)
 
 		const msg = `${ctx.method} - ${ctx.originalUrl} - ${ctx.status} - ${ms}ms`;
 		winstonInstance.log(logLevel, msg);
 	};
 };
-
-// export { logger };
 export default logger
