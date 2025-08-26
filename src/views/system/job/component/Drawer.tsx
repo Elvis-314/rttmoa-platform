@@ -8,7 +8,7 @@ type DrawerComponentProps = {
 	drawerCurrentRow: any;
 	setDrawerCurrentRow: React.Dispatch<React.SetStateAction<any | null>>;
 	setDrawerIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-	modalOperate: (type: string, item: any) => void;
+	modalOperate: any;
 	modalResult: any;
 };
 const DrawerComponent: React.FC<DrawerComponentProps> = Params => {

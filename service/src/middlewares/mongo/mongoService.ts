@@ -85,7 +85,6 @@ class MongoService {
 }
 	// & find
 	async find(table: string, options: { query?: any; page?: number; pageSize?: number; sort?: any }): Promise<{ success: boolean; data?: any[]; message?: string }> {
-		console.log("options", typeof options);
 		if (options !== undefined && (typeof options !== "object" || options === null || Array.isArray(options))) {
 			return { success: false, message: "查询参数必须是对象" };
 		}

@@ -86,7 +86,8 @@ class Job extends Basic {
 					query.postSort = sortNum;
 				}
 			}
-			throw new Error("故意报错 error")
+			// throw new Error("查询岗位：报错 error")
+
 			if (status?.trim()) {
 				query.status = new RegExp(status.trim());
 			}

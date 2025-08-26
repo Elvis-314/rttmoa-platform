@@ -16,7 +16,7 @@ const _Middleware = (): any => {
 
 		// * 挂载 ctx  ||  可以用es6 class的继承方式 this.mongoService 
 		ctx.mongo = mongoService;
-		console.log('中间件 ctx 挂载 mongoService')
+		
 		await next();
 	};
 };
