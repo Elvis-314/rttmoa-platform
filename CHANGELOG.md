@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.2](https://github.com/rttmoa/rttmoa-platform/compare/v2.4.1...v2.4.2) (2025-08-26)
+
+
+### Features
+
+* 🚀 优化代码 ([300ddaf](https://github.com/rttmoa/rttmoa-platform/commit/300ddafd6820678a20647b58e9272bb503f03874))
+* 🚀 Delete excess files for the project ([38b5236](https://github.com/rttmoa/rttmoa-platform/commit/38b5236916879930a28831071974814033b66c06))
+* 🚀 Refactor job management view and remove legacy code ([5bde7ea](https://github.com/rttmoa/rttmoa-platform/commit/5bde7eac23ae8d292fb5e155a23b632553be65ba))
+* 🚀 Reorganized middleware files for clarity, converting app-level middlewares ([26146a1](https://github.com/rttmoa/rttmoa-platform/commit/26146a13ab1f745c9eb0b454a7045a6c0813e340))
+* 🚀 Repair project function ([e24f1e3](https://github.com/rttmoa/rttmoa-platform/commit/e24f1e38537737a0ba552b8c5de1aea7e9d6db20))
+
+
+### Bug Fixes
+
+* 🧩 [error] [vite-plugin-pwa:build] Could not resolve "../src/main.tsx" from "index.html" ([b2e3d9a](https://github.com/rttmoa/rttmoa-platform/commit/b2e3d9a38b5a6be1c26a5fcc518408537eb46d33))
+
 ### [2.4.1](https://github.com/rttmoa/rttmoa-platform/compare/v2.4.0...v2.4.1) (2025-08-25)
 
 
