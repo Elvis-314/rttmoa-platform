@@ -25,10 +25,7 @@ export const DelMoreUser = (ids: string[]) => httpUpack.post(`/userp/delMoreUser
 export const DelMoreProTableUser = (ids: Params) => httpUpack.post('/userp/delMoreUsers', { data: ids });
 
 // * 系统管理 — 岗位管理
-export const findJob = (params: Params) => {
-	console.log('参数 params：', params);
-	return httpUpack.post(`/jb/job`, params);
-};
+export const findJob = (params: Params) => httpUpack.post(`/jb/job`, params);
 export const addJob = (params: Params) => httpUpack.post(`/jb/jobAdd`, params);
 export const delJob = (id: string) => httpUpack.delete(`/jb/job/${id}`);
 export const delMoreJob = (data: string[]) => httpUpack.post(`/jb/jobDel`, data);

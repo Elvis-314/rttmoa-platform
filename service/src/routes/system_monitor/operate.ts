@@ -4,7 +4,8 @@ const router = new Router();
 
  
 // 请求日志
-router.get('/operate', Operate.findOperate);  
+router.post('/operate', Operate.findOperate);  
+
+
 
 export default router;
-

@@ -15,6 +15,8 @@ import Role from "./system_manage/role";
 import Dept from "./system_manage/dept";
 import restApi from './system_manage/restApi'
 import { config } from "../config/config";
+import Operate from './system_monitor/operate'
+import ErrorLog from './system_monitor/errorLog'
 
 
 
@@ -23,8 +25,11 @@ export const unprotect = (app: any) => {
 	router.use("/shelf", Shelf.routes());
 	router.use("/menu", Menu.routes());
 	router.use("/userp", User.routes());
-	router.use("/monitor", Monitor.routes());
 	router.use("/role", Role.routes());
+
+	router.use("/error", ErrorLog.routes());
+	router.use("/monitor", Monitor.routes());
+	router.use("/operate", Operate.routes()); // * 操作日志
 	app.use(router.routes()).use(router.allowedMethods());
 };
 

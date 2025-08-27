@@ -4,7 +4,7 @@ const router = new Router();
 
  
 // 异常日志
-router.get('/errorLog', ErrorLog.findError);  
+router.post('/errorLog', ErrorLog.findError);  
 
 export default router;
 

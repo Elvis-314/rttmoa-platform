@@ -19,16 +19,16 @@ export const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColu
 			align: 'center',
 		},
 		{
-			title: '岗位名称',
-			dataIndex: 'postName',
+			title: '用户名',
+			dataIndex: 'name',
 			copyable: true, // 表格数据可复制？
 			width: 150,
 			fixed: 'left',
 			align: 'center',
-			tooltip: '岗位名称',
+			tooltip: '用户名',
 			onFilter: false, // 筛选
 			fieldProps: {
-				placeholder: '请输入岗位名称',
+				placeholder: '请输入用户名',
 			},
 			// hideInSearch: true, // 在 Search 筛选栏中不展示
 			// hideInTable: true, // 在 Table 中不展示此列
@@ -55,55 +55,72 @@ export const TableColumnsConfig = (modalOperate: any, modalResult: any): ProColu
 			// filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
 		},
 		{
-			title: '岗位排序',
-			dataIndex: 'postSort',
+			title: 'IP',
+			dataIndex: 'ip',
 			align: 'center',
 			width: 120,
 			filters: true,
 			onFilter: true,
 			sorter: true,
 			fieldProps: {
-				placeholder: '请输入岗位排序',
+				placeholder: '请输入ip',
 			},
 		},
 		{
-			title: '岗位状态',
-			dataIndex: 'status',
+			title: 'IP来源',
+			dataIndex: 'ip_source',
 			align: 'center',
+			width: 120,
+			filters: true,
+			onFilter: true,
 			sorter: true,
-			tooltip: '指代用户的年纪大小',
-			// filters: [
-			// 	{ text: '启用', value: '启用' },
-			// 	{ text: '停用', value: '停用' },
-			// ],
 			fieldProps: {
-				placeholder: '请输入岗位状态',
+				placeholder: '请输入ip',
 			},
-			render: (dom, entity) => {
-				if (dom == '启用') return <Tag color='blue'>启用</Tag>;
-				if (dom == '停用') return <Tag color='red'>停用</Tag>;
+		},
+
+		{
+			title: '浏览器',
+			dataIndex: 'browser',
+			align: 'center',
+			width: 150,
+			filters: true,
+			onFilter: true,
+			sorter: true,
+			fieldProps: {
+				placeholder: '请输入ip',
 			},
 		},
 		{
-			title: '运行状态',
-			dataIndex: 'status',
+			title: '请求地址',
+			dataIndex: 'desc',
 			align: 'center',
+			width: 120,
+			filters: true,
+			onFilter: true,
+			sorter: true,
 			fieldProps: {
-				placeholder: '请输入岗位状态',
+				placeholder: '请输入ip',
 			},
-			valueEnum: {
-				all: { text: '全部', status: 'Default' },
-				close: { text: '关闭', status: 'Default' },
-				1: { text: '运行中', status: 'Processing' },
-				启用: { text: '已上线', status: 'Success' },
-				停用: { text: '异常', status: 'Error' },
+		},
+		{
+			title: '错误原因',
+			dataIndex: 'msg',
+			align: 'center',
+			width: 120,
+			filters: true,
+			onFilter: true,
+			sorter: true,
+			fieldProps: {
+				placeholder: '请输入ip',
 			},
 		},
 		{
 			title: '创建日期',
-			dataIndex: 'createTime',
+			dataIndex: 'created',
 			valueType: 'dateRange',
 			align: 'center',
+			width: 160,
 			fieldProps: {
 				placeholder: '选择日期',
 			},
