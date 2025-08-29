@@ -19,7 +19,7 @@ class Dept extends Basic {
 	findDept = async (ctx: Context) => {
 		try {
 			const payload = ctx.state.user; // 这就是你的载荷信息
-			console.log('Authenticated user ID:', payload);
+			// console.log('Authenticated user ID:', payload);
 
 			// const param = ctx.query;
 			// if (!param) return ctx.sendError(400, `未获取到参数`, 400);
@@ -98,7 +98,6 @@ class Dept extends Basic {
 
 			// ✅ 主控制逻辑
 			const flatMenu = await ctx.mongo.find('__dept'); // 或 "__dept"
-			// console.log('flatMenu', flatMenu);
 			const tree = flatToTree(flatMenu);
 			removeEmptyChildren(tree);
 			const sortedTree = sortTreeBySort(tree);

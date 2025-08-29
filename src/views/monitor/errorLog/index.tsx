@@ -1,10 +1,11 @@
-import { ProTable } from '@ant-design/pro-components';
+import { ModalForm, ProFormDigit, ProFormSelect, ProFormText, ProTable } from '@ant-design/pro-components';
 import { useProTableLogic } from './config/useProTableLogic';
 import { createProTableConfig } from './config/ProTableConfig';
 import ModalComponent from './component/Modal';
 import DrawerComponent from './component/Drawer';
 import FooterComponent from './component/Footer';
 import './index.less';
+import { Col, Form, Row } from 'antd';
 
 // * 列配置：用户名、IP、IP来源、描述、浏览器、创建日期
 const JobManage = () => {
@@ -66,12 +67,39 @@ const JobManage = () => {
 		handleModalOperate,
 		handleModalResult,
 	});
-
+	const userSchema = [
+		{
+			title: '姓名',
+			dataIndex: 'name',
+			valueType: 'text',
+			required: true,
+		},
+		{
+			title: '年龄',
+			dataIndex: 'age',
+			valueType: 'digit',
+			required: true,
+		},
+	];
 	return (
 		<>
 			<ProTable<any> {...proTableConfig} request={handleProTableRequest} />
 
 			{selectedRows?.length > 0 && <FooterComponent actionRef={actionRef} selectedRows={selectedRows} setSelectedRows={setSelectedRows} modalResult={handleModalResult} />}
+
+			{/* <ModalForm title='asdasd' visible={true} width={800}>
+				<Form layout='vertical' className='formList'>
+					<Row gutter={[32, 0]}>
+						{userSchema.map((field: any) => (
+							<Col span={12}>
+								{field.valueType == 'text' && <ProFormText key={field.dataIndex} name={field.dataIndex} label={field.title} />}
+								{field.valueType == 'digit' && <ProFormDigit key={field.dataIndex} name={field.dataIndex} label={field.title} />}
+								{field.valueType == 'select' && <ProFormSelect name='select' label='Select' valueEnum={field?.valueEnum} placeholder='Please select a country' />}
+							</Col>
+						))}
+					</Row>
+				</Form>
+			</ModalForm> */}
 
 			<ModalComponent
 				form={form}

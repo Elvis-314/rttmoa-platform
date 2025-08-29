@@ -4,10 +4,13 @@ import { Image } from 'antd';
 import ECharts from '@/components/Echarts';
 import { option1Fn, option2Fn } from '@/views/assembly/echarts/config';
 import { RootState, useSelector } from '@/redux';
-import { serveroption } from './config';
+import { serveroption, serveroption2 } from './config';
+import { useEffect } from 'react';
 
 const Online: React.FC = () => {
 	const isDark = useSelector((state: RootState) => state.global.isDark);
+
+	useEffect(() => {}, []);
 	return (
 		<div>
 			<Card>
@@ -47,7 +50,7 @@ const Online: React.FC = () => {
 				</Col>
 				<Col xl={12} lg={12} md={24} sm={24} xs={24}>
 					<Card hoverable title='内存使用率监控'>
-						<ECharts width={'100%'} height={284} option={serveroption(isDark)} />
+						<ECharts width={'100%'} height={284} option={serveroption2(isDark)} />
 					</Card>
 				</Col>
 			</Row>
