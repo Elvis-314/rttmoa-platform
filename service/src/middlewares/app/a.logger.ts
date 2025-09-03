@@ -1,9 +1,9 @@
 import { Context } from "koa";
 import { transports, format } from "winston";
 import * as path from "path";
-import { config } from '../config/config';
-import { getBrowser, getIpLocation } from "../utils";
-import { mongoService } from "./mongo/mongoService";
+import { config } from '../../config/config';
+import { getBrowser, getIpLocation } from "../../utils";
+import { mongoService } from "./m.mongoService";
 
 //* 将日志写入到文本中
 //* 记录器中间件(在路由之前) ->  status >= 500 || status >= 400 || status >= 200
@@ -13,7 +13,7 @@ const logger = (winstonInstance: any): any => {
 	winstonInstance.configure({
 		level: config.debugLogging ? "debug" : "info", // 是否开发模式
 		transports: [
-			new transports.File({ filename: path.resolve(__dirname, "../../errorLog.log"), level: "error" }), // 仅写入 error 级别的日志
+			new transports.File({ filename: path.resolve(__dirname, "../../log/errorLog.log"), level: "error" }), // 仅写入 error 级别的日志
 			//
 			// - 将指定级别的所有日志写入控制台。 warn、error
 			new transports.Console({

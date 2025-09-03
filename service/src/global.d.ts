@@ -1,3 +1,5 @@
 
 
-declare module "ping"
+declare module "ping" 
+
+

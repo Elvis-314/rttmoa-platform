@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Button, Card, Descriptions, Tag, Typography } from 'antd';
 import TestUtil from './test-util';
 import Link from 'antd/lib/typography/Link';
-import TestForm from './test-form';
+import TestForm from './test-SearchForm';
 import { Is } from '@/utils/is';
 import { Compute } from '@/utils/compute';
 import { randomHex } from '@/utils/color';

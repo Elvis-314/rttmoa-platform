@@ -1,10 +1,11 @@
 import { ProTable } from '@ant-design/pro-components';
 import { useProTableLogic } from './config/useProTableLogic';
-import { createProTableConfig } from './config/ProTableConfig';
+import { proTableConfig } from './config/ProTableConfig';
 import ModalComponent from './component/Modal';
-import DrawerComponent from './component/Drawer';
-import FooterComponent from './component/Footer';
 import './index.less';
+import TableColumnsConfig from './component/Column';
+import DrawerComponent from '@/components/TableDrawer';
+import FooterComponent from '@/components/TableFooter';
 
 const JobManage = () => {
 	const tableName = '岗位管理';
@@ -30,9 +31,9 @@ const JobManage = () => {
 		modalUserInfo,
 		// Drawer
 		drawerCurrentRow,
-		setDrawerCurrentRow,
 		drawerIsVisible,
-		setDrawerIsVisible,
+		drawerClose,
+
 		// Handlers
 		handleModalOperate,
 		handleModalResult,
@@ -52,7 +53,7 @@ const JobManage = () => {
 	};
 
 	// 获取 ProTable 的配置
-	const proTableConfig: any = createProTableConfig({
+	const tableConfig: any = proTableConfig({
 		...toolBarParams, // 将工具栏参数也传递给配置生成器
 		loading,
 		pagination,
@@ -68,9 +69,9 @@ const JobManage = () => {
 
 	return (
 		<>
-			<ProTable<any> {...proTableConfig} request={handleProTableRequest} />
+			<ProTable<any> {...tableConfig} request={handleProTableRequest} />
 
-			{selectedRows?.length > 0 && <FooterComponent actionRef={actionRef} selectedRows={selectedRows} setSelectedRows={setSelectedRows} modalResult={handleModalResult} />}
+			{selectedRows?.length > 0 && <FooterComponent selectedRows={selectedRows} modalResult={handleModalResult} />}
 
 			<ModalComponent
 				form={form}
@@ -84,9 +85,9 @@ const JobManage = () => {
 
 			<DrawerComponent
 				drawerIsVisible={drawerIsVisible}
-				drawerCurrentRow={drawerCurrentRow}
-				setDrawerCurrentRow={setDrawerCurrentRow}
-				setDrawerIsVisible={setDrawerIsVisible}
+				drawerCurrentRow={{ ...drawerCurrentRow, name: drawerCurrentRow?.postName }}
+				drawerClose={drawerClose}
+				TableColumnsConfig={TableColumnsConfig}
 				modalOperate={handleModalOperate}
 				modalResult={handleModalResult}
 			/>

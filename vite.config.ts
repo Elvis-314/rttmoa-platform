@@ -79,27 +79,27 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 					chunkFileNames: 'assets/js/[name]-[hash].js', // 引入文件名的名称
 					entryFileNames: 'assets/js/[name]-[hash].js', // 包的入口文件名称
 					assetFileNames: 'assets/[ext]/[name]-[hash].[ext]', // 资源文件像：字体、图片、mp4、css等
-					manualChunks(id) {
-						// 🔹 react 相关
-						if (id.includes('react')) {
-							return 'react';
-						}
+					// manualChunks(id) {
+					// 	// 🔹 react 相关
+					// 	if (id.includes('react')) {
+					// 		return 'react';
+					// 	}
 
-						// 🔹 antd 主包
-						if (id.includes('antd') && !id.includes('@ant-design/pro-')) {
-							return 'antd';
-						}
+					// 	// 🔹 antd 主包
+					// 	if (id.includes('antd') && !id.includes('@ant-design/pro-')) {
+					// 		return 'antd';
+					// 	}
 
-						// 🔹 lodash
-						if (id.includes('lodash')) {
-							return 'lodash';
-						}
+					// 	// 🔹 lodash
+					// 	if (id.includes('lodash')) {
+					// 		return 'lodash';
+					// 	}
 
-						// 🔹 pro 系列（避免循环依赖）
-						if (id.includes('@ant-design/pro-form') || id.includes('@ant-design/pro-utils') || id.includes('@ant-design/pro-table')) {
-							return 'antd-pro';
-						}
-					},
+					// 	// 🔹 pro 系列（避免循环依赖）
+					// 	if (id.includes('@ant-design/pro-form') || id.includes('@ant-design/pro-utils') || id.includes('@ant-design/pro-table')) {
+					// 		return 'antd-pro';
+					// 	}
+					// },
 				},
 
 				onwarn(warning, warn) {

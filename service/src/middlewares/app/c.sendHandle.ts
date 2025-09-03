@@ -1,10 +1,11 @@
-// & ctx 绑定 send、sendError方法
+import { Context, Next } from "koa";
+
+// & ctx.send、ctx.sendError 使用
 // try {
 //  let starList = await ctx.executeSql(`select * from dt_users where mobile='${ctx.state.user.name}'`);
 // 	return ctx.send(starList, undefined, { counts, pagesize, pages, page });
 // } catch (err) {
 // 	return ctx.sendError(config.resCodes.serverError, err.message);
-import { Context, Next } from "koa";
 
 const sendHandle = () => {
 	const render = (ctx: Context) => {

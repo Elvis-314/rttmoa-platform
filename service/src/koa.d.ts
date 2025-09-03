@@ -1,5 +1,5 @@
-import { MongoService } from "./middlewares/mongo/mongoService";
-import type { MongoType } from "./middlewares/mongo/mongoService";
+import { MongoService } from "./middlewares/app/m.mongoService";
+import type { MongoType } from "./middlewares/app/m.mongoService";
 
 
 

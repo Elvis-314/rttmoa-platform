@@ -1,35 +1,33 @@
-import Router from "@koa/router";
+import Router from '@koa/router';
 import koajwt from 'koa-jwt';
 const router = new Router();
-import user from "./tanhua/user";
-import my from "./tanhua/my";
-import friends from "./tanhua/friends";
-import qz from "./tanhua/qz";
-import message from "./tanhua/message";
-import Shelf from "./business_module/shelf";
-import User from "./system_manage/user";
-import Menu from "./system_manage/menu";
-import Monitor from "./system_monitor/monitor";
-import Job from "./system_manage/job";
-import Role from "./system_manage/role";
-import Dept from "./system_manage/dept";
-import restApi from './system_manage/restApi'
-import { config } from "../config/config";
-import Operate from './system_monitor/operate'
-import ErrorLog from './system_monitor/errorLog'
-
-
+import user from './tanhua/user';
+import my from './tanhua/my';
+import friends from './tanhua/friends';
+import qz from './tanhua/qz';
+import message from './tanhua/message';
+import Shelf from './business_module/shelf';
+import User from './system_manage/user';
+import Menu from './system_manage/menu';
+import Monitor from './system_monitor/monitor';
+import Job from './system_manage/job';
+import Role from './system_manage/role';
+import Dept from './system_manage/dept';
+import restApi from './system_manage/restApi';
+import { config } from '../config/config';
+import Operate from './system_monitor/operate';
+import ErrorLog from './system_monitor/errorLog'; 
 
 export const unprotect = (app: any) => {
-	router.use("/restApi", restApi.routes()); // RESTful 格式的 API
-	router.use("/shelf", Shelf.routes());
-	router.use("/menu", Menu.routes());
-	router.use("/userp", User.routes());
-	router.use("/role", Role.routes());
+	router.use('/restApi', restApi.routes()); // RESTful 格式的 API
+	router.use('/shelf', Shelf.routes());
+	router.use('/menu', Menu.routes());
+	router.use('/userp', User.routes());
+	router.use('/role', Role.routes());
 
-	router.use("/error", ErrorLog.routes());
-	router.use("/monitor", Monitor.routes());
-	router.use("/operate", Operate.routes()); // * 操作日志
+	router.use('/error', ErrorLog.routes());
+	router.use('/monitor', Monitor.routes());
+	router.use('/operate', Operate.routes()); // * 操作日志
 	app.use(router.routes()).use(router.allowedMethods());
 };
 
@@ -40,19 +38,16 @@ export const protect = (app: any) => {
 	const jwtMiddleware: any = koajwt({ secret: config.jwtkey }).unless({
 		path: ['/user/login', '/userp/login', '/user/loginVerification', '/swagger.html'] as any,
 	});
-	router.use(jwtMiddleware)
+	router.use(jwtMiddleware);
 
+	router.use('/user', user.routes());
+	router.use('/friends', friends.routes());
+	router.use('/qz', qz.routes());
+	router.use('/message', message.routes());
+	router.use('/my', my.routes());
 
-	router.use("/user", user.routes());
-	router.use("/friends", friends.routes());
-	router.use("/qz", qz.routes());
-	router.use("/message", message.routes());
-	router.use("/my", my.routes());
-
-	router.use("/dept", Dept.routes()); // 部门
-	router.use("/jb", Job.routes()); // * 岗位模板
-
-
+	router.use('/dept', Dept.routes()); // 部门
+	router.use('/jb', Job.routes()); // * 岗位模板
 
 	app.use(router.routes()).use(router.allowedMethods());
 };

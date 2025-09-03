@@ -1,20 +1,12 @@
-// src/pages/JobManage/ProTableConfig.ts
-// import TableColumnsConfig from './component/Column';
-// import ToolBarRender from './component/ToolBar';
-
 import TableColumnsConfig from '../component/Column';
 import ToolBarRender from '../component/ToolBar';
 
-// 动态计算表格宽度，更具可读性
-const calculateTableWidth = (columns: any[]) => {
-	return columns.reduce((sum: any, col: { width: any }) => sum + (col.width || 0), 0);
-};
-
-export const createProTableConfig = (params: any) => {
+export const proTableConfig = (params: any) => {
 	const { openSearch, loading, pagination, setPagination, selectedRows, setSelectedRows, actionRef, formRef, tableName, handleModalOperate, handleModalResult } = params;
 
 	const columns = TableColumnsConfig(handleModalOperate, handleModalResult);
-	const allWidth = calculateTableWidth(columns);
+	const calculate = (columns: any[]) => columns.reduce((sum: any, col: { width: any }) => sum + (col.width || 0), 0);
+	const allWidth = calculate(columns);
 
 	return {
 		rowKey: '_id',

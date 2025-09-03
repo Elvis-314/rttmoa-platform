@@ -1,7 +1,7 @@
 import * as Koa from "koa";
 const cors = require("@koa/cors");
  
-
+// * 跨域
 const _CrossDomain = (): any => { 
 	return async (ctx: any, next: () => Promise<any>): Promise<void> => {
 		cors({

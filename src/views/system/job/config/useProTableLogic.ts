@@ -106,7 +106,10 @@ export const useProTableLogic = () => {
 			setLoading(false);
 		}
 	}, []);
-
+	const drawerClose = () => {
+		setDrawerCurrentRow({});
+		setDrawerIsVisible(false);
+	};
 	return {
 		// Refs
 		actionRef,
@@ -131,6 +134,7 @@ export const useProTableLogic = () => {
 		setDrawerCurrentRow,
 		drawerIsVisible,
 		setDrawerIsVisible,
+		drawerClose,
 		// Handlers
 		handleModalOperate,
 		handleModalResult,

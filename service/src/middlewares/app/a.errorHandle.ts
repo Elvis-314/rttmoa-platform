@@ -1,6 +1,6 @@
 import { Context } from 'koa';
 import { getBrowser } from '../../utils'; 
-import { mongoService } from '../mongo/mongoService';
+import { mongoService } from './m.mongoService';
 
 // * 错误处理中间件
 const errorHandle = async (ctx: Context, next: () => Promise<any>) => {
@@ -22,10 +22,10 @@ const errorHandle = async (ctx: Context, next: () => Promise<any>) => {
  
   // console.error("错误日志：", logData);
   try {
-    if (ctx.status !== 200) {
-      const body: any = ctx.body
-      const status = body.code;
-      const msg = body.msg;
+    if (ctx.status !== 200) { 
+      const body: any = ctx.body 
+      const status = body?.code;
+      const msg = body?.msg;
       const info = {status, msg}
       const result = await mongoService.insertOne("__error", {...logData, ...info})
     }
@@ -39,7 +39,7 @@ const errorHandle = async (ctx: Context, next: () => Promise<any>) => {
       };
     }
   } catch (err: any) {
-    console.log('middlewares/errorHandle 捕捉错误 ==> ', err.message);
+    console.log('middlewares/app/errorHandle 捕捉错误 ==> ', err.message);
 
     if (ctx.status !== 200) {
       const body: any = ctx.body
