@@ -11,7 +11,6 @@ export const Icon: React.FC<IconProps> = React.memo(({ name, className }) => {
 	try {
 		const customIcons: { [key: string]: any } = Icons;
 		const IconComponent = customIcons[name];
-		// console.log('IconComponent', typeof IconComponent); // {$$typeof: Symbol(react.forward_ref), render: ƒ}
 		if (IconComponent && typeof IconComponent === 'object') {
 			return React.createElement(IconComponent, { className });
 		} else {

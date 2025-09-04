@@ -118,15 +118,7 @@ const useAsyncTable: React.FC<ArgTableProps> = props => {
 
 	return (
 		<>
-			<Table
-				// className={styles.table_wrap}
-				columns={owncolumns(fetchData)}
-				rowKey={(record: any) => record.id}
-				pagination={false}
-				dataSource={state.dataSource}
-				loading={state.loading}
-				{...baseProps}
-			/>
+			<Table columns={owncolumns(fetchData)} rowKey={(record: any) => record.id} pagination={false} dataSource={state.dataSource} loading={state.loading} {...baseProps} />
 			<Row style={{ marginTop: 20 }} justify='end'>
 				<Col>
 					<Pagination

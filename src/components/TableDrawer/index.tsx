@@ -6,6 +6,7 @@ type DrawerComponentProps = {
 	drawerIsVisible: boolean;
 	drawerCurrentRow: {
 		name: string | undefined;
+		[key: string]: any;
 	};
 	drawerClose: any;
 	TableColumnsConfig: (modalOperate: any, modalResult: any) => ProColumns<any>[];

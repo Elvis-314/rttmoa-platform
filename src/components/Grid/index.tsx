@@ -25,7 +25,7 @@ export default function Grid(props: Props) {
 
 	let breakPoint = useRef<BreakPoint>('xl');
 	const hiddenIndex = useRef<number>(-1); // 开始折叠的 index
-	// console.log('hiddenIndex', hiddenIndex.current);
+
 	// 监听屏幕变化
 	const resize = (e: UIEvent) => {
 		let width = (e.target as Window).innerWidth;

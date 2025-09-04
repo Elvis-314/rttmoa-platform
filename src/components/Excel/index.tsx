@@ -3,7 +3,7 @@ import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { message } from '@/hooks/useMessage';
-import { DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleTwoTone, SettingOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleTwoTone } from '@ant-design/icons';
 
 // const tableHeaders = ['序号', '学科', '项目名称', '端', '账号', '密码'];
 
@@ -34,7 +34,6 @@ export default function Excel(Props: ExcelProps) {
 		ImportData, // 导入表格数据结果
 		children,
 	} = Props;
-	// console.log('Props', Props);
 
 	const [tableLoading, setTableLoading] = useState<boolean>(false); // 加载状态：Loading
 	const [fileName, setFileName] = useState<string>(''); // 文件名称： __EXCEL__黑马账号信息.xlsx
@@ -43,8 +42,6 @@ export default function Excel(Props: ExcelProps) {
 	// ! 导入表格数据
 	// 参数设置   (file:文件 Blob类型,sheetName:工作区名称 string类型)
 	const handleUpload = (file: any) => {
-		// console.log('file', file);
-
 		let fileObj = {
 			uid: file.uid,
 			name: file.name,
