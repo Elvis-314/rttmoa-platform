@@ -87,7 +87,7 @@ class Menu extends Basic {
 
 	// * 将数据库Menu 转化为 前端需要的json格式
 	exportMenu = async (ctx: Context) => {
-	try {  
+		try {
 			/** 将扁平结构转换为树结构 */
 			function flatToTree(flatList: any[]): any[] {
 				const keyMap = new Map<string, any>();
@@ -162,7 +162,7 @@ class Menu extends Basic {
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}
-	}
+	};
 
 	// * 查询到数据库中的数据、要返回前端所需要的结构 【已完成】  修改日期：2025-06-03
 	FindAllMenu = async (ctx: Context) => {

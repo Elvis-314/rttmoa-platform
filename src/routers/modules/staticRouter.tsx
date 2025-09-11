@@ -1,12 +1,12 @@
-import { Navigate } from 'react-router-dom'
-import { Loading } from '@/components/Loading'
-import { HOME_URL, LOGIN_URL } from '@/config'
-import { RouteObjectType } from '@/routers/interface'
-import Login from '@/views/login/index'
-import NotAuth from '@/components/Error/403'
-import NotFound from '@/components/Error/404'
-import NotNetwork from '@/components/Error/500'
-import RouterGuard from '../helper/RouterGuard'
+import { Navigate } from 'react-router-dom';
+import { Loading } from '@/components/Loading';
+import { HOME_URL, LOGIN_URL } from '@/config';
+import { RouteObjectType } from '@/routers/interface';
+import Login from '@/views/_/login/index';
+import NotAuth from '@/components/Error/403';
+import NotFound from '@/components/Error/404';
+import NotNetwork from '@/components/Error/500';
+import RouterGuard from '../helper/RouterGuard';
 
 /**
  * @description 静态路由：首页、登陆、403页面、404页面、500页面、*
@@ -49,14 +49,14 @@ export const staticRouter: RouteObjectType[] = [
 		path: '*',
 		element: <Loading />,
 	},
-]
+];
 
 export const wrappedStaticRouter = staticRouter.map(route => {
 	return {
 		...route,
 		element: <RouterGuard>{route.element}</RouterGuard>,
 		loader: () => {
-			return { ...route.meta }
+			return { ...route.meta };
 		},
-	}
-})
+	};
+});
