@@ -1,6 +1,5 @@
-import { ArrowsAltOutlined, FullscreenOutlined, PlusOutlined, SearchOutlined, SecurityScanTwoTone, ShrinkOutlined } from '@ant-design/icons';
-import { Button, Tooltip } from 'antd';
-import Search from 'antd/lib/input/Search'; // ! antd/lib/input
+import { ArrowsAltOutlined, FullscreenOutlined, MinusSquareOutlined, PlusOutlined, PlusSquareOutlined, SearchOutlined, ShrinkOutlined } from '@ant-design/icons';
+import { Button, message, Tooltip } from 'antd';
 import { useDispatch } from '@/redux';
 import { setGlobalState } from '@/redux/modules/global';
 
@@ -22,10 +21,27 @@ const ToolBarRender = (props: ToolBarProps) => {
 	const ExportBtn = () => {};
 	const ImportBtn = () => {};
 	return [
-		<Search placeholder='快捷搜索...' allowClear onSearch={quickSearch} style={{ width: 200 }} />,
+		// <Search placeholder='快捷搜索...' allowClear onSearch={quickSearch} style={{ width: 200 }} />,
 		<Button icon={<PlusOutlined />} onClick={CreateBtn}>
-			新建
+			新建菜单
 		</Button>,
+		<Button
+			icon={<PlusSquareOutlined />}
+			onClick={() => {
+				message.info('正在处理');
+			}}
+		>
+			展开全部
+		</Button>,
+		<Button
+			icon={<MinusSquareOutlined />}
+			onClick={() => {
+				message.info('正在处理');
+			}}
+		>
+			折叠全部
+		</Button>,
+
 		<Button icon={<ArrowsAltOutlined />} onClick={ExportBtn}>
 			导出EXCEL
 		</Button>,

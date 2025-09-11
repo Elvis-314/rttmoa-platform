@@ -1,6 +1,6 @@
 import { ProTable } from '@ant-design/pro-components';
 import { useProTableLogic } from './config/useProTableLogic';
-import { proTableConfig } from './config/proTableConfig';
+import { proTableConfig } from './config/tableConfig';
 import ModalComponent from './component/Modal';
 import './index.less';
 import TableColumnsConfig from './component/Column';

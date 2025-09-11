@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HOME_URL } from '@/config';
-import titleIcon from '@/views/dataScreen/images/dataScreen-title.png';
+import titleIcon from '@/views/_/dataScreen/images/dataScreen-title.png';
 import HeaderTime from './components/HeaderTime';
 import MaleFemaleRatioChart from './components/MaleFemaleRatioChart';
 import HotPlateChart from './components/HotPlateChart';
