@@ -53,7 +53,7 @@ const ToolBarRender = (props: ToolBarProps) => {
 	// console.log('导出表格数据（需要处理）：', exportExcel);
 
 	return [
-		<Search placeholder='快捷搜索...' allowClear onSearch={quickSearch} style={{ width: 200 }} />,
+		// <Search placeholder='快捷搜索...' allowClear onSearch={quickSearch} style={{ width: 200 }} />,
 		<Button icon={<PlusOutlined />} onClick={CreateBtn}>
 			新建
 		</Button>,

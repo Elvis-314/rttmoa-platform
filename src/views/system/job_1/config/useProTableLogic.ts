@@ -47,33 +47,36 @@ export const useProTableLogic = () => {
 	};
 
 	// Modal 结果处理：增删改
-	const handleModalResult = async (type: string, item: any) => {
-		try {
-			if (['create', 'edit'].includes(type)) {
-				const hide = message.loading(type === 'create' ? '正在添加' : '正在编辑');
-				const res = type === 'create' ? await addJob(item) : await modifyJob(item._id, item);
-				hide();
-				if (res) {
-					form.resetFields();
-					setModalIsVisible(false);
-					actionRef.current?.reload();
-					message.success(type === 'create' ? '添加成功' : '编辑成功');
+	const handleModalResult = useCallback(
+		async (type: string, item: any) => {
+			try {
+				if (['create', 'edit'].includes(type)) {
+					const hide = message.loading(type === 'create' ? '正在添加' : '正在编辑');
+					const res = type === 'create' ? await addJob(item) : await modifyJob(item._id, item);
+					hide();
+					if (res) {
+						form.resetFields();
+						setModalIsVisible(false);
+						actionRef.current?.reload();
+						message.success(type === 'create' ? '添加成功' : '编辑成功');
+					}
+				} else if (['delete', 'moreDelete'].includes(type)) {
+					const hide = message.loading('正在删除');
+					const ids = type === 'delete' ? [item._id] : selectedRows.map(row => row._id);
+					const res = type === 'delete' ? await delJob(item._id) : await delMoreJob(ids);
+					hide();
+					if (res) {
+						if (type === 'moreDelete') setSelectedRows([]);
+						actionRef.current?.reloadAndRest?.();
+						message.success(`成功删除${type === 'delete' ? ` ${item?.postName}` : '多条'}记录`);
+					}
 				}
-			} else if (['delete', 'moreDelete'].includes(type)) {
-				const hide = message.loading('正在删除');
-				const ids = type === 'delete' ? [item._id] : selectedRows.map(row => row._id);
-				const res = type === 'delete' ? await delJob(item._id) : await delMoreJob(ids);
-				hide();
-				if (res) {
-					if (type === 'moreDelete') setSelectedRows([]);
-					actionRef.current?.reloadAndRest?.();
-					message.success(`成功删除${type === 'delete' ? ` ${item?.postName}` : '多条'}记录`);
-				}
+			} catch (error: any) {
+				message.error(error.message || '操作失败，请重试！');
 			}
-		} catch (error: any) {
-			message.error(error.message || '操作失败，请重试！');
-		}
-	};
+		},
+		[selectedRows, form]
+	);
 
 	// 导出数据
 	const handleImportData = useCallback(async (data: any) => {

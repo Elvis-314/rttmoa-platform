@@ -64,7 +64,6 @@ const ModalComponent = (Params: any) => {
 					</Col>
 					<Col span={24}>
 						<Form.Item label='状态' name='status' rules={[{ required: false }]}>
-							{/* <Switch /> */}
 							<Radio.Group options={['启用', '停用']} />
 						</Form.Item>
 					</Col>
