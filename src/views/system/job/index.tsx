@@ -96,6 +96,9 @@ const useProTable = () => {
 	);
 
 	// * 发请求：当表格参数变化
+	// * 搜索条件类型为：字符串、数字、日期、筛选比如男女这样的等格式测试
+	// * 表头搜索、排序搜索、分页搜索等
+	// * 统一搜索格式
 	const handleRequest = useCallback(
 		async (params: any, sort: any, filter: any) => {
 			setLoading(true);
@@ -147,8 +150,9 @@ const useProTable = () => {
 		setDrawerCurrentRow({});
 		setDrawerIsVisible(false);
 	};
-	const allWidth = TableColumnsConfig(modalOperate, modalResult).reduce((sum: any, col: any) => sum + (col.width || 0), 0);
+	const allWidth = TableColumnsConfig(0, 0).reduce((sum: any, col: any) => sum + (col.width || 0), 0);
 
+	// * 优化此表格模板
 	return (
 		<>
 			<ProTable<any>
@@ -171,7 +175,7 @@ const useProTable = () => {
 				defaultSize='small'
 				columns={TableColumnsConfig(modalOperate, modalResult)}
 				toolBarRender={() => ToolBarRender(ToolBarParams)} // 渲染工具栏
-				search={openSearch ? false : { labelWidth: 'auto', filterType: 'query', span: 6, resetText: '重置', searchText: '查询', showHiddenNum: true }} // 搜索表单配置
+				search={openSearch ? false : { labelWidth: 'auto', filterType: 'query', span: 4, resetText: '重置', searchText: '查询', showHiddenNum: true }} // 搜索表单配置
 				request={handleRequest}
 				pagination={{
 					size: 'default',

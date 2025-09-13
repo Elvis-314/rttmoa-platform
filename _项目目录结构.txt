@@ -62,7 +62,7 @@ rttmoa-platform
 │   │   └── app.ts
 │   ├── sql/                                ## 先导入 sql 文件
 │   │   ├── tanhua 20200630 0858.rar
-│   │   ├── steedos_nbzy_v2.rar             # 导入此文件、导入mongodb数据库
+* │   │   ├── steedos_nbzy_v2.rar             #### 导入此文件、导入mongodb数据库
 │   │   └── Backup.sql
 │   ├── public/                             # 服务端运行前端打包项目的产物
 │   │   ├── upload/

@@ -1,6 +1,6 @@
 import { FullscreenOutlined, PlusOutlined, SearchOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
-import Search from 'antd/lib/input/Search'; // ! antd/lib/input
+import Search from 'antd/lib/input/Search';
 import { useDispatch } from '@/redux';
 import { setGlobalState } from '@/redux/modules/global';
 import Excel from '@/components/Excel';
