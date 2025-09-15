@@ -1,6 +1,6 @@
 import { Context } from 'koa';
 import Basic from '../basic';
-import _ from 'lodash'
+import _ from 'lodash';
 
 interface JobParams {
 	job_name?: string;
@@ -58,7 +58,7 @@ class Job extends Basic {
 			.join('')
 			.toLowerCase()
 			.replace(/\s+/g, '_');
-	}; 
+	};
 
 	// 检查岗位名称是否已存在
 	private checkPostName = async (ctx: Context, postName: string) => {
@@ -67,56 +67,66 @@ class Job extends Basic {
 		return !!existing.length;
 	};
 
+	// * 抽离 Job 查询条件
+	// * 字符串、数字、日期查询  |  选择框、复选框、日期时间
+	private JobQuery = (data: any) => {
+		const query: Record<string, any> = {};
+
+		const postName = _.trim(_.get(data, 'search.postName', ''));
+		if (!_.isEmpty(postName)) {
+			query.postName = { $regex: postName, $options: 'i' };
+		}
+
+		const postSort = _.toNumber(_.get(data, 'search.postSort'));
+		if (!_.isNaN(postSort)) {
+			query.postSort = postSort;
+		}
+
+		const status = _.trim(_.get(data, 'search.status', ''));
+		if (!_.isEmpty(status)) {
+			query.status = new RegExp(status);
+		}
+
+		const createTime = _.get(data, 'search.createTime', []);
+		if (_.isArray(createTime) && createTime.length === 2) {
+			const [start, end] = createTime;
+			if (_.isNumber(start) && _.isNumber(end)) {
+				query.createTime = {
+					$gte: new Date(start),
+					$lte: new Date(end),
+				};
+			}
+		}
+
+		return query;
+	};
+
 	// * 查询岗位
 	findJob = async (ctx: Context) => {
 		try {
-			// console.log('job 获取 username：', ctx.state.user);
-			
 			const data: any = ctx.request.body;
-			// console.log('查询参数：', data);
+			console.log('查询参数：', data);
 
-			const { postName, postSort, status } = data?.search || {};
-			const query: Record<string, any> = {};
-			if (postName?.trim()) {
-				query.postName = { $regex: postName.trim(), $options: 'i' }; // 不区分大小写
-			}
-			if (postSort?.toString().trim()) {
-				const sortNum = Number(postSort);
-				if (!isNaN(sortNum)) {
-					query.postSort = sortNum;
-				}
-			}
-			// throw new Error("查询岗位：报错 error")
+			const query = this.JobQuery(data);
 
-			if (status?.trim()) {
-				query.status = new RegExp(status.trim());
-			}
+			// 分页参数
+			const page = _.clamp(_.toInteger(_.get(data, 'pagination.page', 1)), 1, Number.MAX_SAFE_INTEGER);
+			const pageSize = _.clamp(_.toInteger(_.get(data, 'pagination.pageSize', 10)), 1, 100); // 限制最大 100
 
-			// 添加分页和排序的默认值
-			const page = Math.max(1, Number(data.pagination?.page) || 1);
-			const pageSize = Math.min(100, Math.max(1, Number(data.pagination?.pageSize) || 10));
+			// 排序参数，默认按 postSort 升序 + createTime 降序
+			const sort = _.get(data, 'sort', { postSort: 1, createTime: -1 });
 
+			// 并行查询
 			const [count, list] = await Promise.all([
-				ctx.mongo.count('__job', query),
-				ctx.mongo.find('__job', {
-					query,
-					page,
-					pageSize,
-					sort: data.sort || { postSort: 1, createTime: -1 },
-				}),
+				ctx.mongo.count('__job', query), 
+				ctx.mongo.find('__job', { query, page, pageSize, sort })
 			]);
 
-			return ctx.send({
-				list,
-				page,
-				pageSize,
-				total: count,
-			});
-		} catch (err) {
-			return ctx.sendError(500, err.message);
+			return ctx.send({ list, page, pageSize, total: count });
+		} catch (err: any) {
+			return ctx.sendError(500, err.message || '服务器错误');
 		}
 	};
-
 
 	// * 新增岗位
 	addJob = async (ctx: Context) => {
@@ -131,15 +141,15 @@ class Job extends Basic {
 			if (errInfo.length) return ctx.sendError(400, errInfo[0]);
 
 			// * 先查询岗位名称是否重复
-			const newJob: any = {  
-				postCode:  this.generatePostCode(data?.job_name),
+			const newJob: any = {
+				postCode: this.generatePostCode(data?.job_name),
 				postName: _.trim(_.toString(data?.job_name)), // 产品经理 | 前端开发 | 会计
 				postSort: _.toNumber(data.job_sort), // 排序
-				status: _.trim(_.toString(data.status)), // 开关：开启/关闭  
+				status: _.trim(_.toString(data.status)), // 开关：开启/关闭
 				desc: _.trim(_.toString(data?.desc)),
-				flag: false, 
+				flag: false,
 				createBy: 'admin',
-				createTime: new Date(), 
+				createTime: new Date(),
 				updateBy: null,
 				updateTime: new Date(),
 			};
@@ -161,21 +171,19 @@ class Job extends Basic {
 			const check = await this.checkPostName(ctx, data?.job_name);
 			if (check) return ctx.sendError(400, '已存在岗位名称');
 
-			
 			const errInfo = this.validateJobData(data);
 			if (errInfo.length) return ctx.sendError(400, errInfo[0]);
 
 			// * 先查询岗位名称是否重复
-			const newJob: any = {  
-				postCode:  this.generatePostCode(data?.job_name),
+			const newJob: any = {
+				postCode: this.generatePostCode(data?.job_name),
 				postName: _.trim(_.toString(data?.job_name)), // 产品经理 | 前端开发 | 会计
 				postSort: _.toNumber(data.job_sort), // 排序
-				status: _.trim(_.toString(data.status)), // 开关：开启/关闭  
+				status: _.trim(_.toString(data.status)), // 开关：开启/关闭
 				desc: _.trim(_.toString(data?.desc)),
-				flag: false, 
-				updateBy: "admin",
+				flag: false,
+				updateBy: 'admin',
 				updateTime: new Date(),
-
 			};
 			const ins = await ctx.mongo.updateOne('__job', id, newJob);
 			return ctx.send(ins);
@@ -224,14 +232,14 @@ class Job extends Basic {
 
 			if (data && data.length) {
 				for (const element of data) {
-					const newJob: any = { 
-						postCode: "ceo",
+					const newJob: any = {
+						postCode: 'ceo',
 						postName: _.trim(_.toString(element.postName)), // 产品经理 | 前端开发 | 会计
 						postSort: _.toNumber(element.postSort), // 排序
-						status: _.trim(_.toString(element.status)), // 开关：开启/关闭  
+						status: _.trim(_.toString(element.status)), // 开关：开启/关闭
 						desc: _.trim(_.toString(element?.desc)),
 						flag: false,
-						createBy: "admin",
+						createBy: 'admin',
 						createTime: new Date(),
 						updateBy: null,
 						updateTime: null,

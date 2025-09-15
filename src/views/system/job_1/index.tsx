@@ -87,7 +87,7 @@ const JobManage = () => {
 				drawerIsVisible={drawerIsVisible}
 				drawerCurrentRow={{ ...drawerCurrentRow, name: drawerCurrentRow?.postName }}
 				drawerClose={drawerClose}
-				TableColumnsConfig={TableColumnsConfig}
+				columnsConfig={TableColumnsConfig}
 				modalOperate={handleModalOperate}
 				modalResult={handleModalResult}
 			/>

@@ -3,7 +3,7 @@ import { Form } from 'antd';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, FormInstance } from '@ant-design/pro-components';
 import { message } from '@/hooks/useMessage';
-import TableColumnsConfig from './component/Column';
+import ColumnsConfig from './component/Column';
 import ToolBarRender from './component/ToolBar';
 import { addJob, delJob, delMoreJob, ExJob, findJob, modifyJob } from '@/api/modules/system';
 import './index.less';
@@ -99,6 +99,7 @@ const useProTable = () => {
 	// * 搜索条件类型为：字符串、数字、日期、筛选比如男女这样的等格式测试
 	// * 表头搜索、排序搜索、分页搜索等
 	// * 统一搜索格式
+	// * 排序：每个字段排序、不可多个字段排序
 	const handleRequest = useCallback(
 		async (params: any, sort: any, filter: any) => {
 			setLoading(true);
@@ -110,16 +111,18 @@ const useProTable = () => {
 				const mappedSort = Object.fromEntries(Object.entries(sort).map(([field, order]) => [field, order === 'ascend' ? 'asc' : 'desc']));
 
 				const payload = {
+					search: searchParams, // 表头过滤
+					filter,
 					pagination: {
 						page: params.current,
 						pageSize: params.pageSize,
 					},
 					sort: mappedSort,
-					filter,
-					search: searchParams,
 				};
-
+				console.log('岗位搜索条件：', payload);
+				console.log('岗位查询：', payload.search);
 				const { data }: any = await findJob(payload);
+				// console.log('岗位接口数据：', data);
 				SetPagination((prev: any) => ({ ...prev, total: data.total }));
 				return {
 					data: data.list,
@@ -146,11 +149,8 @@ const useProTable = () => {
 		tableData,
 		ImportData,
 	};
-	const drawerClose = () => {
-		setDrawerCurrentRow({});
-		setDrawerIsVisible(false);
-	};
-	const allWidth = TableColumnsConfig(0, 0).reduce((sum: any, col: any) => sum + (col.width || 0), 0);
+
+	const allWidth = ColumnsConfig('', '').reduce((sum: any, col: any) => sum + (col.width || 0), 0);
 
 	// * 优化此表格模板
 	return (
@@ -173,7 +173,7 @@ const useProTable = () => {
 				cardBordered
 				dateFormatter='number'
 				defaultSize='small'
-				columns={TableColumnsConfig(modalOperate, modalResult)}
+				columns={ColumnsConfig(modalOperate, modalResult)}
 				toolBarRender={() => ToolBarRender(ToolBarParams)} // 渲染工具栏
 				search={openSearch ? false : { labelWidth: 'auto', filterType: 'query', span: 4, resetText: '重置', searchText: '查询', showHiddenNum: true }} // 搜索表单配置
 				request={handleRequest}
@@ -182,7 +182,7 @@ const useProTable = () => {
 					showQuickJumper: true,
 					showSizeChanger: true,
 					...pagination,
-					pageSizeOptions: [10, 20, 30, 50],
+					pageSizeOptions: [10, 15, 20, 30, 50],
 					onChange: (page, pageSize) => {
 						SetPagination({ ...pagination, page, pageSize });
 					},
@@ -199,7 +199,7 @@ const useProTable = () => {
 				editable={{ type: 'multiple' }}
 				columnsState={{
 					// 持久化列的 key，用于判断是否是同一个 table
-					persistenceKey: 'use-pro-table-key',
+					persistenceKey: 'key-job',
 					// 持久化列的类型: localStorage | sessionStorage
 					persistenceType: 'localStorage',
 				}}
@@ -220,8 +220,11 @@ const useProTable = () => {
 			<DrawerComponent
 				drawerIsVisible={drawerIsVisible}
 				drawerCurrentRow={{ ...drawerCurrentRow, name: drawerCurrentRow?.postName }}
-				drawerClose={drawerClose}
-				TableColumnsConfig={TableColumnsConfig}
+				drawerClose={() => {
+					setDrawerCurrentRow({});
+					setDrawerIsVisible(false);
+				}}
+				columnsConfig={ColumnsConfig}
 				modalOperate={modalOperate}
 				modalResult={modalResult}
 			/>

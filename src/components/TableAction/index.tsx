@@ -55,9 +55,10 @@ import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 // * 操作：图标显示详情、编辑、删除
 export const TableRenderAction = (entity: any, modalOperate: any, modalResult: any) => {
 	return (
-		<div className='flex flex-row justify-around'>
+		<div key='operate' className='flex flex-row justify-around'>
 			{/* 查看详情 */}
 			<div
+				key='detail'
 				className='  bg-green-400 hover:bg-green-500 w-[30px] h-[22px] flex justify-center items-center   rounded-[4px] cursor-pointer'
 				onClick={() => modalOperate('detail', entity)}
 			>
@@ -82,6 +83,7 @@ export const TableRenderAction = (entity: any, modalOperate: any, modalResult: a
 			</div>
 			{/* 编辑 */}
 			<div
+				key='edit'
 				className='bg-blue-400 hover:bg-blue-500 w-[30px] h-[22px] flex justify-center items-center rounded-[4px] cursor-pointer'
 				onClick={() => modalOperate('edit', entity)}
 			>
@@ -103,7 +105,7 @@ export const TableRenderAction = (entity: any, modalOperate: any, modalResult: a
 				placement='top'
 				trigger='hover'
 			>
-				<div className='bg-red-400 hover:bg-red-500  w-[30px] h-[22px] flex justify-center items-center rounded-[4px] cursor-pointer'>
+				<div key='delete' className='bg-red-400 hover:bg-red-500  w-[30px] h-[22px] flex justify-center items-center rounded-[4px] cursor-pointer'>
 					<svg className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='881' width='16' height='16'>
 						<path
 							d='M885.312 213.312h-224a149.312 149.312 0 0 0-298.624 0h-224a37.312 37.312 0 0 0 0 74.56h37.312v597.312c0 41.216 33.408 74.688 74.688 74.688h522.688c41.216 0 74.752-33.344 74.752-74.688V288h37.248a37.312 37.312 0 1 0-0.064-74.688zM512 138.688c41.216 0 74.688 33.536 74.688 74.688H437.312c0-41.152 33.472-74.688 74.688-74.688z m261.312 746.624H250.688V288h522.688v597.312h-0.064z'
