@@ -3,10 +3,10 @@ import Shelf from '../../controllers/business_module/shelf'
 const router = new Router();
 
 // * 这几个接口为测试 mongodb 使用
-router.get('/mongo/all_shelf', Shelf.find_All_Shelf);  
-router.get('/mongo/update_shelf', Shelf.updateOne_shelf);  
-router.get('/mongo/insert_shelf', Shelf.insert_shelf);  
-router.get('/mongo/delete_shelf', Shelf.delete_shelf);  
+router.get('/mongo/all_shelf', Shelf.findShelf);  
+router.get('/mongo/update_shelf', Shelf.upShelf);  
+router.get('/mongo/insert_shelf', Shelf.insShelf);  
+router.get('/mongo/delete_shelf', Shelf.delShelf);  
 
 
 
@@ -19,4 +19,3 @@ router.get('/shelfs', Shelf.Shelfs);
 
 
 export default router;
-

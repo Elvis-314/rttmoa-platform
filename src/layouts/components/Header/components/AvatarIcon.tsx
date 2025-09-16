@@ -38,9 +38,13 @@ const AvatarIcon: React.FC = () => {
 				//    5.提示 退出成功
 				//    ？ 要不要清除Redux持久化数据
 				await loginAPI.logoutApi();
+
 				dispatch(setToken(''));
+
 				dispatch(setAuthMenuList([]));
+
 				navigate(LOGIN_URL, { replace: true });
+
 				// navigate(LOGIN_URL);
 				// navigate("/login?to=/personal", { replace: true });
 				message.success('退出登录成功！');

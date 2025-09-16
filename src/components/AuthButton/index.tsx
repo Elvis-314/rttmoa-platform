@@ -17,11 +17,20 @@ const AuthButton: React.FC<AuthButtonProps> = ({ authority, children }) => {
 
 	let isAuth = false;
 
-	// authority="edit"
+	// <AuthButton authority='add'>
+	// 	<Button type='primary' icon={<PlusCircleOutlined />}>
+	// 		新增
+	// 	</Button>
+	// </AuthButton>
 	if (typeof authority === 'string') {
 		authButtonList[meta.key!]?.includes(authority) && (isAuth = true);
 	}
-	// authority=['add', 'edit', 'delete', 'import', 'export']
+
+	// <AuthButton authority={['add', 'edit', 'delete', 'import', 'export']}>
+	// 	<Button type='primary' icon={<PlusCircleOutlined />}>
+	// 		新增
+	// 	</Button>
+	// </AuthButton>
 	if (authority instanceof Array && authority.length) {
 		const hasPermission = authority.every(item => authButtonList[meta.key!]?.includes(item));
 		hasPermission && (isAuth = true);

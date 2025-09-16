@@ -1,12 +1,13 @@
-import { RootState, useSelector } from '@/redux'
-import { getMenuByPath } from '@/utils'
+import { RootState, useSelector } from '@/redux';
+import { getMenuByPath } from '@/utils';
 
 /**
  * @description  use Hooks Set auth button
  */
 const useAuthButton = () => {
-	const authButtonList = useSelector((state: RootState) => state.auth.authButtonList)
-	// console.log('authButtonList', authButtonList);
+	// * 配置每个角色 不同的表配置不同的按钮
+	const authButtonList = useSelector((state: RootState) => state.auth.authButtonList);
+	console.log('authButtonList', authButtonList);
 	// {
 	//   "authButton": [
 	//       "add",
@@ -23,15 +24,15 @@ const useAuthButton = () => {
 	//       "status"
 	//     ]
 	// }
-	const meta = getMenuByPath()?.meta ?? {}
+	const meta = getMenuByPath()?.meta ?? {};
 
-	let currentPageAuthButton: { [key: string]: boolean } = {}
+	let currentPageAuthButton: { [key: string]: boolean } = {};
 
-	authButtonList[meta.key!]?.forEach(item => (currentPageAuthButton[item] = true))
+	authButtonList[meta.key!]?.forEach(item => (currentPageAuthButton[item] = true));
 
 	return {
 		BUTTONS: currentPageAuthButton,
-	}
-}
+	};
+};
 
-export default useAuthButton
+export default useAuthButton;

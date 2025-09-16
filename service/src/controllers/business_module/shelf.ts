@@ -34,7 +34,7 @@ class Shelf {
 		}
 	}
 
-	static async find_All_Shelf(ctx: Context) {
+	static async findShelf(ctx: Context) {
 		try {
 			let query = ctx.request.query;
 			console.log("query", query);
@@ -56,7 +56,7 @@ class Shelf {
 		}
 	}
 
-	static async insert_shelf(ctx: Context) {
+	static async insShelf(ctx: Context) {
 		try {
 			let query = ctx.request.query;
 			console.log("query", query);
@@ -82,7 +82,7 @@ class Shelf {
 		}
 	}
 
-	static async updateOne_shelf(ctx: Context) {
+	static async upShelf(ctx: Context) {
 		try {
 			let query = ctx.request.query;
 			console.log("query", query);
@@ -101,7 +101,7 @@ class Shelf {
 		}
 	}
 
-	static async delete_shelf(ctx: Context) {
+	static async delShelf(ctx: Context) {
 		try {
 			let query = ctx.request.query;
 			console.log("query", query);
