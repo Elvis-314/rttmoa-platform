@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.9](https://github.com/rttmoa/rttmoa-platform/compare/v2.4.8...v2.4.9) (2025-09-16)
+
+
+### Bug Fixes
+
+* 🧩 delete button ([086b94d](https://github.com/rttmoa/rttmoa-platform/commit/086b94d284c724fe6900b91b86e7cdc29faf1f97))
+* 🧩 Optimize tables ([9e3b440](https://github.com/rttmoa/rttmoa-platform/commit/9e3b4401f5da61ae4c9fc270b16791eea0ae0716))
+
 ### [2.4.8](https://github.com/rttmoa/rttmoa-platform/compare/v2.4.7...v2.4.8) (2025-09-13)
 
 
