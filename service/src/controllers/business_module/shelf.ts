@@ -1,9 +1,9 @@
 import { Context } from "koa";
 import { config } from "../../config/config";
-// import { MongoService } from "../middlewares/_dbMongoService";
-
+ 
 class Shelf {
-	//* 宁波1880个库位、库存报表
+
+	// * 宁波1880个库位、库存报表
 	static async Storages(ctx: Context) {
 		try {
 			const data = ctx.request.query
@@ -17,7 +17,7 @@ class Shelf {
 		}
 	}
 
-	//* 仓库货架表 所有数据
+	// * 仓库货架表 所有数据
 	static async Shelfs(ctx: Context) {
 		try {
 			// 获取 query 数据、处理数据、
@@ -56,6 +56,7 @@ class Shelf {
 		}
 	}
 
+	// 增加货架数据
 	static async insShelf(ctx: Context) {
 		try {
 			let query = ctx.request.query;
@@ -82,6 +83,7 @@ class Shelf {
 		}
 	}
 
+	// 更新货架数据
 	static async upShelf(ctx: Context) {
 		try {
 			let query = ctx.request.query;
@@ -94,13 +96,14 @@ class Shelf {
 			const result = await ctx.mongo.updateOne("_a_b__c", fDocs[0]._id, { priority: 1234 });
 			console.log("修改结果：", result);
 
-			// 5.0 响应
+			// 5.0 响应 
 			return ctx.send(fDocs, undefined, { counts: fDocs.length, pagesize: 5, pages: 2, page: 1 });
 		} catch (err) {
 			return ctx.sendError(config.resCodes.serverError, err.message);
 		}
 	}
-
+	
+	// 删除货架数据
 	static async delShelf(ctx: Context) {
 		try {
 			let query = ctx.request.query;

@@ -89,7 +89,7 @@ const ModalComponent = (Props: any) => {
 			iconNames.push(key);
 		}
 	});
-	console.log('iconNames', iconNames);
+	// console.log('iconNames', iconNames);
 	return (
 		<>
 			<Modal

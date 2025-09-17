@@ -3,16 +3,17 @@ import { UserList } from '@/api/interface';
 import { Button, Dropdown, Input, Popconfirm, Switch, Tag } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import { IconFont } from '@/components/Icon';
+import Link from 'antd/lib/typography/Link';
 
 const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 	return [
 		{
 			title: '角色名称',
 			dataIndex: 'role_name',
-			copyable: true,
+			// copyable: true,
 			// width: 150,
 			fixed: 'left',
-			tooltip: '用户的名字',
+			tooltip: '角色名称：role_name',
 			// initialValue: 'zhangsan',
 			onFilter: false,
 			// hideInSearch: true,
@@ -20,37 +21,28 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 			// hideInForm: true,
 			// hideInDescriptions: true,
 			sorter: true,
-			render: (dom, entity) => {
-				return (
-					<a
-						href='javascript:void(0)'
-						onClick={() => {
-							handleOperator('detail', entity);
-						}}
-					>
-						{dom}
-					</a>
-				);
+			render: (dom, entity: any) => {
+				return <Link onClick={() => handleOperator('detail', entity)}>{entity?.role_name}</Link>;
 			},
-			// 自定义筛选项功能具体实现请参考 https://ant.design/components/table-cn/#components-table-demo-custom-filter-panel
-			filterDropdown: () => (
-				<div style={{ padding: 2 }}>
-					<Input style={{ width: 150, marginBlockEnd: 8, display: 'block', fontSize: '14px' }} placeholder='请输入' />
-				</div>
-			),
-			filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-			fieldProps: (form, config) => {}, // 查询表单的 props，会透传给表单项，
 		},
 		{
 			title: '权限字符',
 			dataIndex: 'permission_str',
-			// width: 150,
+			tooltip: '权限字符： permission_str',
+			filters: true,
+			onFilter: true,
+		},
+		{
+			title: '菜单分配',
+			dataIndex: 'distribution',
+			tooltip: '新建或编辑时体现菜单分配',
 			filters: true,
 			onFilter: true,
 		},
 		{
 			title: '角色级别',
 			dataIndex: 'level',
+			tooltip: '角色级别： level',
 			// width: 150,
 			filters: true,
 			onFilter: true,
@@ -58,6 +50,7 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 		{
 			title: '角色排序',
 			dataIndex: 'sort',
+			tooltip: '角色名称： sort',
 			// width: 150,
 			filters: true,
 			onFilter: true,
@@ -65,9 +58,9 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 		{
 			title: '角色状态',
 			dataIndex: 'status',
+			tooltip: '角色状态： status',
 			// width: 150,
 			sorter: true,
-			tooltip: '指代用户的年纪大小', // * tooltip 提示一些信息
 			// render: (data, entity) => {
 			// 	return <Switch value={data == '0' ? false : true} />;
 			// },

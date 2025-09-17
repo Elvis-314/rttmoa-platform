@@ -57,11 +57,11 @@ const About: React.FC = () => {
 					type='success'
 					showIcon
 				/>
-				<div className='flex justify-end mt-[10px]'>
+				{/* <div className='flex justify-end mt-[10px]'>
 					<Button type='primary' onClick={onClick}>
 						按钮
 					</Button>
-				</div>
+				</div> */}
 			</Card>
 
 			<Card className='mb-[10px]'>

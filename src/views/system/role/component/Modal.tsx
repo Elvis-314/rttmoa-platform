@@ -24,7 +24,8 @@ const ModalComponent = (Params: any) => {
 	}
 
 	useEffect(() => {
-		FindAllMenu({}).then((res: any) => {
+		FindAllMenu({ name: 'all' }).then((res: any) => {
+			console.log(res.data);
 			setMenuList(transformRoutes(res.data || []) as any);
 			setExpandedKeys([]);
 			setCheckedKeys(modalType == 'create' ? '' : userInfo.permission_menu);

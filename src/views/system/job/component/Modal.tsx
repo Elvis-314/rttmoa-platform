@@ -69,7 +69,6 @@ const ModalComponent = (Params: any) => {
 					</Col>
 					<Col span={12}>
 						<Form.Item label='岗位描述' name='desc' rules={[{ required: false }]}>
-							{/* <TextArea rows={3} placeholder='岗位说明' maxLength={60} /> */}
 							<Input placeholder='岗位说明' />
 						</Form.Item>
 					</Col>

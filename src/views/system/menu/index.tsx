@@ -5,13 +5,13 @@ import { UserList } from '@/api/interface';
 import { FooterToolbar, ProDescriptions, ProTable } from '@ant-design/pro-components';
 import type { ActionType, FormInstance, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { message } from '@/hooks/useMessage';
-import TableColumnsConfig from './component/ColumnConfig';
+import ColumnsConfig from './component/ColumnConfig';
 import ToolBarRender from './component/ToolBar';
 import { addJob, delJob, DelMenu, delMoreJob, DelMoreUser, DelUser, FindAllMenu, findJob, GetProTableUser, InsNewMenu, modifyJob, UpMenu } from '@/api/modules/system';
 import './index.less';
 import ModalComponent from './component/Modal';
-import DrawerComponent from './component/Drawer';
-import FooterComponent from './component/Footer';
+import FooterComponent from '@/components/TableFooter';
+import DrawerComponent from '@/components/TableDrawer';
 
 export type FormValueType = {
 	target?: string;
@@ -34,7 +34,7 @@ const useProTable = () => {
 	const [selectedRows, setSelectedRows] = useState<any[]>([]); // 表格：选择行数据
 
 	// Drawer
-	const [drawerCurrentRow, setDrawerCurrentRow] = useState({}); // Drawer 选择当前行数据
+	const [drawerCurrentRow, setDrawerCurrentRow] = useState<any>({}); // Drawer 选择当前行数据
 	const [drawerIsVisible, setDrawerIsVisible] = useState<boolean>(false); // Drawer 是否显示
 
 	// Modal
@@ -143,14 +143,15 @@ const useProTable = () => {
 				headerTitle='使用 ProTable'
 				defaultSize='small'
 				loading={loading}
-				columns={TableColumnsConfig(handleOperator)}
+				columns={ColumnsConfig(handleOperator)}
 				toolBarRender={() => ToolBarRender(ToolBarParams)} // 渲染工具栏
 				actionRef={actionRef} // Table action 的引用，便于自定义触发 actionRef.current.reset()
 				formRef={formRef} // 可以获取到查询表单的 form 实例
 				request={async (params, sort, filter) => {
 					SetLoading(true);
-					const res: any = await FindAllMenu({});
+					const res: any = await FindAllMenu({ name: 'all' });
 					// console.log('获取菜单：', res);
+
 					let format = {
 						list: res.data,
 						current: res.page,
@@ -190,7 +191,8 @@ const useProTable = () => {
 					persistenceType: 'localStorage',
 				}}
 			/>
-			{selectedRows?.length > 0 && <FooterComponent actionRef={actionRef} selectedRows={selectedRows} setSelectedRows={setSelectedRows} handleOperator={handleOperator} />}
+			{selectedRows?.length > 0 && <FooterComponent selectedRows={selectedRows} modalResult={handleModalSubmit} />}
+
 			{/* 新建 / 编辑 Modal弹窗 */}
 			<ModalComponent
 				form={form}
@@ -202,12 +204,17 @@ const useProTable = () => {
 				setModalIsVisible={setModalIsVisible} // 设置显示
 				handleModalSubmit={handleModalSubmit}
 			/>
+
 			<DrawerComponent
 				drawerIsVisible={drawerIsVisible}
-				drawerCurrentRow={drawerCurrentRow}
-				setDrawerCurrentRow={setDrawerCurrentRow}
-				setDrawerIsVisible={setDrawerIsVisible}
-				handleOperator={handleOperator}
+				drawerCurrentRow={{ ...drawerCurrentRow, name: drawerCurrentRow?.meta?.title }}
+				drawerClose={() => {
+					setDrawerCurrentRow({});
+					setDrawerIsVisible(false);
+				}}
+				columnsConfig={ColumnsConfig}
+				modalOperate={handleOperator}
+				modalResult={handleModalSubmit}
 			/>
 		</>
 	);

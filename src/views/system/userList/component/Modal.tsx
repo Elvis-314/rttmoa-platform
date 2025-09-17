@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Modal, Radio, Row, Space } from 'antd';
+import { Button, Col, Form, Input, Modal, Radio, Row, Select, Space } from 'antd';
 import { useEffect } from 'react';
 
 const ModalComponent = (Params: any) => {
@@ -100,6 +100,21 @@ const ModalComponent = (Params: any) => {
 					<Col span={12}>
 						<Form.Item label='时间' name='time' rules={[{ required: false, message: '请输入年龄' }]}>
 							<Input placeholder='请选择时间' />
+						</Form.Item>
+					</Col>
+					<Col span={12}>
+						<Form.Item label='角色' name='role' rules={[{ required: true, message: '请选择角色' }]}>
+							<Select
+								mode='multiple'
+								allowClear
+								style={{ width: '100%' }}
+								placeholder='Please select'
+								onChange={() => {}}
+								options={[
+									{ label: '11', value: 11 },
+									{ label: '22', value: 22 },
+								]}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>

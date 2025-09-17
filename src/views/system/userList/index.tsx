@@ -32,7 +32,7 @@ const useProTable = () => {
 
 	const [openSearch, SetOpenSearch] = useState<boolean>(false); // 工具栏：开启关闭表单搜索
 	// const [dataSource, setdataSource] = useState([]);
-	const [loading, SetLoading] = useState<boolean>(false); // Loading：加载Loading
+	const [loading, SetLoading] = useState<boolean>(false); // Loading：加载 Loading
 	const [pagination, SetPagination] = useState<any>({ page: 1, pageSize: 10, total: 0 }); // 分页数据
 	const [selectedRows, setSelectedRows] = useState<any[]>([]); // 表格：选择行数据
 

@@ -21,7 +21,6 @@ import ErrorLog from './system_monitor/errorLog';
 export const unprotect = (app: any) => {
 	router.use('/restApi', restApi.routes()); // RESTful 格式的 API
 	router.use('/shelf', Shelf.routes());
-	router.use('/menu', Menu.routes());
 	router.use('/userp', User.routes());
 	router.use('/role', Role.routes());
 
@@ -48,6 +47,7 @@ export const protect = (app: any) => {
 
 	router.use('/dept', Dept.routes()); // 部门
 	router.use('/jb', Job.routes()); // * 岗位模板
+	router.use('/menu', Menu.routes());
 
 	app.use(router.routes()).use(router.allowedMethods());
 };

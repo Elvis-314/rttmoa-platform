@@ -1,6 +1,5 @@
 /* eslint-disable no-inner-declarations */
 import { Context } from 'koa';
-import { config } from '../../config/config';
 import Basic from '../basic';
 import { InitMenuConfig } from '../../config/init_menu';
 
@@ -28,10 +27,10 @@ import { InitMenuConfig } from '../../config/init_menu';
 class Menu extends Basic {
 	constructor() {
 		super();
-		this.InitMenu = this.InitMenu.bind(this);
-		this.FindAllMenu = this.FindAllMenu.bind(this);
-		this.UpMenu = this.UpMenu.bind(this);
-		this.DelMenu = this.DelMenu.bind(this);
+		// this.InitMenu = this.InitMenu.bind(this);
+		// this.FindAllMenu = this.FindAllMenu.bind(this);
+		// this.UpMenu = this.UpMenu.bind(this);
+		// this.DelMenu = this.DelMenu.bind(this);
 	}
 
 	// * 初始化菜单：将menuConfig存储转化到数据库中 【已完成】   修改日期：2025-08-06
@@ -167,7 +166,20 @@ class Menu extends Basic {
 	// * 查询到数据库中的数据、要返回前端所需要的结构 【已完成】  修改日期：2025-06-03
 	FindAllMenu = async (ctx: Context) => {
 		try {
-			const param = ctx.query;
+			const { name } = ctx.query;
+			// console.log('获取菜单参数 param：', param);
+
+			const payload = ctx.state.user;
+			// console.log('userInfo: ', payload);
+			const { username } = await this.getUserById(payload.id, ctx);
+			console.log('userinfo', username);
+			// 当角色是普通用户时：user
+
+			// ! 这里是根据 权限字符去
+			const Permission = 'proAdmin';
+			const Role = await ctx.mongo.find('__role', { query: { permission_str: Permission } });
+			const RoleMenu = Role[0].menuList;
+	 
 
 			/** 将扁平结构转换为树结构 */
 			function flatToTree(flatList: any[]): any[] {
@@ -222,7 +234,6 @@ class Menu extends Basic {
 					}
 				}
 			}
-
 			/** 按 meta.sort 递归排序 */
 			function sortTreeBySort(nodes: any[]): any[] {
 				return nodes
@@ -234,12 +245,29 @@ class Menu extends Basic {
 					}));
 			}
 
-			// ✅ 主控制逻辑
-			const flatMenu = await ctx.mongo.find('__menu'); // 或 "__dept"
-			const tree = flatToTree(flatMenu);
-			removeEmptyChildren(tree);
-			const sortedTree = sortTreeBySort(tree);
-			return ctx.send(sortedTree, '获取菜单树结构成功');
+			if (name && name == 'all') {
+				// ✅ 主控制逻辑
+				const flatMenu = await ctx.mongo.find('__menu'); // 或 "__dept"
+				const tree = flatToTree(flatMenu);
+				removeEmptyChildren(tree);
+				const sortedTree = sortTreeBySort(tree);
+				return ctx.send(sortedTree, '获取菜单树结构成功');
+			}
+
+			// ✅ 只返回首页
+			if (!payload.id || RoleMenu.length == 0) {
+				const home = await ctx.mongo.find('__menu', { query: { path: '/_/home/index' } });
+				const homePage = flatToTree(home);
+				return ctx.send(homePage, '获取菜单树结构成功');
+			}
+
+			// ✅ 只返回首页
+			if (RoleMenu.length) {
+				const tree = flatToTree(RoleMenu);
+				removeEmptyChildren(tree);
+				const sortedTree = sortTreeBySort(tree);
+				return ctx.send(sortedTree, '获取菜单树结构成功');
+			}
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}
@@ -268,7 +296,7 @@ class Menu extends Basic {
 			// * 4、编辑菜单对象
 			function delStr(str: string) {
 				const handleStr = String(str || '').trim();
-				if (str == '') return null;
+				if (handleStr == '') return null;
 				else return handleStr;
 			}
 			let fDoc: any = {
@@ -366,15 +394,13 @@ class Menu extends Basic {
 			// 2、根据ID查询数据库中、是否有children
 			// 3、需要先删除一级菜单下的children数据、才可删除一级菜单
 			// 11、不管是目录还是菜单都要判断下面有无chidren属性、如果有需要删除children
-			function errInfo(msg: string) {
-				return ctx.sendError(400, msg || '删除失败', 400);
-			}
 			const body: any = ctx.request.body;
-			if (body.children) return errInfo(`删除失败：需要先删除子菜单`);
+			if (body.children) return ctx.sendError(400, '删除失败：需要先删除子菜单');
 
 			const fm = await ctx.mongo.find('__menu', { query: { path: body.path } });
-			if (!fm.length) return errInfo(`删除失败：未找到该菜单`);
-			if (fm.length > 1) return errInfo(`删除失败：菜单重复，不唯一`);
+			if (!fm.length) return ctx.sendError(400, '删除失败：未找到该菜单');
+			if (fm.length > 1) return ctx.sendError(400, '删除失败：菜单重复，不唯一');
+
 			const delRes = await ctx.mongo.deleteOne('__menu', fm[0]._id);
 			return ctx.send([], `删除菜单成功`);
 		} catch (err) {

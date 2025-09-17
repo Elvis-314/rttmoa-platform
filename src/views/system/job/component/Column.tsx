@@ -1,8 +1,8 @@
 import { ProColumns } from '@ant-design/pro-components';
 import { Tag } from 'antd';
-import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { TableRenderAction } from '@/components/TableAction';
+import Link from 'antd/lib/typography/Link';
 
 export const ColumnsConfig = (modalOperate: any, modalResult: any): ProColumns<any>[] => {
 	// * 这里 dataIndex 唯一索引不可以重复
@@ -36,26 +36,9 @@ export const ColumnsConfig = (modalOperate: any, modalResult: any): ProColumns<a
 			// tooltip: 'The title', // 省略提示
 			sorter: true, // 排序
 			// readonly: true,
-			render: (dom, entity) => {
-				return (
-					<Link
-						to={''}
-						onClick={e => {
-							e.preventDefault();
-							modalOperate('detail', entity);
-						}}
-					>
-						{dom}
-					</Link>
-				);
+			render: (dom, entity: any) => {
+				return <Link onClick={e => modalOperate('detail', entity)}>{entity?.postName}</Link>;
 			},
-			// 自定义筛选项功能具体实现请参考 https://ant.design/components/table-cn/#components-table-demo-custom-filter-panel
-			// filterDropdown: () => (
-			// 	<div style={{ padding: 4 }}>
-			// 		<Input style={{ width: 150, marginBlockEnd: 8, display: 'block', fontSize: '14px' }} placeholder='请输入岗位名称' onChange={onChange} />
-			// 	</div>
-			// ),
-			// filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
 		},
 		{
 			title: '岗位排序',

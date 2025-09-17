@@ -12,18 +12,17 @@ const usePermissions = () => {
 	/**
 	 * 传递token获取用户按钮权限、菜单权限
 	 * @param {token} 用户 token
-	 * @returns {error} 返回Promise错误信息
+	 * @returns {error} 返回 Promise 错误信息
 	 */
 	const initPermissions = async (token: string) => {
 		if (token) {
 			try {
 				const { data: buttonList } = await loginAPI.getAuthButtonListApi(); // 用户按钮权限
-				// const { data: menuList } = await getAuthMenuListApi() // 用户菜单权限【假数据】
+				// const { data: menuList } = await getAuthMenuListApi() // 用户菜单权限、Json数据
 
-				const newMenu: any = await FindAllMenu({}); // 用户菜单权限【接口数据】
-				// console.log('newMenu', newMenu);
+				const newMenu: any = await FindAllMenu({}); // 用户菜单权限
+				console.log('usePermissions 获取树结构菜单：', newMenu);
 				const menuList = newMenu?.data || [];
-				// console.log('menuList', menuList);
 
 				// 获取Cookie、存储Cookie
 				dispatch(setAuthButtonList(buttonList));
