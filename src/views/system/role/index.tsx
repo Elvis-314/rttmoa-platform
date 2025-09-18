@@ -5,7 +5,7 @@ import { UserList } from '@/api/interface';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, FormInstance } from '@ant-design/pro-components';
 import { message } from '@/hooks/useMessage';
-import ColumnsConfig from './component/ColumnConfig';
+import ColumnsConfig from './component/Column';
 import ToolBarRender from './component/ToolBar';
 import { addRole, delMoreJob, delRole, findRole, modifyRole } from '@/api/modules/system';
 import './index.less';
@@ -45,7 +45,6 @@ const useProTable = () => {
 		// console.log('handleOperator', type, item);
 
 		if (type == 'authorize') {
-			// console.log(object);
 			setModalIsOpenAuth(true);
 		} else if (type === 'detail') {
 			setDrawerIsVisible(true);
@@ -136,7 +135,7 @@ const useProTable = () => {
 				headerTitle='使用 ProTable'
 				defaultSize='small'
 				loading={loading}
-				columns={ColumnsConfig(handleOperator)}
+				columns={ColumnsConfig(handleOperator, handleModalSubmit)}
 				toolBarRender={() => ToolBarRender(ToolBarParams)} // 渲染工具栏
 				actionRef={actionRef} // Table action 的引用，便于自定义触发 actionRef.current.reset()
 				formRef={formRef} // 可以获取到查询表单的 form 实例
@@ -145,7 +144,6 @@ const useProTable = () => {
 					SetLoading(true);
 					// console.log('request请求参数：', params, sort, filter);
 					const { data }: any = await findRole({ ...params, page: params.current });
-					// console.log('data', data);
 					SetLoading(false);
 					SetPagination({ ...pagination, total: data.total });
 					return formatDataForProTable<any>({ ...data, page: params.current });
@@ -173,6 +171,7 @@ const useProTable = () => {
 					persistenceType: 'localStorage',
 				}}
 			/>
+
 			{selectedRows?.length > 0 && <FooterComponent selectedRows={selectedRows} modalResult={handleModalSubmit} />}
 
 			<ModalComponent

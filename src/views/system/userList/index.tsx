@@ -5,13 +5,13 @@ import { UserList } from '@/api/interface';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, FormInstance } from '@ant-design/pro-components';
 import { message } from '@/hooks/useMessage';
-import TableColumnsConfig from './component/Column';
+import ColumnsConfig from './component/Column';
 import ToolBarRender from './component/ToolBar';
-import { DelMoreUser, DelUser, GetProTableUser } from '@/api/modules/system';
+import { addUser, DelMoreUser, delUser, GetProTableUser, modifyUser } from '@/api/modules/system';
 import './index.less';
 import ModalComponent from './component/Modal';
-import DrawerComponent from './component/Drawer';
-import FooterComponent from './component/Footer';
+import FooterComponent from '@/components/TableFooter';
+import DrawerComponent from '@/components/TableDrawer';
 
 export type FormValueType = {
 	target?: string;
@@ -37,7 +37,7 @@ const useProTable = () => {
 	const [selectedRows, setSelectedRows] = useState<any[]>([]); // 表格：选择行数据
 
 	// Drawer
-	const [drawerCurrentRow, setDrawerCurrentRow] = useState({}); // Drawer 选择当前行数据
+	const [drawerCurrentRow, setDrawerCurrentRow] = useState<any>({}); // Drawer 选择当前行数据
 	const [drawerIsVisible, setDrawerIsVisible] = useState<boolean>(false); // Drawer 是否显示
 
 	// Modal
@@ -83,7 +83,7 @@ const useProTable = () => {
 		} else if (type === 'delete') {
 			const hide = message.loading('正在删除');
 			try {
-				const result: any = await DelUser(item._id);
+				const result: any = await delUser(item._id);
 				if (result) {
 					hide();
 					actionRef?.current?.reload();
@@ -111,34 +111,29 @@ const useProTable = () => {
 		}
 	};
 	// * 操作 — 员工： 新建、编辑、详情  弹窗内容提交
-	const handleModalSubmit = (type: string, item: any) => {
+	const handleModalSubmit = async (type: string, item: any) => {
 		// 1、获取form字段值 并 过滤出有值的字段
 		// 2、字段值传递接口、获取接口结果、并提示出信息
 		// 3、重置Modal信息
 		// 4、重新请求，根据页码等条件
 
-		// let res = type === 'create' ? createUser(formData) : editUser(formData)
 		console.log('Modal 提交：', type, item);
-		// setModalTitle('');
-		// setModalType('');
-		// setModalIsVisible(false);
-		// setModalUserInfo({});
-		message.info('待实现');
-		const hide = message.loading('正在添加');
+		const hide = message.loading(type == 'create' ? '正在添加' : '正在编辑');
 		try {
-			const formValues = form.getFieldsValue();
-			console.log('formValues', formValues);
-			// const result = await addRule({ ...formValues });
-			// if (result) {
-			// 	hide();
-			// 	form.resetFields();
-			// 	setModalIsVisible(false);
-			// 	if (actionRef.current) actionRef.current.reload();
-			// 	message.success('Added successfully');
-			// }
-		} catch (error) {
+			let res = type === 'create' ? await addUser(item) : await modifyUser(item._id, item);
+			if (res) {
+				hide();
+				form.resetFields();
+				setModalTitle('');
+				setModalType('');
+				setModalIsVisible(false);
+				setModalUserInfo({});
+				if (actionRef.current) actionRef.current.reload();
+				message.success(type == 'create' ? '添加成功' : '编辑成功');
+			}
+		} catch (error: any) {
 			hide();
-			message.error('Adding failed, please try again!');
+			message.error(error.message || error.msg);
 		}
 	};
 
@@ -150,8 +145,7 @@ const useProTable = () => {
 		SetOpenSearch, // 工具栏：开启表单搜索
 		handleOperator,
 	};
-	const allWidth = TableColumnsConfig(handleOperator).reduce((sum: any, col: any) => sum + (col.width || 0), 0);
-
+	const allWidth = ColumnsConfig('', '').reduce((sum: any, col: any) => sum + (col.width || 0), 0);
 	return (
 		<>
 			<ProTable<UserList>
@@ -164,7 +158,7 @@ const useProTable = () => {
 				headerTitle='用户列表'
 				defaultSize='small'
 				loading={loading}
-				columns={TableColumnsConfig(handleOperator)}
+				columns={ColumnsConfig(handleOperator, handleModalSubmit)}
 				toolBarRender={() => ToolBarRender(ToolBarParams)} // 渲染工具栏
 				actionRef={actionRef} // Table action 的引用，便于自定义触发 actionRef.current.reset()
 				formRef={formRef} // 可以获取到查询表单的 form 实例
@@ -208,7 +202,9 @@ const useProTable = () => {
 					persistenceType: 'localStorage',
 				}}
 			/>
-			{selectedRows?.length > 0 && <FooterComponent actionRef={actionRef} selectedRows={selectedRows} setSelectedRows={setSelectedRows} handleOperator={handleOperator} />}
+
+			{selectedRows?.length > 0 && <FooterComponent selectedRows={selectedRows} modalResult={handleOperator} />}
+
 			<ModalComponent
 				form={form}
 				modalIsVisible={modalIsVisible}
@@ -218,12 +214,17 @@ const useProTable = () => {
 				modalUserInfo={modalUserInfo}
 				handleModalSubmit={handleModalSubmit} // 提交表单
 			/>
+
 			<DrawerComponent
 				drawerIsVisible={drawerIsVisible}
-				drawerCurrentRow={drawerCurrentRow}
-				setDrawerCurrentRow={setDrawerCurrentRow}
-				setDrawerIsVisible={setDrawerIsVisible}
-				handleOperator={handleOperator}
+				drawerCurrentRow={{ ...drawerCurrentRow, name: drawerCurrentRow?.username }}
+				drawerClose={() => {
+					setDrawerCurrentRow({});
+					setDrawerIsVisible(false);
+				}}
+				columnsConfig={ColumnsConfig}
+				modalOperate={handleOperator}
+				modalResult={handleModalSubmit}
 			/>
 		</>
 	);

@@ -17,9 +17,11 @@ export const InsNewMenu = (params: Params) => httpUpack.post(`/menu/addMenu`, pa
 export const UpMenu = (params: Params) => httpUpack.post(`/menu/modMenu`, params);
 export const DelMenu = (params: Params) => httpUpack.post(`/menu/delMenu`, params);
 
-// * 系统管理 — 用户管理
-export const GetUserManagerList = (params: Params) => httpUpack.get(`/userp/users2`, params);
-export const DelUser = (id: string) => httpUpack.delete(`/userp/users`, { id });
+// * 系统管理 — 用户管理eg1
+export const getUsers = (params: Params) => httpUpack.get(`/userp/users2`, params);
+export const addUser = (params: Params) => httpUpack.post(`/userp/addUser`, params);
+export const modifyUser = (id: string, data: any) => httpUpack.put(`/userp/putUser/${id}`, data);
+export const delUser = (id: string) => httpUpack.delete(`/userp/users`, { id });
 export const GetProTableUser = (params: Params) => httpUpack.get(`/userp/users1`, params);
 export const DelMoreUser = (ids: string[]) => httpUpack.post(`/userp/delMoreUsers`, { ids });
 export const DelMoreProTableUser = (ids: Params) => httpUpack.post('/userp/delMoreUsers', { data: ids });

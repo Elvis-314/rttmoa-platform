@@ -1,8 +1,10 @@
 import { ProColumns } from '@ant-design/pro-components';
 import { UserList } from '@/api/interface';
-import { Button, Dropdown, Input, Popconfirm } from 'antd';
+import { Button, Dropdown, Input, Popconfirm, Tag } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import { IconFont } from '@/components/Icon';
+import { TableRenderAction } from '@/components/TableAction';
+import Link from 'antd/lib/typography/Link';
 
 const valueEnum: { [key: number]: string } = {
 	0: 'close',
@@ -17,7 +19,7 @@ const ProcessMap = {
 	error: 'exception',
 } as const;
 
-const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
+const TableColumnsConfig = (handleOperator: any, handleModalSubmit: any): ProColumns<UserList>[] => {
 	return [
 		{
 			title: '用户名',
@@ -33,26 +35,26 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 			// hideInForm: true,
 			// hideInDescriptions: true,
 			sorter: true,
+			align: 'center',
 			render: (dom, entity) => {
 				return (
-					<a
-						href='javascript:void(0)'
+					<Link
 						onClick={() => {
 							handleOperator('detail', entity);
 						}}
 					>
-						{dom}
-					</a>
+						{entity.username}
+					</Link>
 				);
 			},
 			// 自定义筛选项功能具体实现请参考 https://ant.design/components/table-cn/#components-table-demo-custom-filter-panel
-			filterDropdown: () => (
-				<div style={{ padding: 2 }}>
-					<Input style={{ width: 150, marginBlockEnd: 8, display: 'block', fontSize: '14px' }} placeholder='请输入' />
-				</div>
-			),
-			filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-			fieldProps: (form, config) => {}, // 查询表单的 props，会透传给表单项，
+			// filterDropdown: () => (
+			// 	<div style={{ padding: 2 }}>
+			// 		<Input style={{ width: 150, marginBlockEnd: 8, display: 'block', fontSize: '14px' }} placeholder='请输入' />
+			// 	</div>
+			// ),
+			// filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+			// fieldProps: (form, config) => {}, // 查询表单的 props，会透传给表单项，
 		},
 		{
 			title: '性别',
@@ -66,10 +68,12 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 				1: { text: '男' },
 				0: { text: '女' },
 			},
+			align: 'center',
 		},
 		{
 			title: '年龄',
 			dataIndex: 'age',
+			align: 'center',
 			width: 80,
 			sorter: true,
 			tooltip: '指代用户的年纪大小', // * tooltip 提示一些信息
@@ -77,6 +81,7 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 		{
 			title: '状态',
 			dataIndex: 'status',
+			align: 'center',
 			width: 100,
 			hideInForm: true, // * hideInForm 在Form中不展示此列, 不可搜索
 			filters: true,
@@ -102,8 +107,22 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 			},
 		},
 		{
+			title: '角色名称',
+			dataIndex: 'role',
+			align: 'center',
+			width: 150,
+			sorter: true,
+			ellipsis: true,
+			render: (_: any, record: any) => {
+				const str = record?.role?.toString();
+				if (str) return <span>{str}</span>;
+				else return <span>-</span>;
+			},
+		},
+		{
 			title: '执行进度',
 			dataIndex: 'progress',
+			align: 'center',
 			width: 300,
 			hideInSearch: true,
 			valueType: item => ({
@@ -114,6 +133,7 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 		{
 			title: '邮箱',
 			dataIndex: 'email',
+			align: 'center',
 			width: 150,
 			hideInSearch: true,
 			ellipsis: true, // * ellipsis 是否自动缩略
@@ -121,6 +141,7 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 		{
 			title: '手机号',
 			dataIndex: 'phone',
+			align: 'center',
 			width: 120,
 			ellipsis: true,
 			copyable: true,
@@ -128,6 +149,7 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 		{
 			title: '地址',
 			dataIndex: 'city',
+			align: 'center',
 			width: 200,
 			// hideInSearch: true,
 			ellipsis: true,
@@ -137,6 +159,7 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 			title: '时间',
 			key: 'time',
 			dataIndex: 'time',
+			align: 'center',
 			width: 100,
 			valueType: 'time',
 			sorter: true,
@@ -146,6 +169,7 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 		{
 			title: '日期',
 			key: 'date',
+			align: 'center',
 			width: 120,
 			dataIndex: 'date',
 			valueType: 'date',
@@ -156,6 +180,7 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 		{
 			title: '日期时间',
 			key: 'dateTime',
+			align: 'center',
 			width: 150,
 			dataIndex: 'dateTime',
 			valueType: 'dateTime',
@@ -227,67 +252,12 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 		{
 			title: '操作',
 			key: 'option',
+			align: 'center',
 			fixed: 'right',
-			width: 50,
 			hideInSearch: true,
-			render: (data, entity) => action(entity, handleOperator),
+			width: 135,
+			render: (_, record) => TableRenderAction(record, handleOperator, handleModalSubmit),
 		},
-	];
-};
-
-const action = (entity: UserList, handleOperator: any) => {
-	const OnView = () => {
-		handleOperator('detail', entity);
-	};
-	const OnEdit = () => {
-		handleOperator('edit', entity);
-	};
-	const OnDelete = () => {
-		handleOperator('delete', entity);
-	};
-	const menuList = [
-		{
-			key: '1',
-			label: (
-				<Button key='view' type='link' size='small' icon={<EyeOutlined />} onClick={OnView}>
-					查看
-				</Button>
-			),
-		},
-		{
-			key: '2',
-			label: (
-				<Button key='edit' type='link' size='small' icon={<EditOutlined />} onClick={OnEdit}>
-					编辑
-				</Button>
-			),
-		},
-		{
-			key: '3',
-			label: (
-				<Popconfirm title='删除任务！' description='你确定要删除这条任务?' onConfirm={OnDelete} okText='确认' cancelText='取消' placement='bottom' trigger='hover'>
-					<Button key='delete' type='link' size='small' danger icon={<DeleteOutlined />}>
-						删除
-					</Button>
-				</Popconfirm>
-			),
-		},
-	];
-	return [
-		<div className='more-button'>
-			<Dropdown
-				menu={{
-					items: menuList,
-				}}
-				placement='bottom'
-				arrow={{ pointAtCenter: true }}
-				trigger={['click']}
-			>
-				<div className='more-button-item'>
-					<IconFont style={{ fontSize: 22 }} type='icon-xiala' />
-				</div>
-			</Dropdown>
-		</div>,
 	];
 };
 export default TableColumnsConfig;

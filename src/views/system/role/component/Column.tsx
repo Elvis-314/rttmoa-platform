@@ -1,11 +1,10 @@
 import { ProColumns } from '@ant-design/pro-components';
 import { UserList } from '@/api/interface';
-import { Button, Dropdown, Input, Popconfirm, Switch, Tag } from 'antd';
-import { DeleteOutlined, EditOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
-import { IconFont } from '@/components/Icon';
+import { Tag } from 'antd';
 import Link from 'antd/lib/typography/Link';
+import { TableRenderAction } from '@/components/TableAction';
 
-const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
+const TableColumnsConfig = (handleOperator: any, handleModalSubmit: any): ProColumns<UserList>[] => {
 	return [
 		{
 			title: '角色名称',
@@ -81,66 +80,10 @@ const TableColumnsConfig = (handleOperator: any): ProColumns<UserList>[] => {
 			title: '操作',
 			key: 'option',
 			fixed: 'right',
-			width: 50,
 			hideInSearch: true,
-			render: (data, entity) => action(entity, handleOperator),
+			width: 135,
+			render: (_, record) => TableRenderAction(record, handleOperator, handleModalSubmit),
 		},
-	];
-};
-
-const action = (entity: UserList, handleOperator: any) => {
-	const OnView = () => {
-		handleOperator('detail', entity);
-	};
-	const OnEdit = () => {
-		handleOperator('edit', entity);
-	};
-	const OnDelete = () => {
-		handleOperator('delete', entity);
-	};
-	const menuList = [
-		{
-			key: '1',
-			label: (
-				<Button key='view' type='link' size='small' icon={<EyeOutlined />} onClick={OnView}>
-					查看
-				</Button>
-			),
-		},
-		{
-			key: '2',
-			label: (
-				<Button key='edit' type='link' size='small' icon={<EditOutlined />} onClick={OnEdit}>
-					编辑
-				</Button>
-			),
-		},
-		{
-			key: '3',
-			label: (
-				<Popconfirm title='删除任务！' description='你确定要删除这条任务?' onConfirm={OnDelete} okText='确认' cancelText='取消' placement='bottom' trigger='hover'>
-					<Button key='delete' type='link' size='small' danger icon={<DeleteOutlined />}>
-						删除
-					</Button>
-				</Popconfirm>
-			),
-		},
-	];
-	return [
-		<div className='more-button'>
-			<Dropdown
-				menu={{
-					items: menuList,
-				}}
-				placement='bottom'
-				arrow={{ pointAtCenter: true }}
-				trigger={['click']}
-			>
-				<div className='more-button-item'>
-					<IconFont style={{ fontSize: 22 }} type='icon-xiala' />
-				</div>
-			</Dropdown>
-		</div>,
 	];
 };
 export default TableColumnsConfig;

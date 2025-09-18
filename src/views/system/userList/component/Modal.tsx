@@ -1,39 +1,55 @@
+import { findRole } from '@/api/modules/system';
 import { Button, Col, Form, Input, Modal, Radio, Row, Select, Space } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const ModalComponent = (Params: any) => {
 	const { form, modalIsVisible, setModalIsVisible, modalTitle, modalType, modalUserInfo: userInfo, handleModalSubmit } = Params;
 
+	const [roleOption, setRoleOption] = useState([]);
+
+	async function GetRole() {
+		const role: any = await findRole({ name: 'all' });
+		const roleList = role.data?.list;
+		const option = roleList.map((value: any) => {
+			return {
+				label: value.role_name,
+				value: value.permission_str,
+			};
+		});
+		setRoleOption(option);
+	}
+
 	useEffect(() => {
-		if (modalType == 'create') {
-			form.resetFields();
-		}
-		if (modalType == 'edit') {
-			form.setFieldsValue({
-				username: userInfo.username,
-				age: userInfo.age,
-				email: userInfo.email,
-				sex: userInfo.sex,
-				status: userInfo.status,
-				phone: userInfo.phone,
-				city: userInfo.city,
-			});
-		}
+		const fetchData = async () => {
+			const roleList = await GetRole();
+			if (modalType == 'create') {
+				form.resetFields();
+			}
+			if (modalType == 'edit') {
+				form.setFieldsValue({
+					username: userInfo.username,
+					age: userInfo.age,
+					email: userInfo.email,
+					sex: userInfo.sex,
+					status: userInfo.status,
+					phone: userInfo.phone,
+					city: userInfo.city,
+					role: userInfo.role,
+				});
+			}
+		};
+		fetchData();
 	}, [modalType, userInfo]);
 
-	const OnCancel = () => {
-		setModalIsVisible(false);
-	};
-	const OnReset = () => {
-		form.resetFields();
-	};
 	const FormOnFinish = () => {
 		const formList = form.getFieldsValue();
+		if (modalType == 'edit') {
+			formList._id = userInfo._id;
+		}
 		handleModalSubmit && handleModalSubmit(modalType, formList);
 	};
-	const OnSubmit = () => {
-		form.submit();
-	};
+	const OnCancel = () => setModalIsVisible(false);
+	const OnSubmit = () => form.submit();
 	return (
 		<Modal
 			title={modalTitle}
@@ -65,7 +81,6 @@ const ModalComponent = (Params: any) => {
 					</Col>
 					<Col span={12}>
 						<Form.Item label='性别' name='sex' rules={[{ required: false, message: '请输入年龄' }]}>
-							{/* <Input placeholder='请输入性别' /> */}
 							<Radio.Group defaultValue={1}>
 								<Radio.Button value={1}>男</Radio.Button>
 								<Radio.Button value={0}>女</Radio.Button>
@@ -104,17 +119,7 @@ const ModalComponent = (Params: any) => {
 					</Col>
 					<Col span={12}>
 						<Form.Item label='角色' name='role' rules={[{ required: true, message: '请选择角色' }]}>
-							<Select
-								mode='multiple'
-								allowClear
-								style={{ width: '100%' }}
-								placeholder='Please select'
-								onChange={() => {}}
-								options={[
-									{ label: '11', value: 11 },
-									{ label: '22', value: 22 },
-								]}
-							/>
+							<Select mode='multiple' allowClear style={{ width: '100%' }} placeholder='请选择角色' options={roleOption} />
 						</Form.Item>
 					</Col>
 				</Row>

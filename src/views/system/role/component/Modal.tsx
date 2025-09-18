@@ -25,7 +25,6 @@ const ModalComponent = (Params: any) => {
 
 	useEffect(() => {
 		FindAllMenu({ name: 'all' }).then((res: any) => {
-			console.log(res.data);
 			setMenuList(transformRoutes(res.data || []) as any);
 			setExpandedKeys([]);
 			setCheckedKeys(modalType == 'create' ? '' : userInfo.permission_menu);
@@ -166,7 +165,7 @@ const ModalComponent = (Params: any) => {
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='状态' name='status' rules={[{ required: false }]}>
+						<Form.Item label='角色状态' name='status' rules={[{ required: false }]}>
 							<Switch />
 						</Form.Item>
 					</Col>

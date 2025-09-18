@@ -49,16 +49,7 @@ class Job extends Basic {
 		return errors;
 	};
 
-	// 岗位代码应该自动生成
-	private generatePostCode = (postName: string) => {
-		// 简单的拼音首字母生成
-		return postName
-			.split('')
-			.map(char => (char.charCodeAt(0) > 255 ? char.charAt(0) : char))
-			.join('')
-			.toLowerCase()
-			.replace(/\s+/g, '_');
-	};
+ 
 
 	// 检查岗位名称是否已存在
 	private checkPostName = async (ctx: Context, postName: string) => {
@@ -105,7 +96,7 @@ class Job extends Basic {
 	findJob = async (ctx: Context) => {
 		try {
 			const data: any = ctx.request.body;
-			console.log('查询参数：', data);
+			// console.log('查询参数：', data);
 
 			const query = this.JobQuery(data);
 
@@ -132,7 +123,10 @@ class Job extends Basic {
 	addJob = async (ctx: Context) => {
 		try {
 			const data: JobParams = ctx.request.body;
-			console.log('新增岗位参数：', data);
+			// console.log('新增岗位参数：', data);
+
+			console.log('数值参数：', _.get(data, "desc", 1));
+				return ctx.send(`新增数据成功!`);
 
 			const check = await this.checkPostName(ctx, data?.job_name);
 			if (check) return ctx.sendError(400, '已存在岗位名称');
@@ -142,11 +136,12 @@ class Job extends Basic {
 
 			// * 先查询岗位名称是否重复
 			const newJob: any = {
-				postCode: this.generatePostCode(data?.job_name),
-				postName: _.trim(_.toString(data?.job_name)), // 产品经理 | 前端开发 | 会计
-				postSort: _.toNumber(data.job_sort), // 排序
-				status: _.trim(_.toString(data.status)), // 开关：开启/关闭
-				desc: _.trim(_.toString(data?.desc)),
+				postCode: _.trim(_.get(data, "job_name", "")),
+				postName:  _.trim(_.get(data, "job_name", "")), // 产品经理 | 前端开发 | 会计
+				// postSort: _.toNumber(data.job_sort), // 排序
+				postSort:_.get(data, "job_sort", 1), // 排序
+				status:  _.trim(_.get(data, "status", "")), // 开关：开启/关闭
+				desc:  _.trim(_.get(data, "desc", "")),
 				flag: false,
 				createBy: 'admin',
 				createTime: new Date(),
@@ -176,7 +171,7 @@ class Job extends Basic {
 
 			// * 先查询岗位名称是否重复
 			const newJob: any = {
-				postCode: this.generatePostCode(data?.job_name),
+				postCode: data?.job_name,
 				postName: _.trim(_.toString(data?.job_name)), // 产品经理 | 前端开发 | 会计
 				postSort: _.toNumber(data.job_sort), // 排序
 				status: _.trim(_.toString(data.status)), // 开关：开启/关闭

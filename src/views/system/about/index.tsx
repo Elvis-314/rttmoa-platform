@@ -39,7 +39,7 @@ const About: React.FC = () => {
 		// mediaDevicesObj.startMediaInput({ video: true, audio: true });
 		// useThrottle(() => {}, 2000)
 	};
-	console.log('copyResult', isCopied, textareaRef);
+	// console.log('copyResult', isCopied, textareaRef);
 	return (
 		<>
 			{/* <TestUtil /> */}

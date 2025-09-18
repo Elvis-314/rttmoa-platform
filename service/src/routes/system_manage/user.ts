@@ -6,8 +6,8 @@ const router = new Router();
 
 router.get("/fakeUser", User.addFakeUser); // 生成500个     http://127.0.0.1:6300/userp/fakeUser
 
-router.post("/ins_User", User.addUser);
-router.get("/up_User", User.upUser);
+router.post("/addUser", User.addUser);
+router.put("/putUser/:id", User.upUser); 
 router.delete("/users", User.delUser); // 删除
 router.post("/delMoreUsers", User.delMoreUser); // 删除更多用户
 

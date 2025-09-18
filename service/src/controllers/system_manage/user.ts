@@ -3,6 +3,7 @@ import { config } from '../../config/config';
 import Basic from '../basic';
 import catArr from '../../config/init_fakeUser';
 import jwt from 'jsonwebtoken';
+import _ from 'lodash';
 
 const Mock = require('mockjs');
 const bcrypt = require('bcrypt');
@@ -44,7 +45,7 @@ class User extends Basic {
 				console.log('token', token);
 				const up = await ctx.mongo.updateOne('__user', findUser[0]._id, { token });
 
-				return ctx.send({ list: findUser, token  });
+				return ctx.send({ list: findUser, token });
 			} else {
 				return ctx.sendError(400, '登陆操作失败：密码错误！');
 			}
@@ -82,7 +83,7 @@ class User extends Basic {
 
 				job: '', // 岗位
 				dept: '', // 部门
-				role: "普通用户", // 角色
+				role: '普通用户', // 角色
 				token: '', // 新token存储起来
 				is_use: 1, // 是否冻结：1 正常，0 冻结
 
@@ -148,59 +149,61 @@ class User extends Basic {
 			return ctx.sendError(config.resCodes.serverError, err.message);
 		}
 	};
-
+ 
 	addUser = async (ctx: Context) => {
 		try {
-			let query = ctx.request.query;
-			let user = {
-				username: '', // 用户名：张三
-				password: '', // 密码：pwd
-				phone: '', // 电话：14443322133
-				nickname: '', // 昵称：管理员、普通用户
-				email: '', // 邮箱：admin@163.com
-				sex: '', // 性别：1 男、0 女
+			const data: any = ctx.request.body;
+			// console.log('用户新增:', data);
+
+			let newUser = {
+				username: _.trim(_.get(data, 'username', '')), // 用户名：张三
+				// password: _.trim(_.get(data, 'password', '')), // 密码：pwd
+				phone: _.trim(_.get(data, 'phone', '')), // 电话：14443322133
+				nickname: _.trim(_.get(data, 'nickname', '')), // 昵称：管理员、普通用户
+				email: _.trim(_.get(data, 'email', '')), // 邮箱：admin@163.com
+				sex: _.get(data, 'sex', 1), // 性别：1 男、0 女
 
 				dept: '', // 部门管理：软件部、财务部
 				job: '', // 岗位管理：前端开发、运维管理
-				role: '', // 角色：管理员、普通用户
+				role: _.get(data, 'role', []), // 角色：管理员、普通用户
 
 				is_use: 1, // 是否冻结：1 正常，0 冻结
 				token: '', // token
 				created_at: new Date(), // 创建时间
 				updated_at: new Date(), // 更新时间
 			};
-			const ins = await ctx.mongo.insertOne('__user', user);
+			const ins = await ctx.mongo.insertOne('__user', newUser);
 
-			return ctx.send({ message: '新增用户成功' });
+			return ctx.send({ message: '添加用户成功' });
 		} catch (err) {
 			return ctx.sendError(config.resCodes.serverError, err.message);
 		}
 	};
 	upUser = async (ctx: Context) => {
 		try {
-			let query: any = ctx.request.query;
-			console.log('query', query);
-			// 获取用户名、密码、
-			if (!query._id) return ctx.sendError(400, '更新用户操作：未获取到iD');
+			const id = ctx.params.id;
+			const data: any = ctx.request.body;
+			// console.log('用户更新:', id, data);
+			if (!id) return ctx.sendError(400, '更新用户操作：参数id错误');
 
 			let newUser = {
-				username: '', // 用户名：张三
-				password: '', // 密码：pwd
-				phone: '', // 电话：14443322133
-				nickname: '', // 昵称：管理员、普通用户
-				email: '', // 邮箱：admin@163.com
-				sex: '', // 性别：1 男、0 女
+				username: _.trim(_.get(data, 'username', '')), // 用户名：张三
+				// password: _.trim(_.get(data, 'password', '')), // 密码：pwd
+				phone: _.trim(_.get(data, 'phone', '')), // 电话：14443322133
+				nickname: _.trim(_.get(data, 'nickname', '')), // 昵称：管理员、普通用户
+				email: _.trim(_.get(data, 'email', '')), // 邮箱：admin@163.com
+				sex: _.get(data, 'sex', 1), // 性别：1 男、0 女
 
 				dept: '', // 部门管理：软件部、财务部
 				job: '', // 岗位管理：前端开发、运维管理
-				role: '', // 角色：管理员、普通用户
+				role: _.get(data, 'role', []), // 角色：管理员、普通用户
 
 				is_use: 1, // 是否冻结：1 正常，0 冻结
 				token: '', // token
 				created_at: new Date(), // 创建时间
 				updated_at: new Date(), // 更新时间
 			};
-			const ins = await ctx.mongo.updateOne('__user', query._id, newUser);
+			const ins = await ctx.mongo.updateOne('__user', id, newUser);
 
 			return ctx.send([], undefined, { counts: 1, pagesize: 5, pages: 2, page: 1 });
 		} catch (err) {
@@ -212,7 +215,7 @@ class User extends Basic {
 	findProTableUser = async (ctx: Context) => {
 		try {
 			const currentUser = ctx.state.user;
-			console.log('当前用户：', currentUser);
+			// console.log('当前用户：', currentUser);
 
 			// if (Object.keys(currentUser).length == 0) {
 			// 	return ctx.sendError(401, "Unauthorized access. Please provide a valid token.");
@@ -232,7 +235,6 @@ class User extends Basic {
 			let sortParam = {};
 			const count = await ctx.mongo.count('__user', query);
 			const result = await ctx.mongo.find('__user', { query: query, sort: {}, page: +param.page || 1, pageSize: +param.pageSize || 10 });
-			// throw new Error("失败；；；；；")
 
 			return ctx.send({ message: '获取数据成功', list: result, page: +param.page || 1, pageSize: +param.pageSize || 10, total: count || 0 });
 		} catch (err) {

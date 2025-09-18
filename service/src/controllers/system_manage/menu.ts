@@ -169,17 +169,17 @@ class Menu extends Basic {
 			const { name } = ctx.query;
 			// console.log('获取菜单参数 param：', param);
 
-			const payload = ctx.state.user;
-			// console.log('userInfo: ', payload);
-			const { username } = await this.getUserById(payload.id, ctx);
-			console.log('userinfo', username);
-			// 当角色是普通用户时：user
+			const currentUser = ctx.state.user;
+			if (Object.keys(currentUser).length == 0) {
+				return ctx.sendError(401, 'Unauthorized access. Please provide a valid token.');
+			}
+			const { username, role } = await this.getUserById(currentUser?.id, ctx);
 
-			// ! 这里是根据 权限字符去
-			const Permission = 'proAdmin';
-			const Role = await ctx.mongo.find('__role', { query: { permission_str: Permission } });
-			const RoleMenu = Role[0].menuList;
-	 
+			let RoleMenu: any = [];
+			if (role.length) {
+				const Role = await ctx.mongo.find('__role', { query: { permission_str: { $in: role } }, sort: { level: -1 } });
+				RoleMenu = Role[0].menuList;
+			}
 
 			/** 将扁平结构转换为树结构 */
 			function flatToTree(flatList: any[]): any[] {
@@ -255,7 +255,10 @@ class Menu extends Basic {
 			}
 
 			// ✅ 只返回首页
-			if (!payload.id || RoleMenu.length == 0) {
+			// 1、没有获取到 cookie 中的 用户信息
+			// 2、登陆的用户没有 角色字符
+			// 3、获取的角色菜单为空
+			if (!currentUser.id || role.length == 0 || RoleMenu.length == 0) {
 				const home = await ctx.mongo.find('__menu', { query: { path: '/_/home/index' } });
 				const homePage = flatToTree(home);
 				return ctx.send(homePage, '获取菜单树结构成功');

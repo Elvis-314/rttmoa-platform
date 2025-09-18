@@ -10,7 +10,7 @@ import { addRule, updateRule } from '@/api/modules/eg_proTable/api';
 import UpdateForm from './component/UpdateForm';
 import TableColumnsConfig, { TableColumnsParams } from './component/ColumnConfig';
 import ToolBarRender from './component/ToolBar';
-import { DelMoreUser, DelUser, GetProTableUser } from '@/api/modules/system';
+import { DelMoreUser, delUser, GetProTableUser } from '@/api/modules/system';
 import './index.less';
 import { DeleteOutlined } from '@ant-design/icons';
 import handle from './component/Operate';
@@ -89,7 +89,7 @@ const useProTable = () => {
 		} else if (type === 'delete') {
 			const hide = message.loading('正在删除');
 			try {
-				const result: any = await DelUser(item._id);
+				const result: any = await delUser(item._id);
 				if (result) {
 					hide();
 					actionRef?.current?.reload();

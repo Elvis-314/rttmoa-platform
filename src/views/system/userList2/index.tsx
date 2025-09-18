@@ -8,7 +8,7 @@ import './index.less';
 import { columnConfig } from './components/ColumnConfig';
 import TableHeader from './components/TableHeader';
 import AdvancedSearchForm from '@/components/AdvancedSearchForm';
-import { DelMoreUser, DelUser, GetUserManagerList } from '@/api/modules/system';
+import { DelMoreUser, delUser, getUsers } from '@/api/modules/system';
 
 interface UserListResults {
 	code?: number;
@@ -88,7 +88,7 @@ const UserManage: React.FC = () => {
 		// console.log('参数 pagination：', pagination)
 		let { page, pageSize } = pagination;
 		let searchParams = { page, pageSize, ...searchFilter };
-		const result: any = await GetUserManagerList(searchParams);
+		const result: any = await getUsers(searchParams);
 		const userlist = result?.data?.list?.map((item: any, index: number) => ({ ...item, key: index + 1 }));
 		setUserList(userlist || []);
 		setPagination({
@@ -122,7 +122,7 @@ const UserManage: React.FC = () => {
 			// 3、重新获取数据
 			const hide = message.loading('正在删除');
 			try {
-				const result: any = await DelUser(item._id);
+				const result: any = await delUser(item._id);
 				if (result) {
 					hide();
 					GetData();

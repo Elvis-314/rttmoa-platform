@@ -13,7 +13,7 @@ class Role extends Basic {
 		try {
 			// 1、获取前端参数并校验：
 			const data: any = ctx.request.body;
-			console.log('添加角色：', data);
+			// console.log('添加角色：', data);
 
 			// 2、校验是否存在相同角色名称、角色字符
 

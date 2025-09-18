@@ -5,9 +5,9 @@ import { UserList } from '@/api/interface';
 import { FooterToolbar, ProDescriptions, ProTable } from '@ant-design/pro-components';
 import type { ActionType, FormInstance, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { message } from '@/hooks/useMessage';
-import ColumnsConfig from './component/ColumnConfig';
+import ColumnsConfig from './component/Column';
 import ToolBarRender from './component/ToolBar';
-import { addJob, delJob, DelMenu, delMoreJob, DelMoreUser, DelUser, FindAllMenu, findJob, GetProTableUser, InsNewMenu, modifyJob, UpMenu } from '@/api/modules/system';
+import { addJob, delJob, DelMenu, delMoreJob, DelMoreUser, delUser, FindAllMenu, findJob, GetProTableUser, InsNewMenu, modifyJob, UpMenu } from '@/api/modules/system';
 import './index.less';
 import ModalComponent from './component/Modal';
 import FooterComponent from '@/components/TableFooter';
@@ -143,7 +143,7 @@ const useProTable = () => {
 				headerTitle='使用 ProTable'
 				defaultSize='small'
 				loading={loading}
-				columns={ColumnsConfig(handleOperator)}
+				columns={ColumnsConfig(handleOperator, handleModalSubmit)}
 				toolBarRender={() => ToolBarRender(ToolBarParams)} // 渲染工具栏
 				actionRef={actionRef} // Table action 的引用，便于自定义触发 actionRef.current.reset()
 				formRef={formRef} // 可以获取到查询表单的 form 实例
