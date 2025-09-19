@@ -2,112 +2,14 @@ import { Context } from 'koa';
 import { config } from '../../config/config';
 import Basic from '../basic';
 import catArr from '../../config/init_fakeUser';
-import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 
 const Mock = require('mockjs');
-const bcrypt = require('bcrypt');
 
 class User extends Basic {
 	constructor() {
 		super();
 	}
-
-	login = async (ctx: Context) => {
-		try {
-			const { username, password } = ctx.request.body as any;
-			if (!username) return ctx.sendError(400, '登陆操作：无用户名');
-			if (!password) return ctx.sendError(400, '登陆操作：无密码');
-			console.log('username', username);
-			const findUser = await ctx.mongo.find('__user', { query: { username: username } });
-			if (!findUser.length) {
-				return ctx.sendError(400, '登陆操作：用户名错误');
-			}
-			const oldPassword = findUser[0].password;
-
-			const isMatch = await bcrypt.compare(password, oldPassword);
-			if (!isMatch) {
-				// jsonwebtoken过期时间：
-				// 秒: 10, 10s
-				// 分钟: 2m, '10m'
-				// 小时: '5h', 10h
-				// 天: '7d'
-				// 周: '2w'
-				// 年: '1y'
-				const token = jwt.sign(
-					{
-						id: findUser[0]._id,
-						name: username,
-					},
-					config.jwtkey,
-					{ expiresIn: '365d' } // 有效期365天 | 1h
-				);
-				console.log('token', token);
-				const up = await ctx.mongo.updateOne('__user', findUser[0]._id, { token });
-
-				return ctx.send({ list: findUser, token });
-			} else {
-				return ctx.sendError(400, '登陆操作失败：密码错误！');
-			}
-		} catch (err) {
-			return ctx.sendError(config.resCodes.serverError, err.message);
-		}
-	};
-
-	logout = async (ctx: Context) => {
-		// 查询用户、将用户token为空
-		const user = ctx.state.user;
-		// const up = await ctx.mongo.updateOne('__user', findUser[0]._id, { token });
-		return ctx.send({ message: '退出成功' });
-	};
-
-	register = async (ctx: Context) => {
-		try {
-			const { username, password, phone } = ctx.request.body as any;
-			if (!username) return ctx.sendError(400, '登陆操作：无用户名');
-			if (!password) return ctx.sendError(400, '登陆操作：无密码');
-			if (!phone) return ctx.sendError(400, '登陆操作：无手机号');
-
-			const findUser = await ctx.mongo.find('__user', { query: { username: username } });
-			if (findUser.length) {
-				return ctx.sendError(400, '注册操作失败：已存在用户');
-			}
-
-			const saltRounds = 10; // 建议值在 10-12 之间
-			const hash = await bcrypt.hash(password, saltRounds);
-
-			let newUser = {
-				username: username, // 用户名
-				password: hash, // 密码
-				phone: phone, // 手机号
-
-				job: '', // 岗位
-				dept: '', // 部门
-				role: '普通用户', // 角色
-				token: '', // 新token存储起来
-				is_use: 1, // 是否冻结：1 正常，0 冻结
-
-				created_at: new Date(), // 创建时间
-				updated_at: new Date(), // 更新时间
-			};
-
-			const insId: any = await ctx.mongo.insertOne('__user', newUser);
-			// console.log('ins', insId);
-
-			const token = jwt.sign(
-				{
-					id: insId,
-					name: username,
-				},
-				config.jwtkey,
-				{ expiresIn: 60 * 60 * 24 * 365 } // 有效期365天
-			);
-
-			return ctx.send({ token });
-		} catch (err) {
-			return ctx.sendError(config.resCodes.serverError, err.message);
-		}
-	};
 
 	// 假数据接口
 	addFakeUser = async (ctx: Context) => {
@@ -139,41 +41,42 @@ class User extends Basic {
 				],
 			});
 			console.log('users', users);
-			// for (const element of users.data) {
-			// 	const ins = await ctx.mongo.insertOne("__user", element);
-			// }
-			const insMany = await ctx.mongo.insertMany('__user', users.data);
-			console.log('insMany', insMany);
+			await ctx.mongo.insertMany('__user', users.data);
 			return ctx.send(users, undefined, { counts: 1, pagesize: 5, pages: 2, page: 1 });
 		} catch (err) {
 			return ctx.sendError(config.resCodes.serverError, err.message);
 		}
 	};
- 
+
+	addAndModifyField = (data: any) => {
+		return {
+			username: this.normalize(data?.username, ['string'], null), // 用户名：张三
+			// password: _.trim(_.get(data, 'password', '')), // 密码：pwd
+			phone: this.normalize(data?.phone, ['string'], null), // 电话：14443322133
+			nickname: this.normalize(data?.nickname, ['string'], null), // 昵称：管理员、普通用户
+			email: this.normalize(data?.email, ['string'], null), // 邮箱：admin@163.com
+			sex: this.normalize(data?.sex, ['number'], 1), // 性别：1 男、0 女
+
+			dept: '', // 部门管理：软件部、财务部
+			job: '', // 岗位管理：前端开发、运维管理
+			role: this.normalize(data?.role, ['array'], []), // 角色：管理员、普通用户
+
+			is_use: 1, // 是否冻结：1 正常，0 冻结
+			token: '', // token 
+		};
+	};
+
 	addUser = async (ctx: Context) => {
 		try {
 			const data: any = ctx.request.body;
 			// console.log('用户新增:', data);
 
+			const user = this.addAndModifyField(data);
 			let newUser = {
-				username: _.trim(_.get(data, 'username', '')), // 用户名：张三
-				// password: _.trim(_.get(data, 'password', '')), // 密码：pwd
-				phone: _.trim(_.get(data, 'phone', '')), // 电话：14443322133
-				nickname: _.trim(_.get(data, 'nickname', '')), // 昵称：管理员、普通用户
-				email: _.trim(_.get(data, 'email', '')), // 邮箱：admin@163.com
-				sex: _.get(data, 'sex', 1), // 性别：1 男、0 女
-
-				dept: '', // 部门管理：软件部、财务部
-				job: '', // 岗位管理：前端开发、运维管理
-				role: _.get(data, 'role', []), // 角色：管理员、普通用户
-
-				is_use: 1, // 是否冻结：1 正常，0 冻结
-				token: '', // token
+				...user,
 				created_at: new Date(), // 创建时间
-				updated_at: new Date(), // 更新时间
 			};
-			const ins = await ctx.mongo.insertOne('__user', newUser);
-
+			await ctx.mongo.insertOne('__user', newUser);
 			return ctx.send({ message: '添加用户成功' });
 		} catch (err) {
 			return ctx.sendError(config.resCodes.serverError, err.message);
@@ -184,28 +87,16 @@ class User extends Basic {
 			const id = ctx.params.id;
 			const data: any = ctx.request.body;
 			// console.log('用户更新:', id, data);
+
 			if (!id) return ctx.sendError(400, '更新用户操作：参数id错误');
 
+			const user = this.addAndModifyField(data);
 			let newUser = {
-				username: _.trim(_.get(data, 'username', '')), // 用户名：张三
-				// password: _.trim(_.get(data, 'password', '')), // 密码：pwd
-				phone: _.trim(_.get(data, 'phone', '')), // 电话：14443322133
-				nickname: _.trim(_.get(data, 'nickname', '')), // 昵称：管理员、普通用户
-				email: _.trim(_.get(data, 'email', '')), // 邮箱：admin@163.com
-				sex: _.get(data, 'sex', 1), // 性别：1 男、0 女
-
-				dept: '', // 部门管理：软件部、财务部
-				job: '', // 岗位管理：前端开发、运维管理
-				role: _.get(data, 'role', []), // 角色：管理员、普通用户
-
-				is_use: 1, // 是否冻结：1 正常，0 冻结
-				token: '', // token
-				created_at: new Date(), // 创建时间
+				...user,
 				updated_at: new Date(), // 更新时间
 			};
-			const ins = await ctx.mongo.updateOne('__user', id, newUser);
-
-			return ctx.send([], undefined, { counts: 1, pagesize: 5, pages: 2, page: 1 });
+			await ctx.mongo.updateOne('__user', id, newUser);
+			return ctx.send('更新用户成功');
 		} catch (err) {
 			return ctx.sendError(config.resCodes.serverError, err.message);
 		}
@@ -274,25 +165,25 @@ class User extends Basic {
 
 	// * 删除用户
 	delUser = async (ctx: Context) => {
-		return this.handle(ctx, async () => {
+		try {
 			let { id } = ctx.request.query;
-			if (!id) return { message: '失败：id 错误' };
+			if (!id) return ctx.sendError(400, '删除用户：传递iD错误');
+
 			const result = await ctx.mongo.find('__user', { query: { _id: id } });
 			if (result.length == 1) {
-				const deleteRes = await ctx.mongo.deleteOne('__user', result[0]._id);
-				return { message: deleteRes ? '删除成功' : '删除失败' };
+				await ctx.mongo.deleteOne('__user', result[0]._id);
+				return ctx.send({ message: '删除用户成功' });
 			} else {
-				return { message: '失败：未找到要删除的数据' };
+				return ctx.sendError(400, '删除用户：未找到要删除的数据');
 			}
-		});
+		} catch (err) {
+			return ctx.sendError(config.resCodes.serverError, err.message);
+		}
 	};
 
 	// * 删除多个用户
 	delMoreUser = async (ctx: Context) => {
-		// http.post("/userp/del_more_User/123", { body: params })
-		return this.handle(ctx, async () => {
-			// console.log('request-id', ctx.params.id);
-			console.log('request-body', ctx.request.body);
+		try {
 			let { ids }: any = ctx.request.body;
 			if (ids.length) {
 				let num = 0;
@@ -301,11 +192,13 @@ class User extends Basic {
 					console.log('result', result);
 					num++;
 				}
-				return { message: `全部删除完成，删除个数为 ${num}` };
+				return ctx.send({ message: '删除用户成功' });
 			} else {
-				return { message: '失败：ids 为空' };
+				return ctx.sendError(400, '删除多个用户：没有传递正确的参数');
 			}
-		});
+		} catch (err) {
+			return ctx.sendError(config.resCodes.serverError, err.message);
+		}
 	};
 }
 

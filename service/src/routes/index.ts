@@ -17,11 +17,13 @@ import restApi from './system_manage/restApi';
 import { config } from '../config/config';
 import Operate from './system_monitor/operate';
 import ErrorLog from './system_monitor/errorLog'; 
+import Login from './system_manage/login'; 
 
 export const unprotect = (app: any) => {
 	router.use('/restApi', restApi.routes()); // RESTful 格式的 API
 	router.use('/shelf', Shelf.routes());
 	router.use('/userp', User.routes());
+	router.use('/login', Login.routes());
 	router.use('/role', Role.routes());
 
 	router.use('/error', ErrorLog.routes());

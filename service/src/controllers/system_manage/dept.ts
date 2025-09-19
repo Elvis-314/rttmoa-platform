@@ -21,20 +21,13 @@ class Dept extends Basic {
 			const payload = ctx.state.user; // 这就是你的载荷信息
 			// console.log('Authenticated user ID:', payload);
 
-			// const param = ctx.query;
-			// if (!param) return ctx.sendError(400, `未获取到参数`, 400);
-			// if (!param._id) return ctx.sendError(400, `查询部门操作：未获取到iD`, 400);
-			// {
-			// 	"code": 400,
-			// 	"data": null,
-			// 	"msg": "查询部门操作：未获取到iD"
-			// }
+			// const param = ctx.query; 
+			// // status：400，查询部门操作：未获取到iD
+			// if (!param._id) return ctx.sendError(400, `查询部门操作：未获取到iD`);
+			
+			// // status：500，服务器错误 
 			// if (!param.name) throw new Error("查询部门操作：请求参数错误，无部门名称")
-			// {
-			// 	"code": 500,
-			// 	"data": null,
-			// 	"msg": "查询部门操作：请求参数错误，无部门名称"
-			// }
+	 
 
 			/** 将扁平结构转换为树结构 */
 			function flatToTree(flatList: any[]): any[] {
@@ -107,50 +100,38 @@ class Dept extends Basic {
 		}
 	};
 
+	addAndModifyField = (data: any) => {
+		let newDept: any = {
+				parent_id: this.normalize(data?.parent_id, ['number', 'string'], null), // 父级菜单ID（顶层为0或null） &  子部门parent_id为上级部门的name
+				name: this.normalize(data?.name, ['string'], null), // 部门名称：研发部
+				label: this.normalize(data?.name, ['string'], null), // 同部门：研发部
+				leader: this.normalize(data?.leader, ['string'], null), // 部门负责人iD或姓名：张三
+				phone: this.normalize(data?.phone, ['string'], null), // 1233333333
+				email: this.normalize(data?.email, ['string'], null), // 9082@qq.com
+				status: this.normalize(data?.status, ['string'], null), // 开关状态：true
+				sort: this.normalize(data?.sort, ['number'], 1), // 部门排序：3
+				desc: this.normalize(data?.desc, ['string'], null), // 描述
+
+				// subCount: 2,
+				// hasChildren: true, 
+			};
+			return newDept
+	}
+
 	// * 新增部门：树结构	  —   是否顶级部门
 	// POST: /dept/department
 	addDept = async (ctx: Context) => {
 		try {
 			let data: any = ctx.request.body;
 			console.log('新增部门参数：', data);
-			// * 1、校验
-			// * 做一下字段校验、无问题写入到数据库中：比如element与redirect不能同时存在
-			if (!data || typeof data !== 'object') return ctx.sendError(400, '新增部门操作：无参数');
-			if (!data.name) return ctx.sendError(400, '新增部门操作：无部门名称');
-			// if (!data.name) throw new Error("新增部门操作：请求参数错误，无部门名称")
 
-			// * 3、如果新增的是菜单、需要注意父iD是什么、需要修改 parent_id
-			// * 4、编辑菜单对象
-
-			function delStr(str: string) {
-				const handleStr = String(str || '').trim();
-				if (str == '') return null;
-				else return handleStr;
-			}
-			let newDept: any = {
-				parent_id: data?.parent_id, // 父级菜单ID（顶层为0或null） ^&  子部门parent_id为上级部门的name
-				name: delStr(data?.name), // 部门名称：研发部
-				label: delStr(data?.name), // 同部门：研发部
-				leader: delStr(data?.leader), // 部门负责人iD或姓名：张三
-				phone: delStr(data?.phone), // 1233333333
-				email: delStr(data?.email), // 9082@qq.com
-				status: data?.status || false, // 开关状态：true
-				sort: +data.sort, // 部门排序：3
-				desc: delStr(data?.desc), // 描述
-
-				// subCount: 2,
-				// hasChildren: true,
+			const dept = this.addAndModifyField(data)
+			let newDept: any = { 
+				 ...dept,
 				createBy: 'admin',
-				createTime: new Date(),
-				updateBy: null,
-				updateTime: null,
+				createTime: new Date(), 
 			};
-
-			// * 5、写入数据库
-			const result = await ctx.mongo.insertOne('__dept', newDept);
-			// console.log('写入菜单结果：', result);
-
-			// * 6、返回前端信息
+			await ctx.mongo.insertOne('__dept', newDept);
 			return ctx.send('新增部门成功');
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
@@ -163,46 +144,16 @@ class Dept extends Basic {
 		try {
 			const id = ctx.params.id;
 			const data: any = ctx.request.body;
-			console.log('新增部门参数：', data);
-			// * 1、校验
-			// * 做一下字段校验、无问题写入到数据库中：比如element与redirect不能同时存在
-			if (!data || typeof data !== 'object') return ctx.sendError(400, '请求格式错误：无参数', 400);
-			if (!id) return ctx.sendError(400, '请求参数错误：无iD', 400);
-			if (!data.name) return ctx.sendError(400, '请求参数错误：无部门名称', 400);
+			console.log('更新部门参数：', data);
 
-			// * 3、如果新增的是菜单、需要注意父iD是什么、需要修改 parent_id
-			// * 4、编辑菜单对象
-
-			function delStr(str: string) {
-				const handleStr = String(str || '').trim();
-				if (str == '') return null;
-				else return handleStr;
-			}
-			let newDept: any = {
-				parent_id: data?.parent_id, // 父级菜单ID（顶层为0或null） ^&  子部门parent_id为上级部门的name
-				name: delStr(data?.name), // 部门名称：研发部
-				label: delStr(data?.name), // 同部门：研发部
-				leader: delStr(data?.leader), // 部门负责人iD或姓名：张三
-				phone: delStr(data?.phone), // 1233333333
-				email: delStr(data?.email), // 9082@qq.com
-				status: data?.status || false, // 开关状态：true
-				sort: +data.sort, // 部门排序：3
-				desc: delStr(data?.desc), // 描述
-
-				// subCount: 2,
-				// hasChildren: true,
-				// createBy: "admin",
-				// createTime: new Date(),
+			const dept = this.addAndModifyField(data)
+			let newDept: any = {  
+				...dept,
 				updateBy: null,
-				updateTime: new Date(),
+				updateTime: null,
 			};
-
-			// * 5、写入数据库
-			const result = await ctx.mongo.updateOne('__dept', id, newDept);
-			// console.log('写入菜单结果：', result);
-
-			// * 6、返回前端信息
-			return ctx.send('修改菜单成功');
+			await ctx.mongo.updateOne('__dept', id, newDept);
+			return ctx.send('新增部门成功');
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}
@@ -212,20 +163,17 @@ class Dept extends Basic {
 	DelDept = async (ctx: Context) => {
 		try {
 			const id = ctx.params.id;
-			console.log('删除部门', id);
+			console.log('删除部门', id); 
+ 			if (!id) return ctx.sendError(400, '无iD');
 
-			if (!id) return ctx.sendError(400, '无iD', 400);
 			const data = await ctx.mongo.find('__dept', { query: { _id: id } });
-			if (!data.length) {
-				return ctx.sendError(400, '未找到数据', 400);
-			}
-			const findChildren = await ctx.mongo.find('__dept', { query: { parent_id: data[0].name } });
-			// console.log('findChildren', findChildren.length);
-			if (findChildren.length > 0) {
-				return ctx.sendError(400, '需要先删除子菜单', 400);
-			}
-			const delRes = await ctx.mongo.deleteOne('__dept', data[0]._id);
-			return ctx.send(`删除部门 ${data[0].name} 成功`);
+			if (!data.length) return ctx.sendError(400, '未找到数据')
+
+			const fc = await ctx.mongo.find('__dept', { query: { parent_id: data[0].name } });
+			if (fc.length > 0) return ctx.sendError(400, '需要先删除子菜单', 400);
+
+			await ctx.mongo.deleteOne('__dept', data[0]._id);
+			return ctx.send(`删除部门成功`);
 		} catch (err) {
 			console.error('删除部门错误：', err);
 			return ctx.sendError(500, err.message, 500);

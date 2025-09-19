@@ -1,13 +1,14 @@
 import { ProColumns } from '@ant-design/pro-components';
 import { UserList } from '@/api/interface';
-import { Icon } from '@/components/Icon';
+import { Tag } from 'antd';
 import { TableRenderAction } from '@/components/TableAction';
+import Link from 'antd/lib/typography/Link';
 
 const TableColumnsConfig = (handleOperator: any, handleModalSubmit: any): ProColumns<UserList>[] => {
 	return [
 		{
-			title: '菜单标题',
-			dataIndex: ['meta', 'title'],
+			title: '部门名称',
+			dataIndex: 'name',
 			copyable: true,
 			ellipsis: true,
 			width: 200,
@@ -20,16 +21,15 @@ const TableColumnsConfig = (handleOperator: any, handleModalSubmit: any): ProCol
 			// hideInForm: true,
 			// hideInDescriptions: true,
 			sorter: true,
-			render: (dom, entity) => {
+			render: (dom, entity: any) => {
 				return (
-					<a
-						href='javascript:void(0)'
+					<Link
 						onClick={() => {
 							handleOperator('detail', entity);
 						}}
 					>
-						{dom}
-					</a>
+						{entity.name}
+					</Link>
 				);
 			},
 			// 自定义筛选项功能具体实现请参考 https://ant.design/components/table-cn/#components-table-demo-custom-filter-panel
@@ -42,101 +42,62 @@ const TableColumnsConfig = (handleOperator: any, handleModalSubmit: any): ProCol
 			// fieldProps: (form, config) => {}, // 查询表单的 props，会透传给表单项，
 		},
 		{
-			title: '排序',
-			width: 80,
-			dataIndex: ['meta', 'sort'],
-			filters: true,
-			onFilter: true,
-		},
-		{
-			title: '菜单图标',
-			dataIndex: ['meta', 'icon'],
-			width: 80,
-			filters: true,
-			onFilter: true,
-			render: (text, record: any) => <Icon name={record?.meta?.icon} />,
-		},
-		{
-			title: '菜单类型',
-			dataIndex: ['meta', 'type'],
+			title: '部门排序',
+			dataIndex: 'sort',
 			width: 80,
 			filters: true,
 			onFilter: true,
 		},
 
 		{
-			title: '菜单标识',
-			dataIndex: ['meta', 'key'],
+			title: '部门状态',
+			width: 80,
+			dataIndex: 'status',
+			filters: true,
+			onFilter: true,
+			render: (dom, entity) => {
+				if (dom == '启用') return <Tag color='blue'>启用</Tag>;
+				if (dom == '停用') return <Tag color='red'>停用</Tag>;
+			},
+		},
+		{
+			title: '部门负责人',
+			dataIndex: 'leader',
 			ellipsis: true,
 			width: 100,
 			filters: true,
 			onFilter: true,
 		},
 		{
-			title: '路由路径',
-			dataIndex: 'path',
+			title: '负责人手机号',
+			dataIndex: 'phone',
 			ellipsis: true,
 			width: 180,
 			filters: true,
 			onFilter: true,
 		},
 		{
-			title: '组件路径',
-			dataIndex: 'element',
-			ellipsis: true,
-			width: 180,
-			filters: true,
-			onFilter: true,
-		},
-		{
-			title: '重定向路径',
-			dataIndex: 'redirect',
-			ellipsis: true,
-			width: 180,
-			filters: true,
-			onFilter: true,
-		},
-		{
-			title: '外链url',
-			dataIndex: ['meta', 'isLink'],
-			width: 180,
-			filters: true,
-			onFilter: true,
-			render: (_, record: any) => record.meta.isLink || '-',
-		},
-		{
-			title: '隐藏菜单项',
-			dataIndex: ['meta', 'isHide'],
-			ellipsis: true,
-			width: 90,
-			filters: true,
-			onFilter: true,
-			render: (_, record: any) => (record.meta.isHide ? '是' : '否'),
-		},
-		{
-			title: '全屏显示',
-			dataIndex: ['meta', 'isFull'],
-			width: 80,
-			filters: true,
-			onFilter: true,
-			render: (_, record: any) => (record.meta.isFull ? '是' : '否'),
-		},
-		{
-			title: '固定标签页',
-			dataIndex: ['meta', 'isAffix'],
-			ellipsis: true,
-			width: 90,
-			filters: true,
-			onFilter: true,
-			render: (_, record: any) => (record.meta.isAffix ? '是' : '否'),
-		},
+			title: '负责人邮箱',
+			dataIndex: 'email',
 
+			ellipsis: true,
+			width: 180,
+			filters: true,
+			onFilter: true,
+		},
+		{
+			title: '部门描述',
+			dataIndex: 'desc',
+			ellipsis: true,
+			filters: true,
+			onFilter: true,
+		},
 		{
 			title: '操作',
 			key: 'option',
+			align: 'center',
 			fixed: 'right',
 			hideInSearch: true,
-			// render: (data, entity) => action(entity, handleOperator),
 			width: 135,
 			render: (_, record) => TableRenderAction(record, handleOperator, handleModalSubmit),
 		},

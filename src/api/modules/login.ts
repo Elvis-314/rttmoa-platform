@@ -8,9 +8,9 @@ import { httpApi, httpUpack } from '..';
 
 export class loginAPI {
 	// * 系统管理 — 用户管理 — 登陆、注册、退出
-	static userLogin = (params: Params) => httpUpack.post(`/userp/login`, params);
-	static userLogout = (params: Params) => httpUpack.post(`/userp/logout`, params);
-	static userRegister = (params: Params) => httpUpack.post(`/userp/register`, params);
+	static userLogin = (params: Params) => httpUpack.post(`/login/login`, params);
+	static userLogout = (params: Params) => httpUpack.post(`/login/logout`, params);
+	static userRegister = (params: Params) => httpUpack.post(`/login/register`, params);
 
 	// 用户登陆
 	static loginApi = (params: ReqLogin) => {

@@ -8,60 +8,56 @@ class Role extends Basic {
 		super();
 	}
 
+	addAndModifyField = async (ctx: Context, data: any) => {
+		const menu = await ctx.mongo.find('__menu');
+		let roleMenu = [];
+		for (const ItemPermission of data?.menuList || []) {
+			for (const ItemMenu of menu) {
+				if (ItemPermission == ItemMenu.key) {
+					roleMenu.push(ItemMenu);
+				}
+			}
+		}
+		return {
+			role_name: this.normalize(data?.role_name, ['string'], null), // 管理员 | 普通用户
+			permission_str: this.normalize(data?.permission_str, ['string'], null), // 权限字符： admin / user
+			level: this.normalize(data?.level, ['number'], null), // 角色级别  1
+			sort: this.normalize(data?.sort, ['number'], null), // 角色排序  1
+			status: this.normalize(data?.status, ['boolean'], false),
+			permission_menu: this.normalize(data?.permission_menu, ['array'], []), // 菜单数组：树结构  ['menu', 'menu2', 'menu22', 'menu221', 'menu222']
+			menuList: this.normalize(roleMenu, ['array'], []), // 菜单数组：角色菜单
+
+			dataScope: '全部', // 数据范围
+			depts: [] as any, // 数据权限：部门
+			desc: data?.desc, // 角色描述
+
+			createTime: new Date(),
+			updateBy: 'admin',
+			updateTime: new Date(),
+		};
+	};
+
 	// * 新增角色：角色中带菜单
 	addRole = async (ctx: Context) => {
 		try {
-			// 1、获取前端参数并校验：
 			const data: any = ctx.request.body;
 			// console.log('添加角色：', data);
-
-			// 2、校验是否存在相同角色名称、角色字符
-
-			// 2、根据前端 ['auth', 'pageMenu'] key、去库中寻找菜单
-			// data.permission_menu // 无父节点：['pageMenu']
-			// data.menuList // 有父节点：['auth', 'pageMenu']
-			const menu = await ctx.mongo.find('__menu');
-			let roleMenu = [];
-			for (const ItemPermission of data?.menuList || []) {
-				for (const ItemMenu of menu) {
-					if (ItemPermission == ItemMenu.key) {
-						roleMenu.push(ItemMenu);
-					}
-				}
-			}
-			// 这里的Menu应该是获取所有的Menu、去正确的勾选哪些Menu的
 
 			// ! 权限字符不可以重复
 			const permission_str = _.trim(_.get(data, 'permission_str', ''));
 			if (!_.isEmpty(permission_str)) {
 				const role = await ctx.mongo.find('__role', { query: { permission_str: permission_str } });
-				if (role.length) {
-					return ctx.sendError(400, '新增角色错误：权限字符不可以重复');
-				}
+				if (role.length) return ctx.sendError(400, '新增角色错误：权限字符不可以重复');
 			}
-
-			// 3、将参数都处理完成
+			const role = await this.addAndModifyField(ctx, data);
 			const newRole: any = {
-				role_name: data?.role_name, // 管理员 | 普通用户
-				permission_str: data?.permission_str, // 权限字符： admin / user
-				level: data?.level || 1, // 角色级别  1
-				sort: data?.sort || 1, // 角色排序  1
-				status: data?.status || false,
-				permission_menu: data?.permission_menu, // 菜单数组：树结构  ['menu', 'menu2', 'menu22', 'menu221', 'menu222']
-				menuList: roleMenu, // 菜单数组：角色菜单
-
-				dataScope: '全部', // 数据范围
-				depts: [], // 数据权限：部门
-				desc: data?.desc, // 角色描述
+				...role,
 				createTime: new Date(),
 				updateBy: 'admin',
 				updateTime: new Date(),
 			};
-
-			// 4、写入库中
-			const ins = await ctx.mongo.insertOne('__role', newRole);
-
-			return ctx.send(ins);
+			await ctx.mongo.insertOne('__role', newRole);
+			return ctx.send('新增角色成功');
 		} catch (err) {
 			return ctx.sendError(500, err.message);
 		}
@@ -73,49 +69,22 @@ class Role extends Basic {
 			// 1、获取前端参数并校验：
 			const data: any = ctx.request.body;
 			console.log('添加角色：', data);
-			if (!data) return ctx.sendError(400, `未获取到参数`, 400);
-			if (!data._id) return ctx.sendError(400, `未获取到iD`, 400);
-			if (!data?.role_name) return ctx.sendError(400, `未获取到角色名称`, 400);
-			if (!data?.permission_str) return ctx.sendError(400, `未获取到角色字符`, 400);
 
-			// 2、校验是否存在相同角色名称、角色字符
-
-			// 2、根据前端 ['auth', 'pageMenu'] key、去库中寻找菜单
-			// data.permission_menu // 无父节点：['pageMenu']
-			// data.menuList // 有父节点：['auth', 'pageMenu']
-			const menu = await ctx.mongo.find('__menu');
-			let roleMenu = [];
-			for (const ItemPermission of data?.menuList || []) {
-				for (const ItemMenu of menu) {
-					if (ItemPermission == ItemMenu.key) {
-						roleMenu.push(ItemMenu);
-					}
-				}
+			// ! 权限字符不可以重复
+			const permission_str = _.trim(_.get(data, 'permission_str', ''));
+			if (!_.isEmpty(permission_str)) {
+				const role = await ctx.mongo.find('__role', { query: { permission_str: permission_str } });
+				if (role.length) return ctx.sendError(400, '新增角色错误：权限字符不可以重复');
 			}
-			// 这里的Menu应该是获取所有的Menu、去正确的勾选哪些Menu的
 
-			// 3、将参数都处理完成
+			const role = await this.addAndModifyField(ctx, data);
 			const newRole: any = {
-				role_name: data?.role_name, // 管理员 | 普通用户
-				permission_str: data?.permission_str, // 权限字符： admin / user
-				level: data?.level || 1, // 角色级别  1
-				sort: data?.sort || 1, // 角色排序  1
-				status: data?.status || false,
-				permission_menu: data?.permission_menu, // 菜单数组：树结构  ['menu', 'menu2', 'menu22', 'menu221', 'menu222']
-				menuList: roleMenu, // 菜单数组：角色菜单
-
-				dataScope: '全部', // 数据范围
-				depts: [], // 数据权限：部门
-				desc: data?.desc, // 角色描述
-				// createTime: new Date(),
+				...role,
 				updateBy: 'admin',
 				updateTime: new Date(),
 			};
-
-			// 4、写入库中
-			const ins = await ctx.mongo.updateOne('__role', data._id, newRole);
-
-			return ctx.send(ins);
+			await ctx.mongo.updateOne('__role', data._id, newRole);
+			return ctx.send('更新角色成功');
 		} catch (err) {
 			return ctx.sendError(500, err.message);
 		}

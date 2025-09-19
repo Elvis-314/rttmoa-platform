@@ -27,13 +27,9 @@ import { InitMenuConfig } from '../../config/init_menu';
 class Menu extends Basic {
 	constructor() {
 		super();
-		// this.InitMenu = this.InitMenu.bind(this);
-		// this.FindAllMenu = this.FindAllMenu.bind(this);
-		// this.UpMenu = this.UpMenu.bind(this);
-		// this.DelMenu = this.DelMenu.bind(this);
 	}
 
-	// * 初始化菜单：将menuConfig存储转化到数据库中 【已完成】   修改日期：2025-08-06
+	// * 初始化菜单：将menuConfig.json存储转化到数据库中
 	InitMenu = async (ctx: Context) => {
 		try {
 			const user = ctx.state.user;
@@ -283,16 +279,17 @@ class Menu extends Basic {
 		try {
 			let data: any = ctx.request.body;
 			console.log('新增菜单参数：', data);
-			// * 1、校验 【前端校验参数】
-			// * 做一下字段校验、无问题写入到数据库中：比如element与redirect不能同时存在
-			if (!data || typeof data !== 'object') return ctx.sendError(400, '请求格式错误：无参数', 400);
 
-			// * 2、查询数据库有无相同key和path、必须保证key和apth唯一
 			const { path, key } = data;
-			const fp = await ctx.mongo.find('__menu', { query: { path: path } });
-			if (fp.length > 0) return ctx.sendError(400, `新增菜单失败：已经存在path为 ${data?.path}`, 400);
-			const fk = await ctx.mongo.find('__menu', { query: { key: key } });
-			if (fk.length > 0) return ctx.sendError(400, `新增菜单失败：已经存在key为 ${data?.key}`, 400);
+			const exists = await ctx.mongo.find('__menu', { query: { $or: [{ path }, { key }] } });
+			if (exists.length > 0) {
+				if (exists[0].path === path) {
+					return ctx.sendError(400, `新增菜单失败：已经存在 path 为 ${path}`, 400);
+				}
+				if (exists[0].key === key) {
+					return ctx.sendError(400, `新增菜单失败：已经存在 key 为 ${key}`, 400);
+				}
+			}
 
 			// * 3、如果新增的是菜单、需要注意父iD是什么、需要修改 parent_id
 
@@ -340,18 +337,18 @@ class Menu extends Basic {
 
 			// * 2、检查是否重复 path、key
 			// 如果修改path、key的话：不可与其他菜单的path重复、查询path是否被修改
-			const findMenu = await ctx.mongo.find('__menu', { query: { _id: data?._id } });
-			console.log('findMenu', findMenu.length);
-			if (!findMenu.length) return ctx.sendError(400, '修改菜单失败：数据错误，根据id查找、数据未找到', 400);
-			const { path, key } = findMenu[0];
-			if (path != data.path) {
-				const fDoc = await ctx.mongo.find('__menu', { query: { path: data?.path } });
-				console.log('fDoc', fDoc);
-				if (fDoc.length > 0) return ctx.sendError(400, `新增菜单失败：已经存在 path 为：${data?.path}`, 400);
-			}
-			if (key != data.key) {
-				const fDoc = await ctx.mongo.find('__menu', { query: { key: data?.key } });
-				if (fDoc.length > 0) return ctx.sendError(400, `新增菜单失败：已经存在 key 为：${data?.key}`, 400);
+			const fm = await ctx.mongo.find('__menu', { query: { _id: data?._id } });
+			if (!fm.length) return ctx.sendError(400, '修改菜单失败：数据错误，根据id查找、数据未找到');
+  
+			const { path, key } = data;
+			const exists = await ctx.mongo.find('__menu', { query: { $or: [{ path }, { key }] } });
+			if (exists.length > 0) {
+				if (exists[0].path === path) {
+					return ctx.sendError(400, `新增菜单失败：已经存在 path 为 ${path}`, 400);
+				}
+				if (exists[0].key === key) {
+					return ctx.sendError(400, `新增菜单失败：已经存在 key 为 ${key}`, 400);
+				}
 			}
 
 			// * 3、如果修改了菜单、从二级菜单变到了其他二级菜单、需要修改 parent_id
@@ -378,7 +375,7 @@ class Menu extends Basic {
 				sort: +data?.sort || 1,
 			};
 			// * 4、写入数据库
-			const result = await ctx.mongo.updateOne('__menu', findMenu[0]._id, fDoc);
+			const result = await ctx.mongo.updateOne('__menu', fm[0]._id, fDoc);
 			console.log('写入菜单结果：', result);
 
 			// 返回前端结果：
@@ -404,8 +401,8 @@ class Menu extends Basic {
 			if (!fm.length) return ctx.sendError(400, '删除失败：未找到该菜单');
 			if (fm.length > 1) return ctx.sendError(400, '删除失败：菜单重复，不唯一');
 
-			const delRes = await ctx.mongo.deleteOne('__menu', fm[0]._id);
-			return ctx.send([], `删除菜单成功`);
+			await ctx.mongo.deleteOne('__menu', fm[0]._id);
+			return ctx.send(`删除菜单成功`);
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}

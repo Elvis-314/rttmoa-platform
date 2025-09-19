@@ -1,17 +1,17 @@
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Form } from 'antd';
 import { formatDataForProTable } from '@/utils';
 import { UserList } from '@/api/interface';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, FormInstance } from '@ant-design/pro-components';
 import { message } from '@/hooks/useMessage';
-import TableColumnsConfig from './component/ColumnConfig';
+import ColumnsConfig from './component/Column';
 import ToolBarRender from './component/ToolBar';
 import { addDept, delDept, findDept, modifyDept } from '@/api/modules/system';
 import './index.less';
 import ModalComponent from './component/Modal';
-import DrawerComponent from './component/Drawer';
-import FooterComponent from './component/Footer';
+import DrawerComponent from '@/components/TableDrawer';
+import FooterComponent from '@/components/TableFooter';
 
 export type FormValueType = {
 	target?: string;
@@ -34,7 +34,7 @@ const useProTable = () => {
 	const [pagination, SetPagination] = useState<any>({ page: 1, pageSize: 10, total: 0 }); // 分页数据
 
 	// Drawer
-	const [drawerCurrentRow, setDrawerCurrentRow] = useState({}); // Drawer 选择当前行数据
+	const [drawerCurrentRow, setDrawerCurrentRow] = useState<any>({}); // Drawer 选择当前行数据
 	const [drawerIsVisible, setDrawerIsVisible] = useState<boolean>(false); // Drawer 是否显示
 
 	// Modal
@@ -46,81 +46,49 @@ const useProTable = () => {
 	const quickSearch = () => {};
 
 	// * 操作 — 员工： 新建、编辑、详情、删除  按钮
-	const handleOperator = async (type: string, item: any) => {
-		console.log('操作：类型+记录', type, item);
+	const handleOperator = (type: 'create' | 'edit' | 'detail', item?: any) => {
+		setModalType(type);
 		if (type === 'detail') {
 			setDrawerIsVisible(true);
-			setDrawerCurrentRow(item);
-		} else if (type === 'create') {
+			setDrawerCurrentRow(item || {});
+		} else {
 			setModalIsVisible(true);
-			setModalTitle('新建菜单');
-			setModalType(type);
-			setModalUserInfo({});
-		} else if (['edit'].includes(type)) {
-			setModalIsVisible(true);
-			setModalTitle(type === 'edit' ? '编辑菜单' : '查看详情');
-			setModalType(type);
-			setModalUserInfo(item);
-		} else if (type === 'delete') {
-			const hide = message.loading('正在删除');
-			try {
-				const result: any = await delDept(item.unique);
-				// console.log('删除菜单结果：', result);
-				if (result) {
-					hide();
-					actionRef?.current?.reload();
-					message.success(`删除 ${item?.name} 成功`);
-				}
-			} catch (error) {
-				hide();
-				message.error('删除失败、请再试一次！');
-			}
-		} else if (type === 'moreDelete') {
-			message.loading('删除更多按钮、正在实现');
-			// const hide = message.loading('正在删除');
-			// try {
-			// 	const selectIds = selectedRows.map(value => value?._id);
-			// 	console.log('selectIds', selectIds);
-			// 	const res: any = await delMoreJob(selectIds || []);
-			// 	if (res) {
-			// 		hide();
-			// 		setSelectedRows([]);
-			// 		actionRef.current?.reloadAndRest?.();
-			// 		message.success('全部删除完成！');
-			// 	}
-			// } catch (error) {
-			// 	hide();
-			// 	message.error('删除失败、请再试一次！');
-			// }
+			setModalUserInfo(item || {});
+			setModalTitle(type === 'create' ? '新建岗位' : '编辑岗位	');
 		}
 	};
+
 	// * 操作 — 员工： 新建、编辑、详情  弹窗内容提交
-	const handleModalSubmit = async (type: string, item: any) => {
-		console.log('Modal 提交：', type, item);
-		// 1、获取字段数据
-		// 2、将字段传入到接口中
-		// 3、获取返回值并展示
-		// 4、清空表单值
-		// 5、关闭弹窗
-		// 6、重新回去菜单列表
-		const hide = message.loading(type == 'create' ? '正在添加' : '正在编辑');
-		try {
-			let res = type === 'create' ? await addDept(item) : await modifyDept(item._id, item);
-			if (res) {
-				hide();
-				form.resetFields();
-				setModalTitle('');
-				setModalType('');
-				setModalIsVisible(false);
-				setModalUserInfo({});
-				if (actionRef.current) actionRef.current.reload();
-				message.success(type == 'create' ? '添加成功' : '编辑成功');
+	const handleModalSubmit = useCallback(
+		async (type: string, item: any) => {
+			try {
+				if (['create', 'edit'].includes(type)) {
+					const hide = message.loading(type === 'create' ? '正在添加' : '正在编辑');
+					const res = type === 'create' ? await addDept(item) : await modifyDept(item._id, item);
+					hide();
+					if (res) {
+						form.resetFields();
+						setModalIsVisible(false);
+						actionRef.current?.reload();
+						message.success(type === 'create' ? '添加成功' : '编辑成功');
+					}
+				} else if (['delete', 'moreDelete'].includes(type)) {
+					const hide = message.loading('正在删除');
+					const ids = type === 'delete' ? [item.unique] : selectedRows.map(row => row._id);
+					const res = type === 'delete' ? await delDept(item.unique) : message.warning('正在实现中。。。');
+					hide();
+					if (res) {
+						if (type === 'moreDelete') setSelectedRows([]);
+						actionRef.current?.reloadAndRest?.();
+						message.success(`成功删除${type === 'delete' ? ` ${item?.postName}` : '多条'} 记录`);
+					}
+				}
+			} catch (error: any) {
+				message.error(error.message || '操作失败，请重试！');
 			}
-		} catch (error: any) {
-			hide();
-			message.error(error.message || error.msg);
-		}
-	};
+		},
+		[selectedRows, form]
+	);
 
 	// * 工具栏 ToolBar
 	let ToolBarParams: any = {
@@ -142,7 +110,7 @@ const useProTable = () => {
 				headerTitle='使用 ProTable'
 				defaultSize='small'
 				loading={loading}
-				columns={TableColumnsConfig(handleOperator)}
+				columns={ColumnsConfig(handleOperator, handleModalSubmit)}
 				toolBarRender={() => ToolBarRender(ToolBarParams)} // 渲染工具栏
 				actionRef={actionRef} // Table action 的引用，便于自定义触发 actionRef.current.reset()
 				formRef={formRef} // 可以获取到查询表单的 form 实例
@@ -180,7 +148,9 @@ const useProTable = () => {
 					persistenceType: 'localStorage',
 				}}
 			/>
-			{selectedRows?.length > 0 && <FooterComponent actionRef={actionRef} selectedRows={selectedRows} setSelectedRows={setSelectedRows} handleOperator={handleOperator} />}
+
+			{selectedRows?.length > 0 && <FooterComponent selectedRows={selectedRows} modalResult={handleModalSubmit} />}
+
 			<ModalComponent
 				form={form}
 				menuList={menuList}
@@ -193,10 +163,14 @@ const useProTable = () => {
 			/>
 			<DrawerComponent
 				drawerIsVisible={drawerIsVisible}
-				drawerCurrentRow={drawerCurrentRow}
-				setDrawerCurrentRow={setDrawerCurrentRow}
-				setDrawerIsVisible={setDrawerIsVisible}
-				handleOperator={handleOperator}
+				drawerCurrentRow={{ ...drawerCurrentRow, name: drawerCurrentRow?.name }}
+				drawerClose={() => {
+					setDrawerCurrentRow({});
+					setDrawerIsVisible(false);
+				}}
+				columnsConfig={ColumnsConfig}
+				modalOperate={handleOperator}
+				modalResult={handleModalSubmit}
 			/>
 		</>
 	);

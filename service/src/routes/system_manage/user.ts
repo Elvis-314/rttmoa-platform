@@ -15,12 +15,7 @@ router.post("/delMoreUsers", User.delMoreUser); // 删除更多用户
 router.get("/users1", User.findProTableUser); // ProTable 获取用户
 router.get("/users2", User.findUserManager); // UserManager 用户管理获取用户
 
-
  
-router.post("/login", User.login); // 登陆
-router.post("/logout", User.logout);  // 退出
-router.post("/register", User.register);  // 注册
-
 
 
 export default router;

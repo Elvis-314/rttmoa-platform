@@ -26,37 +26,6 @@ class Job extends Basic {
 	constructor() {
 		super();
 	}
-	// 优化：添加更详细的验证
-	private validateJobData = (data: JobParams) => {
-		const errors: string[] = [];
-
-		if (!data?.job_name?.trim()) {
-			errors.push('岗位名称不能为空');
-		} else if (data.job_name.length > 50) {
-			errors.push('岗位名称长度不能超过50个字符');
-		}
-
-		if (!data?.job_sort) {
-			errors.push('岗位排序不能为空');
-		} else if (isNaN(Number(data.job_sort)) || Number(data.job_sort) < 0) {
-			errors.push('岗位排序必须是大于等于0的数字');
-		}
-
-		if (!data?.status?.trim()) {
-			errors.push('状态不能为空');
-		}
-
-		return errors;
-	};
-
- 
-
-	// 检查岗位名称是否已存在
-	private checkPostName = async (ctx: Context, postName: string) => {
-		const existing = await ctx.mongo.find('__job', { query: { postName: postName } });
-		// console.log('existing', existing);
-		return !!existing.length;
-	};
 
 	// * 抽离 Job 查询条件
 	// * 字符串、数字、日期查询  |  选择框、复选框、日期时间
@@ -108,10 +77,7 @@ class Job extends Basic {
 			const sort = _.get(data, 'sort', { postSort: 1, createTime: -1 });
 
 			// 并行查询
-			const [count, list] = await Promise.all([
-				ctx.mongo.count('__job', query), 
-				ctx.mongo.find('__job', { query, page, pageSize, sort })
-			]);
+			const [count, list] = await Promise.all([ctx.mongo.count('__job', query), ctx.mongo.find('__job', { query, page, pageSize, sort })]);
 
 			return ctx.send({ list, page, pageSize, total: count });
 		} catch (err: any) {
@@ -119,34 +85,37 @@ class Job extends Basic {
 		}
 	};
 
+	addAndModifyField = (data: any) => {
+		return {
+			postCode: this.normalize(data?.job_name, ['string'], null),
+			postName: this.normalize(data?.job_name, ['string'], null), // 产品经理 | 前端开发 | 会计
+			postSort: this.normalize(data?.job_sort, ['number'], 1), // 排序
+			status: this.normalize(data?.status, ['string'], null), // 开关：开启/关闭
+			desc: this.normalize(data?.desc, ['string'], null),
+			flag: false,
+		};
+	};
+
+	// 检查岗位名称是否已存在
+	private checkPostName = async (ctx: Context, postName: string) => {
+		const existing = await ctx.mongo.find('__job', { query: { postName: _.trim(postName) } });
+		return !!existing.length;
+	};
+
 	// * 新增岗位
 	addJob = async (ctx: Context) => {
 		try {
 			const data: JobParams = ctx.request.body;
-			// console.log('新增岗位参数：', data);
-
-			console.log('数值参数：', _.get(data, "desc", 1));
-				return ctx.send(`新增数据成功!`);
+			console.log('新增岗位参数：', data);
 
 			const check = await this.checkPostName(ctx, data?.job_name);
 			if (check) return ctx.sendError(400, '已存在岗位名称');
 
-			const errInfo = this.validateJobData(data);
-			if (errInfo.length) return ctx.sendError(400, errInfo[0]);
-
-			// * 先查询岗位名称是否重复
+			const job = this.addAndModifyField(data);
 			const newJob: any = {
-				postCode: _.trim(_.get(data, "job_name", "")),
-				postName:  _.trim(_.get(data, "job_name", "")), // 产品经理 | 前端开发 | 会计
-				// postSort: _.toNumber(data.job_sort), // 排序
-				postSort:_.get(data, "job_sort", 1), // 排序
-				status:  _.trim(_.get(data, "status", "")), // 开关：开启/关闭
-				desc:  _.trim(_.get(data, "desc", "")),
-				flag: false,
+				...job,
 				createBy: 'admin',
 				createTime: new Date(),
-				updateBy: null,
-				updateTime: new Date(),
 			};
 			const ins = await ctx.mongo.insertOne('__job', newJob);
 			return ctx.send(`新增数据成功!`);
@@ -160,28 +129,53 @@ class Job extends Basic {
 		try {
 			const id = ctx.params.id;
 			const data: JobParams = ctx.request.body;
-			console.log('修改岗位参数：', data);
+			// console.log('修改岗位参数：', data);
+
 			if (!id) return ctx.sendError(400, `修改岗位操作：无iD`);
 
 			const check = await this.checkPostName(ctx, data?.job_name);
 			if (check) return ctx.sendError(400, '已存在岗位名称');
 
-			const errInfo = this.validateJobData(data);
-			if (errInfo.length) return ctx.sendError(400, errInfo[0]);
-
-			// * 先查询岗位名称是否重复
+			const job = this.addAndModifyField(data);
 			const newJob: any = {
-				postCode: data?.job_name,
-				postName: _.trim(_.toString(data?.job_name)), // 产品经理 | 前端开发 | 会计
-				postSort: _.toNumber(data.job_sort), // 排序
-				status: _.trim(_.toString(data.status)), // 开关：开启/关闭
-				desc: _.trim(_.toString(data?.desc)),
-				flag: false,
-				updateBy: 'admin',
-				updateTime: new Date(),
+				...job,
+				updateBy: null,
+				updateTime: null,
 			};
-			const ins = await ctx.mongo.updateOne('__job', id, newJob);
-			return ctx.send(ins);
+			await ctx.mongo.updateOne('__job', id, newJob);
+			return ctx.send('修改岗位成功');
+		} catch (err) {
+			return ctx.sendError(500, err.message, 500);
+		}
+	};
+
+	// * Excel 表格数据导入
+	ExJob = async (ctx: Context) => {
+		try {
+			const data: any = ctx.request.body;
+			// console.log('Excel 数据', data);
+
+			// 这个字段与上面导入新增的字段不同
+			if (data && data.length) {
+				for (const element of data) {
+					const check = await this.checkPostName(ctx, element.postName);
+					if (!check) {
+						const newJob: any = {
+							postCode: 'ceo',
+							postName: _.trim(_.toString(element.postName)), // 产品经理 | 前端开发 | 会计
+							postSort: _.toNumber(element.postSort), // 排序
+							status: _.trim(_.toString(element.status)), // 开关：开启/关闭
+							desc: _.trim(_.toString(element?.desc)),
+							flag: false,
+
+							createBy: 'admin',
+							createTime: new Date(), 
+						};
+						await ctx.mongo.insertOne('__job', newJob);
+					}
+				}
+				return ctx.send('岗位数据导入成功');
+			} else return ctx.sendError(400, `服务端未获取到数据`);
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}
@@ -194,9 +188,7 @@ class Job extends Basic {
 			if (id) {
 				const ins = await ctx.mongo.deleteOne('__job', id);
 				return ctx.send(ins);
-			} else {
-				return ctx.sendError(400, `删除岗位操作：前端未传递id！`);
-			}
+			} else return ctx.sendError(400, `删除岗位操作：前端未传递id！`);
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}
@@ -211,40 +203,7 @@ class Job extends Basic {
 					await ctx.mongo.deleteOne('__job', _id);
 				}
 				return ctx.send('全部删除完成');
-			} else {
-				return ctx.sendError(400, `删除岗位操作：前端传递的参数不正确！`);
-			}
-		} catch (err) {
-			return ctx.sendError(500, err.message, 500);
-		}
-	};
-
-	// * Excel 表格数据导入
-	ExJob = async (ctx: Context) => {
-		try {
-			const data: any = ctx.request.body;
-			// console.log('Excel 数据', data);
-
-			if (data && data.length) {
-				for (const element of data) {
-					const newJob: any = {
-						postCode: 'ceo',
-						postName: _.trim(_.toString(element.postName)), // 产品经理 | 前端开发 | 会计
-						postSort: _.toNumber(element.postSort), // 排序
-						status: _.trim(_.toString(element.status)), // 开关：开启/关闭
-						desc: _.trim(_.toString(element?.desc)),
-						flag: false,
-						createBy: 'admin',
-						createTime: new Date(),
-						updateBy: null,
-						updateTime: null,
-					};
-					const ins = await ctx.mongo.insertOne('__job', newJob);
-				}
-				return ctx.send('岗位数据导入成功');
-			} else {
-				return ctx.sendError(400, `服务端未获取到数据`);
-			}
+			} else return ctx.sendError(400, `删除岗位操作：前端传递的参数不正确！`);
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}

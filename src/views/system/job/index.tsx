@@ -42,7 +42,7 @@ const useProTable = () => {
 		} else {
 			setModalIsVisible(true);
 			setModalUserInfo(item || {});
-			setModalTitle(type === 'create' ? '新建用户' : '编辑用户');
+			setModalTitle(type === 'create' ? '新建岗位' : '编辑岗位	');
 		}
 	};
 
