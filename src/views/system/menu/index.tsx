@@ -166,9 +166,7 @@ const useProTable = () => {
 				expandable={{
 					defaultExpandAllRows: true,
 					// expandedRowKeys: ['683943c255b6600b07b37e59', '683943c255b6600b07b37e5c'], // * 默认展开，  展开全部的话就是所有的父节点集合
-					onExpandedRowsChange: data => {
-						console.log('1211', data);
-					},
+					onExpandedRowsChange: data => {},
 				}}
 				// rowKey="key"
 				// columns={columns}

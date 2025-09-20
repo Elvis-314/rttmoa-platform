@@ -58,6 +58,7 @@ class Menu extends Basic {
 						is_full: item.meta.isFull ? 1 : 0,
 						is_affix: item.meta.isAffix ? 1 : 0,
 						sort: +data.sort || 999,
+						enable: '开启', // 这里可能是关闭状态
 						created_at: new Date(),
 						updated_at: new Date(),
 					};
@@ -67,103 +68,20 @@ class Menu extends Basic {
 				});
 			};
 			handleMenu(data, '目录', '');
-			let num = 0;
 			for (const element of handleAllMenu) {
-				num++;
-				const result = await ctx.mongo.insertOne('__menu', element);
-				console.log('写入菜单结果：', result);
+				await ctx.mongo.insertOne('__menu', element);
 			}
-			console.log(num);
 			return ctx.send(handleAllMenu);
 		} catch (err) {
 			return ctx.sendError(500, err.message);
 		}
 	};
 
-	// * 将数据库Menu 转化为 前端需要的json格式
-	exportMenu = async (ctx: Context) => {
-		try {
-			/** 将扁平结构转换为树结构 */
-			function flatToTree(flatList: any[]): any[] {
-				const keyMap = new Map<string, any>();
-				const tree: any[] = [];
-
-				// 构建 key 映射
-				for (const item of flatList) {
-					const node: any = {
-						path: item.path,
-						...(item.element && { element: item.element }),
-						...(item.redirect && { redirect: item.redirect }),
-						meta: {
-							key: item.key,
-							title: item.title,
-							icon: item.icon || null,
-							isLink: item.is_link || '',
-							isHide: item.is_hide === 1,
-							isFull: item.is_full === 1,
-							isAffix: item.is_affix === 1,
-							type: item.type,
-							sort: +item.sort || 1,
-						},
-						parent_id: item.parent_id,
-						unique: item._id,
-						children: [],
-					};
-					keyMap.set(item.key, node);
-				}
-
-				// 构建父子关系
-				for (const item of flatList) {
-					const node = keyMap.get(item.key);
-					const parent = keyMap.get(item.parent_id);
-					if (parent) {
-						parent.children.push(node);
-					} else {
-						tree.push(node);
-					}
-				}
-
-				return tree;
-			}
-
-			/** 清除空 children 字段 */
-			function removeEmptyChildren(nodes: any[]): void {
-				for (const node of nodes) {
-					if (Array.isArray(node.children) && node.children.length > 0) {
-						removeEmptyChildren(node.children);
-					} else {
-						delete node.children;
-					}
-				}
-			}
-
-			/** 按 meta.sort 递归排序 */
-			function sortTreeBySort(nodes: any[]): any[] {
-				return nodes
-					.slice()
-					.sort((a, b) => (a.meta?.sort ?? 0) - (b.meta?.sort ?? 0))
-					.map(node => ({
-						...node,
-						children: node.children ? sortTreeBySort(node.children) : undefined,
-					}));
-			}
-
-			// ✅ 主控制逻辑
-			const flatMenu = await ctx.mongo.find('__menu'); // 或 "__dept"
-			const tree = flatToTree(flatMenu);
-			removeEmptyChildren(tree);
-			const sortedTree = sortTreeBySort(tree);
-			return ctx.send(sortedTree, '获取菜单树结构成功');
-		} catch (err) {
-			return ctx.sendError(500, err.message, 500);
-		}
-	};
-
 	// * 查询到数据库中的数据、要返回前端所需要的结构 【已完成】  修改日期：2025-06-03
-	FindAllMenu = async (ctx: Context) => {
+	findMenu = async (ctx: Context) => {
 		try {
+			// * 当 name == 'all' 时、将数据库中菜单导出为json格式
 			const { name } = ctx.query;
-			// console.log('获取菜单参数 param：', param);
 
 			const currentUser = ctx.state.user;
 			if (Object.keys(currentUser).length == 0) {
@@ -198,6 +116,7 @@ class Menu extends Basic {
 							isAffix: item.is_affix === 1,
 							type: item.type,
 							sort: +item.sort || 1,
+							enable: item.enable,
 						},
 						parent_id: item.parent_id,
 						unique: item._id,
@@ -280,16 +199,23 @@ class Menu extends Basic {
 			let data: any = ctx.request.body;
 			console.log('新增菜单参数：', data);
 
+			// * 2、查询数据库有无相同key和path、必须保证key和apth唯一
 			const { path, key } = data;
-			const exists = await ctx.mongo.find('__menu', { query: { $or: [{ path }, { key }] } });
-			if (exists.length > 0) {
-				if (exists[0].path === path) {
-					return ctx.sendError(400, `新增菜单失败：已经存在 path 为 ${path}`, 400);
-				}
-				if (exists[0].key === key) {
-					return ctx.sendError(400, `新增菜单失败：已经存在 key 为 ${key}`, 400);
-				}
-			}
+			const fp = await ctx.mongo.find('__menu', { query: { path: path } });
+			if (fp.length > 0) return ctx.sendError(400, `新增菜单失败：已经存在path为 ${data?.path}`, 400);
+			const fk = await ctx.mongo.find('__menu', { query: { key: key } });
+			if (fk.length > 0) return ctx.sendError(400, `新增菜单失败：已经存在key为 ${data?.key}`, 400);
+
+			// const { path, key } = data;
+			// const exists = await ctx.mongo.find('__menu', { query: { $or: [{ path }, { key }] } });
+			// if (exists.length > 0) {
+			// 	if (exists[0].path === path) {
+			// 		return ctx.sendError(400, `新增菜单失败：已经存在 path 为 ${path}`, 400);
+			// 	}
+			// 	if (exists[0].key === key) {
+			// 		return ctx.sendError(400, `新增菜单失败：已经存在 key 为 ${key}`, 400);
+			// 	}
+			// }
 
 			// * 3、如果新增的是菜单、需要注意父iD是什么、需要修改 parent_id
 
@@ -313,15 +239,12 @@ class Menu extends Basic {
 				is_full: data?.isFull == '是' ? 1 : 0, // 是否全屏显示页面
 				is_affix: data?.isAffix == '是' ? 1 : 0, // 是否固定标签页
 				sort: +data?.sort || 1, // 显示排序: 1-9999
+				enable: delStr(data?.enable), // 是否开启菜单
 				created_at: new Date(),
 				updated_at: new Date(),
 			};
-			// * 5、写入数据库
-			const result = await ctx.mongo.insertOne('__menu', fDoc);
-			console.log('写入菜单结果：', result);
-
-			// * 6、返回前端信息
-			return ctx.send(result, '新增菜单成功');
+			await ctx.mongo.insertOne('__menu', fDoc);
+			return ctx.send('新增菜单成功');
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}
@@ -335,21 +258,35 @@ class Menu extends Basic {
 			if (!data) return ctx.sendError(400, '失败：无参数', 400);
 			console.log('更新菜单参数：', data);
 
-			// * 2、检查是否重复 path、key
-			// 如果修改path、key的话：不可与其他菜单的path重复、查询path是否被修改
-			const fm = await ctx.mongo.find('__menu', { query: { _id: data?._id } });
-			if (!fm.length) return ctx.sendError(400, '修改菜单失败：数据错误，根据id查找、数据未找到');
-  
-			const { path, key } = data;
-			const exists = await ctx.mongo.find('__menu', { query: { $or: [{ path }, { key }] } });
-			if (exists.length > 0) {
-				if (exists[0].path === path) {
-					return ctx.sendError(400, `新增菜单失败：已经存在 path 为 ${path}`, 400);
-				}
-				if (exists[0].key === key) {
-					return ctx.sendError(400, `新增菜单失败：已经存在 key 为 ${key}`, 400);
-				}
+			const findMenu = await ctx.mongo.find('__menu', { query: { _id: data?._id } });
+			console.log('findMenu', findMenu.length);
+			if (!findMenu.length) return ctx.sendError(400, '修改菜单失败：数据错误，根据id查找、数据未找到', 400);
+			const { path, key } = findMenu[0];
+			if (path != data.path) {
+				const fDoc = await ctx.mongo.find('__menu', { query: { path: data?.path } });
+				console.log('fDoc', fDoc);
+				if (fDoc.length > 0) return ctx.sendError(400, `新增菜单失败：已经存在 path 为：${data?.path}`, 400);
 			}
+			if (key != data.key) {
+				const fDoc = await ctx.mongo.find('__menu', { query: { key: data?.key } });
+				if (fDoc.length > 0) return ctx.sendError(400, `新增菜单失败：已经存在 key 为：${data?.key}`, 400);
+			}
+
+			// // * 2、检查是否重复 path、key
+			// // 如果修改path、key的话：不可与其他菜单的path重复、查询path是否被修改
+			// const findMenu = await ctx.mongo.find('__menu', { query: { _id: data?._id } });
+			// if (!findMenu.length) return ctx.sendError(400, '修改菜单失败：数据错误，根据id查找、数据未找到');
+
+			// const { path, key } = data;
+			// const exists = await ctx.mongo.find('__menu', { query: { $or: [{ path }, { key }] } });
+			// if (exists.length > 0) {
+			// 	if (exists[0].path === path) {
+			// 		return ctx.sendError(400, `新增菜单失败：已经存在 path 为 ${path}`, 400);
+			// 	}
+			// 	if (exists[0].key === key) {
+			// 		return ctx.sendError(400, `新增菜单失败：已经存在 key 为 ${key}`, 400);
+			// 	}
+			// }
 
 			// * 3、如果修改了菜单、从二级菜单变到了其他二级菜单、需要修改 parent_id
 			function delStr(str: string) {
@@ -373,13 +310,11 @@ class Menu extends Basic {
 				is_full: data?.isFull == '是' ? 1 : 0,
 				is_affix: data?.isAffix == '是' ? 1 : 0,
 				sort: +data?.sort || 1,
+				enable: delStr(data?.enable),
+				updated_at: new Date(),
 			};
-			// * 4、写入数据库
-			const result = await ctx.mongo.updateOne('__menu', fm[0]._id, fDoc);
-			console.log('写入菜单结果：', result);
-
-			// 返回前端结果：
-			return ctx.send(result, '新增菜单成功');
+			await ctx.mongo.updateOne('__menu', findMenu[0]._id, fDoc);
+			return ctx.send('更新菜单成功');
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
 		}

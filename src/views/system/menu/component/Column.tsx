@@ -2,6 +2,7 @@ import { ProColumns } from '@ant-design/pro-components';
 import { UserList } from '@/api/interface';
 import { Icon } from '@/components/Icon';
 import { TableRenderAction } from '@/components/TableAction';
+import { Tag } from 'antd';
 
 const TableColumnsConfig = (handleOperator: any, handleModalSubmit: any): ProColumns<UserList>[] => {
 	return [
@@ -63,7 +64,6 @@ const TableColumnsConfig = (handleOperator: any, handleModalSubmit: any): ProCol
 			filters: true,
 			onFilter: true,
 		},
-
 		{
 			title: '菜单标识',
 			dataIndex: ['meta', 'key'],
@@ -71,6 +71,17 @@ const TableColumnsConfig = (handleOperator: any, handleModalSubmit: any): ProCol
 			width: 100,
 			filters: true,
 			onFilter: true,
+		},
+		{
+			title: '开启菜单',
+			dataIndex: ['meta', 'enable'],
+			ellipsis: true,
+			width: 100,
+			filters: true,
+			onFilter: true,
+			render: (_, record: any) => {
+				return <Tag color={record.meta.enable == '开启' ? 'blue' : 'red'}>{record.meta.enable}</Tag>;
+			},
 		},
 		{
 			title: '路由路径',

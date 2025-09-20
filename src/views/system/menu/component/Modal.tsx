@@ -41,6 +41,7 @@ const ModalComponent = (Props: any) => {
 			isHide: type === 'create' ? '否' : data?.meta?.isHide == 1 ? '是' : '否',
 			isFull: type === 'create' ? '否' : data?.meta?.isFull == 1 ? '是' : '否',
 			isAffix: type === 'create' ? '否' : data?.meta?.isAffix == 1 ? '是' : '否',
+			enable: type === 'create' ? '开启' : data?.meta?.enable,
 		});
 		setIsTop(type === 'create' ? '是' : data?.parent_id == 0 ? '是' : '否');
 		setValue(type === 'create' ? '' : data?.parent_id == 0 ? null : data?.parent_id);
@@ -248,6 +249,11 @@ const ModalComponent = (Props: any) => {
 						<Col span={12}>
 							<Form.Item label='显示排序' name='sort' tooltip={{ title: '最小值：1、最大值：999、数值小排在前面' }}>
 								<InputNumber controls min={1} max={999} defaultValue={1} />
+							</Form.Item>
+						</Col>
+						<Col span={12}>
+							<Form.Item label='是否启用菜单' name='enable' rules={[{ required: true, message: '创建菜单需 enable' }]}>
+								<Radio.Group options={['开启', '关闭']} defaultValue='开启' />
 							</Form.Item>
 						</Col>
 					</Row>

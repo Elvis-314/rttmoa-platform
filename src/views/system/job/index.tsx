@@ -119,8 +119,9 @@ const useProTable = () => {
 					},
 					sort: mappedSort,
 				};
-				console.log('岗位搜索条件：', payload);
-				console.log('岗位查询：', payload.search);
+				// console.log('岗位搜索条件：', payload);
+				// console.log('岗位查询：', payload.search);
+
 				const { data }: any = await findJob(payload);
 				// console.log('岗位接口数据：', data);
 				SetPagination((prev: any) => ({ ...prev, total: data.total }));
@@ -156,12 +157,6 @@ const useProTable = () => {
 	return (
 		<>
 			<ProTable<any>
-				// components={{
-				// 	body: {
-				// 		row: EditableRow,
-				// 		cell: EditableCell,
-				// 	},
-				// }}
 				rowKey='_id'
 				className='ant-pro-table-scroll'
 				scroll={{ x: allWidth, y: '100vh' }} // 100vh

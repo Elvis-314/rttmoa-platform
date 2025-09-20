@@ -8,10 +8,9 @@ router.post("/addMenu", Menu.addMenu); // 新增菜单
 router.post("/modMenu", Menu.UpMenu);
 router.post("/delMenu", Menu.DelMenu);
 
-router.get("/allMenu", Menu.FindAllMenu);
+router.get("/allMenu", Menu.findMenu);
 
-router.get('/exportMenu', Menu.exportMenu) 
-
+ 
 export default router;
  
 
