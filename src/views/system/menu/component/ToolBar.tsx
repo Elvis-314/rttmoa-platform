@@ -4,41 +4,47 @@ import { useDispatch } from '@/redux';
 import { setGlobalState } from '@/redux/modules/global';
 
 type ToolBarProps = {
-	quickSearch: () => void;
 	openSearch: string;
 	SetOpenSearch: any;
 	handleOperator: (type: string, data: any) => void;
+	setRowKeys: any;
+	menuList: any[];
 };
 
 // * 渲染工具栏 组件
 const ToolBarRender = (props: ToolBarProps) => {
-	let { quickSearch, openSearch, SetOpenSearch, handleOperator } = props;
+	let { openSearch, SetOpenSearch, handleOperator, setRowKeys, menuList } = props;
 	const dispatch = useDispatch();
 
-	const CreateBtn = () => {
-		handleOperator('create', null);
-	};
+	const CreateBtn = () => handleOperator('create', null);
 	const ExportBtn = () => {};
 	const ImportBtn = () => {};
+
+	const menuExpand = () => {
+		let setExpandKey: any = [];
+		const handleMenu = (menuConfig: any) => {
+			return menuConfig?.map((item: any) => {
+				if (item.children && item.children.length) {
+					setExpandKey.push(item.unique);
+					handleMenu(item.children);
+				}
+				return item;
+			});
+		};
+		handleMenu(menuList);
+		setRowKeys(setExpandKey);
+	};
+	const menuClosed = () => {
+		setRowKeys([]);
+	};
 	return [
-		// <Search placeholder='快捷搜索...' allowClear onSearch={quickSearch} style={{ width: 200 }} />,
-		<Button icon={<PlusOutlined />} onClick={CreateBtn}>
+		<Button type='primary' icon={<PlusOutlined />} onClick={CreateBtn}>
 			新建菜单
 		</Button>,
-		<Button
-			icon={<PlusSquareOutlined />}
-			onClick={() => {
-				message.info('正在处理');
-			}}
-		>
+		<Button type='primary' icon={<PlusSquareOutlined />} onClick={menuExpand}>
 			展开全部
 		</Button>,
-		<Button
-			icon={<MinusSquareOutlined />}
-			onClick={() => {
-				message.info('正在处理');
-			}}
-		>
+		<Button type='primary' icon={<MinusSquareOutlined />} onClick={menuClosed}>
 			折叠全部
 		</Button>,
 

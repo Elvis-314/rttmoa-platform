@@ -2,6 +2,7 @@
 import { Context } from 'koa';
 import Basic from '../basic';
 import { InitMenuConfig } from '../../config/init_menu';
+import _ from 'lodash';
 
 // * 菜单结构
 // ✅ 推荐存储格式（MongoDB 示例）
@@ -24,6 +25,9 @@ import { InitMenuConfig } from '../../config/init_menu';
 //   "created_at": ISODate("2025-06-25T10:00:00Z"),
 //   "updated_at": ISODate("2025-06-25T10:00:00Z")
 // }
+
+// 注意点：开启菜单状态：新增时，如果最上级菜单是关闭、那么子菜单必须全是关闭状态
+// 注意点：开启菜单状态：更新时，如果最上级菜单改成关闭状态、那么子菜单必须全是关闭状态才可以
 class Menu extends Basic {
 	constructor() {
 		super();
@@ -77,22 +81,17 @@ class Menu extends Basic {
 		}
 	};
 
-	// * 查询到数据库中的数据、要返回前端所需要的结构 【已完成】  修改日期：2025-06-03
+	// * 查询到数据库中的数据、要返回前端所需要的结构
+	// * 菜单管理中查询的是所有的菜单 name = "all"
+	// * 前端展示查询的菜单应该是 开启菜单 != "关闭"
 	findMenu = async (ctx: Context) => {
 		try {
-			// * 当 name == 'all' 时、将数据库中菜单导出为json格式
+			// * 当 name == 'all' 时、查全部的菜单、将数据库中菜单导出为json格式
 			const { name } = ctx.query;
 
 			const currentUser = ctx.state.user;
 			if (Object.keys(currentUser).length == 0) {
 				return ctx.sendError(401, 'Unauthorized access. Please provide a valid token.');
-			}
-			const { username, role } = await this.getUserById(currentUser?.id, ctx);
-
-			let RoleMenu: any = [];
-			if (role.length) {
-				const Role = await ctx.mongo.find('__role', { query: { permission_str: { $in: role } }, sort: { level: -1 } });
-				RoleMenu = Role[0].menuList;
 			}
 
 			/** 将扁平结构转换为树结构 */
@@ -160,8 +159,16 @@ class Menu extends Basic {
 					}));
 			}
 
+			// 根据角色：proAdmin / admin / user 去
+			const { role } = await this.getUserById(currentUser?.id, ctx);
+			let RoleMenu: any = [];
+			if (role.length) {
+				const Role = await ctx.mongo.find('__role', { query: { permission_str: { $in: role } }, sort: { level: -1 } }); // 角色级别倒序
+				RoleMenu = Role[0].menuList;
+			}
+
+			// * ✅ 主控制逻辑：查询全部菜单
 			if (name && name == 'all') {
-				// ✅ 主控制逻辑
 				const flatMenu = await ctx.mongo.find('__menu'); // 或 "__dept"
 				const tree = flatToTree(flatMenu);
 				removeEmptyChildren(tree);
@@ -169,8 +176,17 @@ class Menu extends Basic {
 				return ctx.send(sortedTree, '获取菜单树结构成功');
 			}
 
-			// ✅ 只返回首页
-			// 1、没有获取到 cookie 中的 用户信息
+			// * ✅ 主控制逻辑： 前端查询：菜单 != "关闭"
+			if (name && name == 'open') {
+				const flatMenu = await ctx.mongo.find('__menu', { query: { enable: { $ne: '关闭' } } }); // 或 "__dept"
+				const tree = flatToTree(flatMenu);
+				removeEmptyChildren(tree);
+				const sortedTree = sortTreeBySort(tree);
+				return ctx.send(sortedTree, '获取菜单树结构成功');
+			}
+
+			// * ✅ 只返回首页：返回：首页home
+			// 1、没有获取到 cookie 中的 用户信息：currentUser
 			// 2、登陆的用户没有 角色字符
 			// 3、获取的角色菜单为空
 			if (!currentUser.id || role.length == 0 || RoleMenu.length == 0) {
@@ -179,7 +195,7 @@ class Menu extends Basic {
 				return ctx.send(homePage, '获取菜单树结构成功');
 			}
 
-			// ✅ 只返回首页
+			// * ✅ 根据角色：proAdmin / admin / user 返回对应的角色菜单
 			if (RoleMenu.length) {
 				const tree = flatToTree(RoleMenu);
 				removeEmptyChildren(tree);
@@ -187,35 +203,36 @@ class Menu extends Basic {
 				return ctx.send(sortedTree, '获取菜单树结构成功');
 			}
 		} catch (err) {
-			return ctx.sendError(500, err.message, 500);
+			return ctx.sendError(500, err.message);
 		}
 	};
 
 	// * 新增菜单
 	// 前台尽量多做一些选择框去供用户去选择
-	// 前端字段需要与数据库字段转化一下
+	// 新增时，如果最上级菜单是关闭、那么子菜单必须全是关闭状态
 	addMenu = async (ctx: Context) => {
 		try {
 			let data: any = ctx.request.body;
 			console.log('新增菜单参数：', data);
 
 			// * 2、查询数据库有无相同key和path、必须保证key和apth唯一
-			const { path, key } = data;
-			const fp = await ctx.mongo.find('__menu', { query: { path: path } });
-			if (fp.length > 0) return ctx.sendError(400, `新增菜单失败：已经存在path为 ${data?.path}`, 400);
-			const fk = await ctx.mongo.find('__menu', { query: { key: key } });
-			if (fk.length > 0) return ctx.sendError(400, `新增菜单失败：已经存在key为 ${data?.key}`, 400);
+			const path = _.trim(_.get(data, 'path', ''));
+			const key = _.trim(_.get(data, 'key', ''));
+			const exists = await ctx.mongo.find('__menu', { query: { $or: [{ path }, { key }] } });
+			if (exists.length > 0) {
+				if (exists[0].path === path) return ctx.sendError(400, `新增菜单失败：已经存在 path 为 ${path}`);
+				if (exists[0].key === key) return ctx.sendError(400, `新增菜单失败：已经存在 key 为 ${key}`);
+			}
 
-			// const { path, key } = data;
-			// const exists = await ctx.mongo.find('__menu', { query: { $or: [{ path }, { key }] } });
-			// if (exists.length > 0) {
-			// 	if (exists[0].path === path) {
-			// 		return ctx.sendError(400, `新增菜单失败：已经存在 path 为 ${path}`, 400);
-			// 	}
-			// 	if (exists[0].key === key) {
-			// 		return ctx.sendError(400, `新增菜单失败：已经存在 key 为 ${key}`, 400);
-			// 	}
-			// }
+			// * 新增时、如果上一级状态是关闭、那么新增的子菜单状态也是关闭状态 
+			// console.log('上级菜单：', data?.parent_id); // 0 | auth
+			let enableStatus = data?.enable;
+			if (data?.parent_id != 0) { // 当不是顶级菜单时
+				const exists = await ctx.mongo.find('__menu', { query: { key: data?.parent_id } });
+				if (exists.length) {
+					if (exists[0].enable == '关闭') enableStatus = '关闭';
+				}
+			}
 
 			// * 3、如果新增的是菜单、需要注意父iD是什么、需要修改 parent_id
 
@@ -239,7 +256,7 @@ class Menu extends Basic {
 				is_full: data?.isFull == '是' ? 1 : 0, // 是否全屏显示页面
 				is_affix: data?.isAffix == '是' ? 1 : 0, // 是否固定标签页
 				sort: +data?.sort || 1, // 显示排序: 1-9999
-				enable: delStr(data?.enable), // 是否开启菜单
+				enable: enableStatus, // 是否开启菜单
 				created_at: new Date(),
 				updated_at: new Date(),
 			};
@@ -255,38 +272,41 @@ class Menu extends Basic {
 		try {
 			// * 1、校验参数、校验前端参数  【前端校验参数】
 			const data: any = ctx.request.body;
-			if (!data) return ctx.sendError(400, '失败：无参数', 400);
 			console.log('更新菜单参数：', data);
 
 			const findMenu = await ctx.mongo.find('__menu', { query: { _id: data?._id } });
-			console.log('findMenu', findMenu.length);
-			if (!findMenu.length) return ctx.sendError(400, '修改菜单失败：数据错误，根据id查找、数据未找到', 400);
-			const { path, key } = findMenu[0];
-			if (path != data.path) {
-				const fDoc = await ctx.mongo.find('__menu', { query: { path: data?.path } });
-				console.log('fDoc', fDoc);
-				if (fDoc.length > 0) return ctx.sendError(400, `新增菜单失败：已经存在 path 为：${data?.path}`, 400);
+			if (!findMenu.length) return ctx.sendError(400, '修改菜单失败：数据错误，根据id查找、数据未找到');
+
+			// 通用唯一性校验函数
+			async function checkUniqueField(ctx: any, collection: string, field: string, value: string, excludeId?: string): Promise<void> {
+				if (_.isEmpty(value)) return;
+
+				const query: Record<string, any> = { [field]: value };
+				if (excludeId) query._id = { $ne: excludeId }; // 不等于当前 id
+
+				const exists = await ctx.mongo.find(collection, { query });
+				if (exists.length > 0) throw new Error(`新增菜单失败：已经存在${field}: ${value}`);
 			}
-			if (key != data.key) {
-				const fDoc = await ctx.mongo.find('__menu', { query: { key: data?.key } });
-				if (fDoc.length > 0) return ctx.sendError(400, `新增菜单失败：已经存在 key 为：${data?.key}`, 400);
+			try {
+				const path = _.trim(_.get(data, 'path', ''));
+				await checkUniqueField(ctx, '__menu', 'path', path, data._id); // 校验 path
+
+				const key = _.trim(_.get(data, 'key', ''));
+				await checkUniqueField(ctx, '__menu', 'key', key, data._id); // 校验 key
+
+				// 继续你的保存逻辑...
+			} catch (err: any) {
+				return ctx.sendError(400, err.message);
 			}
 
-			// // * 2、检查是否重复 path、key
-			// // 如果修改path、key的话：不可与其他菜单的path重复、查询path是否被修改
-			// const findMenu = await ctx.mongo.find('__menu', { query: { _id: data?._id } });
-			// if (!findMenu.length) return ctx.sendError(400, '修改菜单失败：数据错误，根据id查找、数据未找到');
-
-			// const { path, key } = data;
-			// const exists = await ctx.mongo.find('__menu', { query: { $or: [{ path }, { key }] } });
-			// if (exists.length > 0) {
-			// 	if (exists[0].path === path) {
-			// 		return ctx.sendError(400, `新增菜单失败：已经存在 path 为 ${path}`, 400);
-			// 	}
-			// 	if (exists[0].key === key) {
-			// 		return ctx.sendError(400, `新增菜单失败：已经存在 key 为 ${key}`, 400);
-			// 	}
-			// }
+			// ! 更新菜单时、如果最顶级菜单为关闭时、那么子菜单全部关闭才可以
+			const currentKey = findMenu[0].key; // auth
+			const KeyArr = await ctx.mongo.find('__menu', { query: { parent_id: currentKey } });
+			if (KeyArr.length) {
+				for (const element of KeyArr) {
+					if (element.enable != '关闭') return ctx.sendError(400, '更新菜单：当前节点下，将子节点修改为关闭状态');
+				}
+			}
 
 			// * 3、如果修改了菜单、从二级菜单变到了其他二级菜单、需要修改 parent_id
 			function delStr(str: string) {

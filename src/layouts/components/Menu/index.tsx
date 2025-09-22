@@ -129,13 +129,6 @@ const LayoutMenu: React.FC<LayoutMenuProps> = ({ mode, menuList, menuSplit }) =>
 			onClick={clickMenu} // 点击 MenuItem 调用此函数
 			items={antdMenuList} // type: https://ant.design/components/menu-cn#itemtype
 			{...(!isTransverseLayout && accordion && { openKeys, onOpenChange })}
-			// style={{ fontFamily: 'aliFonts' }}
-			// font-sans
-			// style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'" }}
-			// font-serif
-			// style={{ fontFamily: "ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif" }}
-			// font-mono
-			// style={{fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace", fontWeight: "bold"}}
 		/>
 	);
 };

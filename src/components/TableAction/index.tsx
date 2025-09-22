@@ -54,6 +54,7 @@ import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 
 // * 操作：图标显示详情、编辑、删除
 export const TableRenderAction = (entity: any, modalOperate: any, modalResult: any) => {
+	// console.log('操作 entity： ', entity);
 	return (
 		<div key='operate' className='flex flex-row justify-around'>
 			{/* 查看详情 */}
@@ -98,7 +99,7 @@ export const TableRenderAction = (entity: any, modalOperate: any, modalResult: a
 			{/* 删除 */}
 			<Popconfirm
 				title='删除任务！'
-				description={`你确定要删除： ${entity?.name || entity?.postName}`}
+				description={`你确定要删除： ${entity?.name || entity?.postName || entity?.meta?.title}`}
 				onConfirm={() => modalResult('delete', entity)}
 				okText='确认'
 				cancelText='取消'

@@ -20,7 +20,7 @@ const usePermissions = () => {
 				const { data: buttonList } = await loginAPI.getAuthButtonListApi(); // 用户按钮权限
 				// const { data: menuList } = await getAuthMenuListApi() // 用户菜单权限、Json数据
 
-				const newMenu: any = await FindAllMenu({}); // 用户菜单权限
+				const newMenu: any = await FindAllMenu({ name: 'open' }); // 用户菜单权限
 				console.log('usePermissions 获取树结构菜单：', newMenu);
 				const menuList = newMenu?.data || [];
 

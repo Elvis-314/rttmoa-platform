@@ -12,7 +12,7 @@ const suffix = (object = {}) => {
 
 // * System
 // * 系统管理 — 菜单管理
-export const FindAllMenu = (params: Params) => httpUpack.get(`/menu/allMenu`, params); // {name: 'all'}
+export const FindAllMenu = (params: Params) => httpUpack.get(`/menu/allMenu`, params); // {name: 'all'} | {name: 'open'}
 export const InsNewMenu = (params: Params) => httpUpack.post(`/menu/addMenu`, params);
 export const UpMenu = (params: Params) => httpUpack.post(`/menu/modMenu`, params);
 export const DelMenu = (params: Params) => httpUpack.post(`/menu/delMenu`, params);

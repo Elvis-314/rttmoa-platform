@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
-import { Button, Col, Drawer, Form, Input, Modal, Row, Space } from 'antd';
+import { useCallback, useRef, useState } from 'react';
+import { Form } from 'antd';
 import { formatDataForProTable } from '@/utils';
 import { UserList } from '@/api/interface';
-import { FooterToolbar, ProDescriptions, ProTable } from '@ant-design/pro-components';
-import type { ActionType, FormInstance, ProDescriptionsItemProps } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
+import type { ActionType, FormInstance } from '@ant-design/pro-components';
 import { message } from '@/hooks/useMessage';
 import ColumnsConfig from './component/Column';
 import ToolBarRender from './component/ToolBar';
-import { addJob, delJob, DelMenu, delMoreJob, DelMoreUser, delUser, FindAllMenu, findJob, GetProTableUser, InsNewMenu, modifyJob, UpMenu } from '@/api/modules/system';
+import { DelMenu, delMoreJob, FindAllMenu, InsNewMenu, UpMenu } from '@/api/modules/system';
 import './index.less';
 import ModalComponent from './component/Modal';
 import FooterComponent from '@/components/TableFooter';
@@ -43,84 +43,128 @@ const useProTable = () => {
 	const [modalType, setModalType] = useState<string>('');
 	const [modalUserInfo, setModalUserInfo] = useState({});
 
+	const [rowKeys, setRowKeys] = useState([]);
+
 	const quickSearch = () => {};
 
 	// * 操作 — 员工： 新建、编辑、详情、删除  按钮
-	const handleOperator = async (type: string, item: any) => {
-		console.log('操作：类型+记录', type, item);
+	const handleOperator = (type: 'create' | 'edit' | 'detail', item?: any) => {
+		setModalType(type);
 		if (type === 'detail') {
 			setDrawerIsVisible(true);
-			setDrawerCurrentRow(item);
-		} else if (type === 'create') {
+			setDrawerCurrentRow(item || {});
+		} else {
 			setModalIsVisible(true);
-			setModalTitle('新建菜单');
-			setModalType(type);
-			setModalUserInfo({});
-		} else if (['edit'].includes(type)) {
-			setModalIsVisible(true);
-			setModalTitle(type === 'edit' ? '编辑菜单' : '查看详情');
-			setModalType(type);
-			setModalUserInfo(item);
-		} else if (type === 'delete') {
-			const hide = message.loading('正在删除');
-			try {
-				const result: any = await DelMenu(item);
-				// console.log('删除菜单结果：', result);
-				if (result) {
-					hide();
-					actionRef?.current?.reload();
-					message.success(`删除 ${item?.meta?.title} 成功`);
-				}
-			} catch (error) {
-				hide();
-				message.error('删除失败、请再试一次！');
-			}
-		} else if (type === 'moreDelete') {
-			message.loading('删除更多按钮、正在实现');
-			// const hide = message.loading('正在删除');
-			// try {
-			// 	const selectIds = selectedRows.map(value => value?._id);
-			// 	console.log('selectIds', selectIds);
-			// 	const res: any = await delMoreJob(selectIds || []);
-			// 	if (res) {
-			// 		hide();
-			// 		setSelectedRows([]);
-			// 		actionRef.current?.reloadAndRest?.();
-			// 		message.success('全部删除完成！');
-			// 	}
-			// } catch (error) {
-			// 	hide();
-			// 	message.error('删除失败、请再试一次！');
-			// }
+			setModalUserInfo(item || {});
+			setModalTitle(type === 'create' ? '新建岗位' : '编辑岗位	');
 		}
 	};
+	// const handleOperator = async (type: string, item: any) => {
+	// 	console.log('操作：类型+记录', type, item);
+	// 	if (type === 'detail') {
+	// 		setDrawerIsVisible(true);
+	// 		setDrawerCurrentRow(item);
+	// 	} else if (type === 'create') {
+	// 		setModalIsVisible(true);
+	// 		setModalTitle('新建菜单');
+	// 		setModalType(type);
+	// 		setModalUserInfo({});
+	// 	} else if (['edit'].includes(type)) {
+	// 		setModalIsVisible(true);
+	// 		setModalTitle(type === 'edit' ? '编辑菜单' : '查看详情');
+	// 		setModalType(type);
+	// 		setModalUserInfo(item);
+	// 	} else if (type === 'delete') {
+	// 		const hide = message.loading('正在删除');
+	// 		try {
+	// 			const result: any = await DelMenu(item);
+	// 			// console.log('删除菜单结果：', result);
+	// 			if (result) {
+	// 				hide();
+	// 				actionRef?.current?.reload();
+	// 				message.success(`删除 ${item?.meta?.title} 成功`);
+	// 			}
+	// 		} catch (error) {
+	// 			hide();
+	// 			message.error('删除失败、请再试一次！');
+	// 		}
+	// 	} else if (type === 'moreDelete') {
+	// 		message.loading('删除更多按钮、正在实现');
+	// 		// const hide = message.loading('正在删除');
+	// 		// try {
+	// 		// 	const selectIds = selectedRows.map(value => value?._id);
+	// 		// 	console.log('selectIds', selectIds);
+	// 		// 	const res: any = await delMoreJob(selectIds || []);
+	// 		// 	if (res) {
+	// 		// 		hide();
+	// 		// 		setSelectedRows([]);
+	// 		// 		actionRef.current?.reloadAndRest?.();
+	// 		// 		message.success('全部删除完成！');
+	// 		// 	}
+	// 		// } catch (error) {
+	// 		// 	hide();
+	// 		// 	message.error('删除失败、请再试一次！');
+	// 		// }
+	// 	}
+	// };
 	// * 操作 — 员工： 新建、编辑、详情  弹窗内容提交
-	const handleModalSubmit = async (type: string, item: any) => {
-		console.log('Modal 提交：', type, item);
-		// 1、获取字段数据
-		// 2、将字段传入到接口中
-		// 3、获取返回值并展示
-		// 4、清空表单值
-		// 5、关闭弹窗
-		// 6、重新回去菜单列表
-		const hide = message.loading(type == 'create' ? '正在添加' : '正在编辑');
-		try {
-			let res = type === 'create' ? await InsNewMenu(item) : await UpMenu(item);
-			if (res) {
-				hide();
-				form.resetFields();
-				setModalTitle('');
-				setModalType('');
-				setModalIsVisible(false);
-				setModalUserInfo({});
-				if (actionRef.current) actionRef.current.reload();
-				message.success(type == 'create' ? '添加成功' : '编辑成功');
+	const handleModalSubmit = useCallback(
+		async (type: string, item: any) => {
+			try {
+				if (['create', 'edit'].includes(type)) {
+					const hide = message.loading(type === 'create' ? '正在添加' : '正在编辑');
+					const res = type === 'create' ? await InsNewMenu(item) : await UpMenu(item);
+					hide();
+					if (res) {
+						form.resetFields();
+						setModalIsVisible(false);
+						actionRef.current?.reload();
+						message.success(type === 'create' ? '添加成功' : '编辑成功');
+					}
+				} else if (['delete', 'moreDelete'].includes(type)) {
+					const hide = message.loading('正在删除');
+					const ids = type === 'delete' ? [item._id] : selectedRows.map(row => row._id);
+					const res = type === 'delete' ? await DelMenu(item) : message.warning('多选删除正在开发中');
+					hide();
+					if (res) {
+						if (type === 'moreDelete') setSelectedRows([]);
+						actionRef.current?.reloadAndRest?.();
+						message.success(`成功删除${type === 'delete' ? ` ${item?.postName}` : '多条'}记录`);
+					}
+				}
+			} catch (error: any) {
+				message.error(error.message || '操作失败，请重试！');
 			}
-		} catch (error: any) {
-			hide();
-			message.error(error.message || error.msg);
-		}
-	};
+		},
+		[selectedRows, form]
+	);
+
+	// const handleModalSubmit = async (type: string, item: any) => {
+	// 	console.log('Modal 提交：', type, item);
+	// 	// 1、获取字段数据
+	// 	// 2、将字段传入到接口中
+	// 	// 3、获取返回值并展示
+	// 	// 4、清空表单值
+	// 	// 5、关闭弹窗
+	// 	// 6、重新回去菜单列表
+	// 	const hide = message.loading(type == 'create' ? '正在添加' : '正在编辑');
+	// 	try {
+	// 		let res = type === 'create' ? await InsNewMenu(item) : await UpMenu(item);
+	// 		if (res) {
+	// 			hide();
+	// 			form.resetFields();
+	// 			setModalTitle('');
+	// 			setModalType('');
+	// 			setModalIsVisible(false);
+	// 			setModalUserInfo({});
+	// 			if (actionRef.current) actionRef.current.reload();
+	// 			message.success(type == 'create' ? '添加成功' : '编辑成功');
+	// 		}
+	// 	} catch (error: any) {
+	// 		hide();
+	// 		message.error(error.message || error.msg);
+	// 	}
+	// };
 
 	// * 工具栏 ToolBar
 	let ToolBarParams: any = {
@@ -128,6 +172,8 @@ const useProTable = () => {
 		openSearch,
 		SetOpenSearch, // 工具栏：开启表单搜索
 		handleOperator,
+		setRowKeys,
+		menuList,
 	};
 
 	// * 表格封装成通用
@@ -150,8 +196,7 @@ const useProTable = () => {
 				request={async (params, sort, filter) => {
 					SetLoading(true);
 					const res: any = await FindAllMenu({ name: 'all' });
-					// console.log('获取菜单：', res);
-
+					// console.log('获取菜单结果：', res);
 					let format = {
 						list: res.data,
 						current: res.page,
@@ -165,11 +210,11 @@ const useProTable = () => {
 				}}
 				expandable={{
 					defaultExpandAllRows: true,
-					// expandedRowKeys: ['683943c255b6600b07b37e59', '683943c255b6600b07b37e5c'], // * 默认展开，  展开全部的话就是所有的父节点集合
-					onExpandedRowsChange: data => {},
+					expandedRowKeys: rowKeys, // * 默认展开，  展开全部的话就是所有的父节点集合
+					onExpandedRowsChange: (data: any) => {
+						setRowKeys(data);
+					},
 				}}
-				// rowKey="key"
-				// columns={columns}
 				search={false}
 				pagination={false}
 				options={false}

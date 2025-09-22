@@ -3,6 +3,7 @@ import Basic from '../basic';
 import _ from 'lodash';
 
 // * 角色管理
+// 注：权限字符、新增时和编辑时操作不想同
 class Role extends Basic {
 	constructor() {
 		super();
@@ -43,7 +44,7 @@ class Role extends Basic {
 			const data: any = ctx.request.body;
 			// console.log('添加角色：', data);
 
-			// ! 权限字符不可以重复
+			// ! 权限字符 （新增时、判断是否有该字符）
 			const permission_str = _.trim(_.get(data, 'permission_str', ''));
 			if (!_.isEmpty(permission_str)) {
 				const role = await ctx.mongo.find('__role', { query: { permission_str: permission_str } });
@@ -53,6 +54,7 @@ class Role extends Basic {
 			const newRole: any = {
 				...role,
 				createTime: new Date(),
+				createBy: 'admin',
 				updateBy: 'admin',
 				updateTime: new Date(),
 			};
@@ -70,11 +72,16 @@ class Role extends Basic {
 			const data: any = ctx.request.body;
 			console.log('添加角色：', data);
 
-			// ! 权限字符不可以重复
+			// ! 权限字符 （更新时、判断除了自己的字符还有别的字符吗）
 			const permission_str = _.trim(_.get(data, 'permission_str', ''));
 			if (!_.isEmpty(permission_str)) {
-				const role = await ctx.mongo.find('__role', { query: { permission_str: permission_str } });
-				if (role.length) return ctx.sendError(400, '新增角色错误：权限字符不可以重复');
+				const query: Record<string, any> = { permission_str };
+				// 编辑时需要排除自己
+				if (data._id) query._id = { $ne: data._id }; // $ne = not equal
+				const exists = await ctx.mongo.find('__role', { query });
+				if (exists.length > 0) {
+					return ctx.sendError(400, '操作失败：权限字符已存在');
+				}
 			}
 
 			const role = await this.addAndModifyField(ctx, data);
