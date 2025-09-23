@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.15](https://github.com/rttmoa/rttmoa-platform/compare/v2.4.14...v2.4.15) (2025-09-23)
+
+
+### Bug Fixes
+
+* 🧩 更新文件 ([a1a468f](https://github.com/rttmoa/rttmoa-platform/commit/a1a468f8c18356405a9bbaf70d72312636bf616d))
+
 ### [2.4.14](https://github.com/rttmoa/rttmoa-platform/compare/v2.4.13...v2.4.14) (2025-09-22)
 
 
