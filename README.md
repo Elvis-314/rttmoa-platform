@@ -14,7 +14,7 @@
 
 ## 📑参考链接
 
-> - 项目 url; [🚀](https://github.com/rttmoa/rttmoa-platform)
+> - 项目 url [🚀](https://github.com/rttmoa/rttmoa-platform)
 
 ## 🌱 安装使用步骤
 
@@ -25,6 +25,13 @@
 https://github.com/rttmoa/rttmoa-platform.git
 ```
 
+- **Node.js：**
+
+```
+# 版本
+node.js >= 18.18.0
+```
+
 - **Install：**
 
 ```
@@ -32,11 +39,18 @@ https://github.com/rttmoa/rttmoa-platform.git
 pnpm install
 ```
 
+- **DataBase：**
+
+```
+# 导入数据库
+将数据导入mongodb中、直接启动项目即可
+```
+
 - **Run：**
 
 ```
 # 启动
-pnpm start
+pnpm dev
 ```
 
 - **Build：**
@@ -72,7 +86,7 @@ pnpm lint:stylelint
 pnpm commit
 ```
 
-- **Bit**
+- **Bit：**
 
 ```
 # Build composable software
@@ -140,7 +154,7 @@ rttmoa-platform
 | ----------------------------------------------- | ------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- |
 | not support                                     | last 2 versions                                   | last 2 versions                                      | last 2 versions                                     | last 2 versions                                     |
 
-## 使用标准 commit 生成 changelog 标准化
+## ✨ 使用标准 commit 生成 CHANGELOG.MD 标准化
 
 - [conventional-changelog](https://github.com/conventional-changelog)
 - [standard-version](https://github.com/conventional-changelog/standard-version)
@@ -169,11 +183,17 @@ rttmoa-platform
     "release": "standard-version --tag-prefix \"publish/\""
     ```
 
-## 约定式提交
+## ✨ 约定式提交
 
 1. [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
+2. 为什么使用约定式提交
+    1. 自动化生成 CHANGELOG。
+    2. 基于提交的类型，自动决定语义化的版本变更。
+    3. 向同事、公众与其他利益关系者传达变化的性质。
+    4. 触发构建和部署流程。
+    5. 让人们探索一个更加结构化的提交历史，以便降低对你的项目做出贡献的难度。
 
-## Commit message
+## ✨ Commit message
 
 1. The commit message should be structured as follows:
 
@@ -215,13 +235,13 @@ rttmoa-platform
 6. [git commit 工具链](https://juejin.cn/post/7067166468797890591)
 7. [https://theodorusclarence.com/library/conventional-commit-readme](https://theodorusclarence.com/library/conventional-commit-readme)
 
-## React 代码拆分库
+## ✨ React 代码拆分库
 
 1. [Loadable Components](https://loadable-components.com/)
 
-## Mock Server
+## ✨ Mock Server
 
-## 部署
+## ✨ 部署
 
 1. Deployment: [Deployment] ([https://create-react-app.dev/docs/deployment](https://create-react-app.dev/docs/deployment))
 2. Deploy gh-pages:
@@ -231,9 +251,20 @@ rttmoa-platform
     "deploy": "gh-pages -d dist -b gh-pages",
     ```
 
-## Docusaurus
+## ✨ Docusaurus
 
-## Snyk
+> 快速构建**优化的**网站
+
+- [Docusaurus](https://docusaurus.io/)
+- ⚡️ Docusaurus 将帮助您 **立即发布一个漂亮的文档网站** 。
+- 💸 构建自定义技术栈成本高昂。与其如此， **不如专注于内容本身** ，直接编写 Markdown 文件就好。
+- 💥 准备好迎接更多精彩了吗？使用版本控制、国际化、搜索和主题自定义等**高级功能。**
+- 💅 查看**[最佳 Docusaurus 网站](https://docusaurus.io/showcase?tags=favorite)**以获取灵感。\*\*
+- **🧐 Docusaurus 是一个 **静态网站生成器** 。它构建一个具有快速客户端导航的**单页应用程序，充分利用\***\*React**的强大功能，使您的网站具有交互性。它提供开箱即用的 **文档功能** ，但可用于创建 **任何类型的网站** （个人网站、产品、博客、营销落地页等）。
+
+## ✨ Snyk
+
+> Snyk CLI 扫描并监控您的项目是否存在安全漏洞。
 
 ```js
   - npm install -g snyk
@@ -241,12 +272,21 @@ rttmoa-platform
   - snyk monitor
 ```
 
-## Bit
+## ✨ Bit
+
+> [Bit](https://bit.dev/) 是 AI 时代连接组件和应用（从开发到持续集成）的构建系统。Bit 将源代码组织成可组合的组件，从而构建可靠、可扩展且一致的应用程序。它使 AI 代理能够通过 MCP 智能地创建和重用组件，从而避免重复并加速开发。
+
+⚡**功能**
+
+- **可重用组件。** 创建可重用的 UI 组件和模块，以便在您的软件中重复使用。
+- **标准构建块。** 将用于创建开发人员和 AI 组件的蓝图模板定义为一个整体。
+- **Shell 应用程序。** 将可重用的组件和功能组合到应用程序 Shell 中。
+- **高效安全的部署。** 确保以简单、安全且优化的方式部署应用和服务，以进行测试和生产。
 
 1. [Bit.dev](https://bit.dev/)
 2. [Bit 实践](https://juejin.cn/post/7157576390177456159)
 
-## 已支持特性
+## ✨ 已支持特性
 
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
     - [https://react-typescript-cheatsheet.netlify.app/](https://react-typescript-cheatsheet.netlify.app/)
@@ -264,7 +304,7 @@ rttmoa-platform
 5. React SVGR
     - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
 
-## 代码规范：ESLint Prettier Husky EditorConfig
+## ✨ 代码规范：ESLint Prettier Husky EditorConfig
 
 1. ESLint: [ESLint](https://eslint.org/)
 
@@ -319,24 +359,24 @@ rttmoa-platform
      "prettier:fix": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
     ```
 
-## 自动化持续代码审查工具
+## ✨ 自动化持续代码审查工具
 
 1. [DeepSource/](https://deepsource.io/)
 2. [DeepScan](https://deepscan.io/)
 3. [SonarQube](https://www.sonarsource.com/)
 
-## Mac 本地部署 SonarQube
+## ✨ Mac 本地部署 SonarQube
 
 1. [SonarQube for Mac](https://juejin.cn/post/7210005376652886077)
 2. [Gitlab for Mac](https://juejin.cn/post/7210746685802397755)
 3. [Gitlab CI/CD for Mac](https://juejin.cn/post/7214686619097874491)
 
-## VSCode 扩展
+## ✨ VSCode 扩展
 
 1. ErrorLens: [ErrorLens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
 2. SonarLint: [https://www.sonarlint.org/](https://www.sonarlint.org/)
 
-## CSS Modules
+## ✨ CSS Modules
 
 CSS模块是一个CSS文件，其中的所有类名和动画名称默认都是本地作用域。
 
@@ -344,16 +384,16 @@ CSS模块是一个CSS文件，其中的所有类名和动画名称默认都是�
 2. StyleLint: [StyleLint](https://stylelint.io/)
    npx stylelint --help
 
-## CSS Libary
+## ✨ CSS Libary
 
 1. Windi CSS: [Windi CSS](https://windicss.org/)
 2. TailWind CSS: [TailWind CSS](https://tailwindcss.com/)
 
-## CI/CD 自动化构建
+## ✨ CI/CD 自动化构建
 
 1. GitHub Actions
 
-## Test
+## ✨ Test
 
 1. [Jest](https://jestjs.io/)
 2. [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
@@ -367,40 +407,40 @@ CSS模块是一个CSS文件，其中的所有类名和动画名称默认都是�
     4. npm install --save-dev @testing-library/react-hook
 ```
 
-## Plugins
+## ✨ Plugins
 
 1. [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin)
 2. [react-refresh](https://www.npmjs.com/package/react-refresh)
 
-## HTTP
+## ✨ HTTP
 
 1. HTTP: [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)
 
-## Code Contributors
+## ✨ Code Contributors
 
-## 许可证
+## ✨ 许可证
 
 1. [MIT](https://choosealicense.com/licenses/mit/)
 2. [Choose A License](https://choosealicense.com/)
 
-## Server: Dev, Test, UAT(Live), Staging, Demo, Production
+## ✨ Server: Dev, Test, UAT(Live), Staging, Demo, Production
 
 1. [Server Info](https://www.gratasoftware.com/what-is-each-server-for-development-test-uat-or-staging-demo-and-production/)
 
 Promotion Web
 Licensed under the [Apache License](https://choosealicense.com/licenses/apache-2.0/).
 
-## NPM version
+## ✨ NPM version
 
 npm version [| major | minor | patch | premajor | preminor | prepatch | prerelease [--preid=[alpha, beta, rc]] | from-git]
 
-## Git Tag
+## ✨ Git Tag
 
 1. git tag -a v1.2.0 -m "version: 1.2.0"
 2. git push origin v1.2.0
 3. git push origin --tags
 
-## Nginx
+## ✨ Nginx
 
 1. [Mac Nginx](https://newbedev.com/how-to-restart-nginx-on-mac-os-x)
 
@@ -459,7 +499,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
        5. nginx -s reopen
     ```
 
-## Tree Node Cli（生成目录结构）
+## ✨ Tree Node Cli（生成目录结构）
 
 1. npm install -g tree-node-cli
 2. Mac: tree -L 2 -I "node_modules" -r -F
@@ -468,7 +508,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 5. Win: treee -L 3 -I "node_modules" -r -F > tree3.txt
 6. tree node
 
-## Webpack Analyse
+## ✨ Webpack Analyse
 
 1. [Webpack 官方分析工具](https://webpack.github.io/analyse/)
 
@@ -476,18 +516,18 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
        npm run analyze:build
     ```
 
-## CRACO：创建React应用程序配置
+## ✨ CRACO：创建React应用程序配置
 
 1. [https://github.com/gsoft-inc/craco](https://github.com/gsoft-inc/craco)
 
-## 与 ESLint 风格不一致
+## ✨ 与 ESLint 风格不一致
 
 1. "lint:json": "jsonlint --quiet src/\*_/_.json",
 2. "standard": "standard src/\*_/_",
 3. "standard:fix": "standard --fix src/\*_/_",
 4. rm -rf package-lock.json
 
-## Update npm
+## ✨ Update npm
 
 ```bash
   npm install css-loader@5.2.7 --save-dev
@@ -495,7 +535,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
   Uncaught TypeError: SocketClient is not a constructor
 ```
 
-## GitHub Proxy
+## ✨ GitHub Proxy
 
 1. 首先确认自己 git 拉取代码的方式
 
@@ -531,15 +571,15 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
       git config --global --unset https.proxy
     ```
 
-## pm-keeper
+## ✨ pm-keeper
 
 1. [https://www.npmjs.com/package/pm-keeper](https://www.npmjs.com/package/pm-keeper)
 
-## npm i && npm ci
+## ✨ npm i && npm ci
 
 1. [npm ci vs. npm install](https://betterprogramming.pub/npm-ci-vs-npm-install-which-should-you-use-in-your-node-js-projects-51e07cb71e26)
 
-## Husky 不起作用解决方案
+## ✨ Husky 不起作用解决方案
 
 参考官网：[https://typicode.github.io/husky](https://typicode.github.io/husky/#/)
 按以下步骤进行设置：
@@ -573,6 +613,6 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
       npx husky add .husky/commit-msg 'npx --no-install commitlint --edit'
     ```
 
-## Show your support
+## ✨ Show your support
 
 If you like the project, give it a star ⭐️, it will be a great encouragement to me.
