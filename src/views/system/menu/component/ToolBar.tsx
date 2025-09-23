@@ -2,25 +2,29 @@ import { ArrowsAltOutlined, FullscreenOutlined, MinusSquareOutlined, PlusOutline
 import { Button, message, Tooltip } from 'antd';
 import { useDispatch } from '@/redux';
 import { setGlobalState } from '@/redux/modules/global';
+import { sleep } from '@/utils';
 
 type ToolBarProps = {
 	openSearch: string;
 	SetOpenSearch: any;
 	handleOperator: (type: string, data: any) => void;
 	setRowKeys: any;
+	SetLoading: any;
 	menuList: any[];
 };
 
 // * 渲染工具栏 组件
 const ToolBarRender = (props: ToolBarProps) => {
-	let { openSearch, SetOpenSearch, handleOperator, setRowKeys, menuList } = props;
+	let { openSearch, SetOpenSearch, handleOperator, setRowKeys, SetLoading, menuList } = props;
 	const dispatch = useDispatch();
 
 	const CreateBtn = () => handleOperator('create', null);
 	const ExportBtn = () => {};
 	const ImportBtn = () => {};
 
-	const menuExpand = () => {
+	const menuExpand = async () => {
+		SetLoading(true);
+		await sleep(1000);
 		let setExpandKey: any = [];
 		const handleMenu = (menuConfig: any) => {
 			return menuConfig?.map((item: any) => {
@@ -33,6 +37,7 @@ const ToolBarRender = (props: ToolBarProps) => {
 		};
 		handleMenu(menuList);
 		setRowKeys(setExpandKey);
+		SetLoading(false);
 	};
 	const menuClosed = () => {
 		setRowKeys([]);

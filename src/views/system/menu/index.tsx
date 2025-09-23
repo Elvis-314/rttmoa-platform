@@ -59,54 +59,7 @@ const useProTable = () => {
 			setModalTitle(type === 'create' ? '新建岗位' : '编辑岗位	');
 		}
 	};
-	// const handleOperator = async (type: string, item: any) => {
-	// 	console.log('操作：类型+记录', type, item);
-	// 	if (type === 'detail') {
-	// 		setDrawerIsVisible(true);
-	// 		setDrawerCurrentRow(item);
-	// 	} else if (type === 'create') {
-	// 		setModalIsVisible(true);
-	// 		setModalTitle('新建菜单');
-	// 		setModalType(type);
-	// 		setModalUserInfo({});
-	// 	} else if (['edit'].includes(type)) {
-	// 		setModalIsVisible(true);
-	// 		setModalTitle(type === 'edit' ? '编辑菜单' : '查看详情');
-	// 		setModalType(type);
-	// 		setModalUserInfo(item);
-	// 	} else if (type === 'delete') {
-	// 		const hide = message.loading('正在删除');
-	// 		try {
-	// 			const result: any = await DelMenu(item);
-	// 			// console.log('删除菜单结果：', result);
-	// 			if (result) {
-	// 				hide();
-	// 				actionRef?.current?.reload();
-	// 				message.success(`删除 ${item?.meta?.title} 成功`);
-	// 			}
-	// 		} catch (error) {
-	// 			hide();
-	// 			message.error('删除失败、请再试一次！');
-	// 		}
-	// 	} else if (type === 'moreDelete') {
-	// 		message.loading('删除更多按钮、正在实现');
-	// 		// const hide = message.loading('正在删除');
-	// 		// try {
-	// 		// 	const selectIds = selectedRows.map(value => value?._id);
-	// 		// 	console.log('selectIds', selectIds);
-	// 		// 	const res: any = await delMoreJob(selectIds || []);
-	// 		// 	if (res) {
-	// 		// 		hide();
-	// 		// 		setSelectedRows([]);
-	// 		// 		actionRef.current?.reloadAndRest?.();
-	// 		// 		message.success('全部删除完成！');
-	// 		// 	}
-	// 		// } catch (error) {
-	// 		// 	hide();
-	// 		// 	message.error('删除失败、请再试一次！');
-	// 		// }
-	// 	}
-	// };
+
 	// * 操作 — 员工： 新建、编辑、详情  弹窗内容提交
 	const handleModalSubmit = useCallback(
 		async (type: string, item: any) => {
@@ -139,33 +92,6 @@ const useProTable = () => {
 		[selectedRows, form]
 	);
 
-	// const handleModalSubmit = async (type: string, item: any) => {
-	// 	console.log('Modal 提交：', type, item);
-	// 	// 1、获取字段数据
-	// 	// 2、将字段传入到接口中
-	// 	// 3、获取返回值并展示
-	// 	// 4、清空表单值
-	// 	// 5、关闭弹窗
-	// 	// 6、重新回去菜单列表
-	// 	const hide = message.loading(type == 'create' ? '正在添加' : '正在编辑');
-	// 	try {
-	// 		let res = type === 'create' ? await InsNewMenu(item) : await UpMenu(item);
-	// 		if (res) {
-	// 			hide();
-	// 			form.resetFields();
-	// 			setModalTitle('');
-	// 			setModalType('');
-	// 			setModalIsVisible(false);
-	// 			setModalUserInfo({});
-	// 			if (actionRef.current) actionRef.current.reload();
-	// 			message.success(type == 'create' ? '添加成功' : '编辑成功');
-	// 		}
-	// 	} catch (error: any) {
-	// 		hide();
-	// 		message.error(error.message || error.msg);
-	// 	}
-	// };
-
 	// * 工具栏 ToolBar
 	let ToolBarParams: any = {
 		quickSearch, // 工具栏：快捷搜索
@@ -173,6 +99,7 @@ const useProTable = () => {
 		SetOpenSearch, // 工具栏：开启表单搜索
 		handleOperator,
 		setRowKeys,
+		SetLoading,
 		menuList,
 	};
 
