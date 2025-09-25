@@ -24,8 +24,8 @@ const ModalComponent = (Params: any) => {
 	const Submit = () => form.submit();
 	return (
 		<Modal
-			width={850}
 			title={modalTitle}
+			width={800}
 			open={modalIsVisible}
 			onCancel={OnCancel}
 			footer={[
@@ -37,7 +37,7 @@ const ModalComponent = (Params: any) => {
 				</Button>,
 			]}
 		>
-			<Form className='mt-[20px] mb-[60px] px-[20px] max-h-[500px] overflow-auto' layout='horizontal' form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} onFinish={FormOnFinish}>
+			<Form className='mt-[40px] mb-[100px] px-[20px] max-h-[500px] overflow-auto' layout='horizontal' form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} onFinish={FormOnFinish}>
 				<Row gutter={16}>
 					<Col span={12}>
 						<Form.Item label='岗位名称' name='job_name' rules={[{ required: true, message: '必填：岗位名称' }]}>
@@ -51,6 +51,7 @@ const ModalComponent = (Params: any) => {
 					</Col>
 					<Col span={12}>
 						<Form.Item label='状态' name='status' rules={[{ required: false }]}>
+							{/* <Switch /> */}
 							<Radio.Group options={['启用', '停用']} />
 						</Form.Item>
 					</Col>

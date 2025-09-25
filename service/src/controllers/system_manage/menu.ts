@@ -224,10 +224,11 @@ class Menu extends Basic {
 				if (exists[0].key === key) return ctx.sendError(400, `新增菜单失败：已经存在 key 为 ${key}`);
 			}
 
-			// * 新增时、如果上一级状态是关闭、那么新增的子菜单状态也是关闭状态 
+			// * 新增时、如果上一级状态是关闭、那么新增的子菜单状态也是关闭状态
 			// console.log('上级菜单：', data?.parent_id); // 0 | auth
 			let enableStatus = data?.enable;
-			if (data?.parent_id != 0) { // 当不是顶级菜单时
+			if (data?.parent_id != 0) {
+				// 当不是顶级菜单时
 				const exists = await ctx.mongo.find('__menu', { query: { key: data?.parent_id } });
 				if (exists.length) {
 					if (exists[0].enable == '关闭') enableStatus = '关闭';
@@ -300,11 +301,22 @@ class Menu extends Basic {
 			}
 
 			// ! 更新菜单时、如果最顶级菜单为关闭时、那么子菜单全部关闭才可以
-			const currentKey = findMenu[0].key; // auth
+			const currentKey = findMenu[0].key; // auth 获取当前key、寻找下级
 			const KeyArr = await ctx.mongo.find('__menu', { query: { parent_id: currentKey } });
 			if (KeyArr.length) {
 				for (const element of KeyArr) {
 					if (element.enable != '关闭') return ctx.sendError(400, '更新菜单：当前节点下，将子节点修改为关闭状态');
+				}
+			}
+
+			// ! 更新菜单时、如果最顶级菜单为关闭时、那么子菜单无法开启、除非顶级菜单先开启
+			const superStatus = findMenu[0].parent_id; // 获取当前节点、寻找上级
+			if (superStatus != 0) {
+				const KeyArr = await ctx.mongo.find('__menu', { query: { key: superStatus } });
+				if (KeyArr.length) {
+					for (const element of KeyArr) {
+						if (element.enable != '开启') return ctx.sendError(400, '更新菜单：开启当前节点，需要将上级节点修改为开启状态');
+					}
 				}
 			}
 

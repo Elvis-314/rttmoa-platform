@@ -3,7 +3,7 @@ import { Button, Tooltip } from 'antd';
 import Search from 'antd/lib/input/Search';
 import { useDispatch } from '@/redux';
 import { setGlobalState } from '@/redux/modules/global';
-import Excel from '@/components/Excel';
+import Excel from '@/components/TableExcel';
 import TableColumnsConfig from './Column';
 
 type ToolBarProps = {
