@@ -52,13 +52,17 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 			// 去除console、debugger
 			pure: viteEnv.VITE_DROP_CONSOLE ? ['console.log', 'debugger'] : [],
 		},
+		// 开启构建缓存： 用 esbuild 做依赖预构建 + 缓存，加快二次打包
+		optimizeDeps: {
+			esbuildOptions: {
+				target: 'esnext',
+			},
+		},
 		build: {
 			outDir: 'dist',
-			// esbuild 打包速度较快，但不能去掉 console.log
+			// esbuild 打包速度较快，但不能去掉 console.log、 默认是 'terser'
 			minify: 'esbuild',
 
-			// terser打包速度较慢，但​可以去掉console.log
-			// minify: "terser",
 			// terserOptions: {
 			// 	compress: {
 			// 		drop_console: viteEnv.VITE_DROP_CONSOLE,
@@ -79,6 +83,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 					chunkFileNames: 'assets/js/[name]-[hash].js', // 引入文件名的名称
 					entryFileNames: 'assets/js/[name]-[hash].js', // 包的入口文件名称
 					assetFileNames: 'assets/[ext]/[name]-[hash].[ext]', // 资源文件像：字体、图片、mp4、css等
+
 					// manualChunks(id) {
 					// 	// 🔹 react 相关
 					// 	if (id.includes('react')) {

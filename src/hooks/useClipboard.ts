@@ -13,8 +13,7 @@ type ClipboardHook = ClipboardFunctions & {
 };
 type stateType = null | { state: 'success' } | { state: 'error'; message: string };
 
-// todo：use Hooks 设置剪切版
-// todo：常用功能： 剪切板
+// * 常用功能： 剪切板
 const useClipboard = (): ClipboardHook => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const [result, setResult] = useState<stateType>(null);

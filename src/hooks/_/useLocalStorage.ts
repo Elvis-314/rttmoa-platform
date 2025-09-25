@@ -7,7 +7,7 @@ function getStorageValue(key: string, defaultValue: any) {
 	}
 }
 
-// localStorage
+// * 【本地存储】
 const useLocalStorage = (key: string, defaultValue: any) => {
 	const [value, setValue] = useState(() => getStorageValue(key, defaultValue));
 

@@ -30,6 +30,7 @@ export interface TableTemplateConfig<T extends TableDataItem> {
 /**
  * 通用表格模板 Hooks
  * 可用于快速构建具备 CRUD 功能的表格页面
+ * 【job_1 模板的 公共函数部分】
  */
 export const useTableTemplate = <T extends TableDataItem>(config: TableTemplateConfig<T>) => {
 	const { tableName, apiMethods, nameField, columnsConfig } = config;

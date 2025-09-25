@@ -5,13 +5,11 @@ type Action = {
 	data?: any;
 	error?: string;
 };
-
 const initialState = {
 	loading: false,
 	data: null,
 	error: null,
 };
-
 const reducer = (state: any, action: Action) => {
 	switch (action.type) {
 		case 'loading':
@@ -25,7 +23,7 @@ const reducer = (state: any, action: Action) => {
 	}
 };
 
-// ? useApiCallOnMount-useReducer
+// * 请求 【请求状态 loading、success、error】
 const useApiCallOnMount = (service: Promise<any>) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 

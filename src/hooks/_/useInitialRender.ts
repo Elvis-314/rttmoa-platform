@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 
+// * 【判断是否是初始化渲染】
 export default function useInitialRender() {
 	const ref = React.useRef<any>(null); // ref.current 初始为 null（整个组件生命周期内不会变引用）
 	useEffect(() => {

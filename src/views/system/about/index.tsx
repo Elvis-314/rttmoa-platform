@@ -7,9 +7,9 @@ import { Is } from '@/utils/is';
 import { Compute } from '@/utils/compute';
 import { randomHex } from '@/utils/color';
 import { connectInfo, getGeolocation, mediaDevicesObj } from '@/utils/navigator';
-import useViewport from '@/hooks/useWinViewport';
-import useMousePosition from '@/hooks/useWinMouse';
-import useThrottle from '@/hooks/useThrottle';
+import useViewport from '@/hooks/_/useWinViewport';
+import useMousePosition from '@/hooks/_/useWinMouse';
+import useThrottle from '@/hooks/_/use_Throttle';
 import useClipboard from '@/hooks/useClipboard';
 // import { suffix } from '@/utils/public';
 

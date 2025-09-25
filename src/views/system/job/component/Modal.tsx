@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Modal, Radio, Row, Space, Switch } from 'antd';
+import { Button, Col, Form, Input, Modal, Radio, Row, Space, Switch } from 'antd'; // 393.1k (gzipped: 123.8k)
 import TextArea from 'antd/es/input/TextArea';
 import { useEffect } from 'react';
 

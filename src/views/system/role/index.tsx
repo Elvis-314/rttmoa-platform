@@ -8,7 +8,6 @@ import { message } from '@/hooks/useMessage';
 import ColumnsConfig from './component/Column';
 import ToolBarRender from './component/ToolBar';
 import { addRole, delMoreJob, delRole, findRole, modifyRole } from '@/api/modules/system';
-import './index.less';
 import ModalComponent from './component/Modal';
 import ModalAuth from './component/ModalAuth';
 import DrawerComponent from '@/components/TableDrawer';

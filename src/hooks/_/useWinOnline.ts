@@ -4,7 +4,7 @@ function getOnlineStatus() {
 	return typeof navigator !== 'undefined' && typeof navigator.onLine === 'boolean' ? navigator.onLine : true;
 }
 
-// * React Hook 获取在线状态
+// * 监听 【网络在线状态】
 export function useWinOnline() {
 	const [onlineStatus, setOnlineStatus] = useState(getOnlineStatus());
 

@@ -6,7 +6,6 @@ import { message } from '@/hooks/useMessage';
 import ColumnsConfig from './component/Column';
 import ToolBarRender from './component/ToolBar';
 import { addJob, delJob, delMoreJob, ExJob, findJob, modifyJob } from '@/api/modules/system';
-import './index.less';
 import ModalComponent from './component/Modal';
 import DrawerComponent from '@/components/TableDrawer';
 import FooterComponent from '@/components/TableFooter';
@@ -36,6 +35,16 @@ const useProTable = () => {
 	const [modalTitle, setModalTitle] = useState<string>('');
 	const [modalType, setModalType] = useState<'create' | 'edit' | 'detail'>('create');
 	const [modalUserInfo, setModalUserInfo] = useState<any>({});
+
+	// 统一方法：修改此处即可
+	const apiMethods = {
+		find: findJob,
+		add: addJob,
+		modify: modifyJob,
+		del: delJob,
+		delMore: delMoreJob,
+		import: ExJob,
+	};
 
 	// Modal 操作：创建、编辑、详情
 	const modalOperate = (type: 'create' | 'edit' | 'detail', item?: any) => {
@@ -143,7 +152,6 @@ const useProTable = () => {
 		},
 		[findJob]
 	);
-
 	// * 工具栏 ToolBar
 	let toolBarParams: any = {
 		quickSearch, // 工具栏：快捷搜索

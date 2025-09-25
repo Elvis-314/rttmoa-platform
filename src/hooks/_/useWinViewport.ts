@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-// ? useWinViewport
-// 动态监听页面大小变化，网络是否断开
+// * 监听【页面大小变化】
 // 效果：在组件调用 useWindowSize 时，可以拿到页面大小，并且在浏览器缩放时自动触发组件更新。
 export default function useWinViewport() {
 	const [width, setWidth] = useState<number>(window.innerWidth);

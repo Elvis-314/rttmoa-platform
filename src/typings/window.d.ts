@@ -1,5 +1,5 @@
 import { NavigateFunction } from 'react-router-dom';
-import { NetworkState } from '@/hooks/useNetworkStatus';
+import { NetworkState } from '@/hooks/_/useNetworkStatus';
 
 // https://wangdoc.com/typescript/declare
 // d.ts 仅供 声明类型

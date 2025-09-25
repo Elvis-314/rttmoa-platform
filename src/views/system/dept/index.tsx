@@ -8,7 +8,6 @@ import { message } from '@/hooks/useMessage';
 import ColumnsConfig from './component/Column';
 import ToolBarRender from './component/ToolBar';
 import { addDept, delDept, findDept, modifyDept } from '@/api/modules/system';
-import './index.less';
 import ModalComponent from './component/Modal';
 import DrawerComponent from '@/components/TableDrawer';
 import FooterComponent from '@/components/TableFooter';
