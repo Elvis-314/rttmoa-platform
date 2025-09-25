@@ -22,6 +22,8 @@ interface JobParams {
 // 职位排序：1
 // 状态：0
 // flag：false
+
+// * 新增 + 更新 + 导入表格 都要统一表字段
 class Job extends Basic {
 	constructor() {
 		super();
@@ -85,7 +87,7 @@ class Job extends Basic {
 		}
 	};
 
-	addAndModifyField = (data: any) => {
+	private addAndModifyField = (data: any) => {
 		return {
 			postCode: this.normalize(data?.job_name, ['string'], null),
 			postName: this.normalize(data?.job_name, ['string'], null), // 产品经理 | 前端开发 | 会计
@@ -169,7 +171,7 @@ class Job extends Basic {
 							flag: false,
 
 							createBy: 'admin',
-							createTime: new Date(), 
+							createTime: new Date(),
 						};
 						await ctx.mongo.insertOne('__job', newJob);
 					}
@@ -186,8 +188,13 @@ class Job extends Basic {
 		try {
 			const id = ctx.params.id;
 			if (id) {
-				const ins = await ctx.mongo.deleteOne('__job', id);
-				return ctx.send(ins);
+				const docs = await ctx.mongo.find('__job', { query: { _id: id } });
+				if (docs.length) {
+					await ctx.mongo.deleteOne('__job', docs[0]._id);
+					return ctx.send('删除成功');
+				} else {
+					return ctx.sendError(400, `删除岗位操作：删除任务失败！`);
+				}
 			} else return ctx.sendError(400, `删除岗位操作：前端未传递id！`);
 		} catch (err) {
 			return ctx.sendError(500, err.message, 500);
@@ -200,7 +207,10 @@ class Job extends Basic {
 			const data: any = ctx.request.body;
 			if (data && data.length) {
 				for (const _id of data) {
-					await ctx.mongo.deleteOne('__job', _id);
+					const docs = await ctx.mongo.find('__job', { query: { _id: _id } });
+					if (docs.length) {
+						await ctx.mongo.deleteOne('__job', docs[0]._id);
+					}
 				}
 				return ctx.send('全部删除完成');
 			} else return ctx.sendError(400, `删除岗位操作：前端传递的参数不正确！`);

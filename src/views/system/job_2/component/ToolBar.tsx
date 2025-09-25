@@ -1,6 +1,6 @@
 import { FullscreenOutlined, PlusOutlined, SearchOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
-import Search from 'antd/lib/input/Search';
+import Search from 'antd/lib/input/Search'; // ! antd/lib/input
 import { useDispatch } from '@/redux';
 import { setGlobalState } from '@/redux/modules/global';
 import Excel from '@/components/Excel';
@@ -30,18 +30,15 @@ const ToolBarRender = (props: ToolBarProps) => {
 			return v.title != '操作' && v.title != '创建日期';
 		})
 		.map((v: any) => v.title);
-
-	const exportExcel: any =
-		tableData &&
-		tableData.map((v: any) => {
-			return {
-				岗位名称: v.postName,
-				岗位排序: v.postSort,
-				岗位状态: v.status,
-				创建时间: v.createTime,
-				岗位描述: v.desc,
-			};
-		});
+	const exportExcel: any = tableData.map((v: any) => {
+		return {
+			岗位名称: v.postName,
+			岗位排序: v.postSort,
+			岗位状态: v.status,
+			创建时间: v.createTime,
+			岗位描述: v.desc,
+		};
+	});
 	const handleImport = (data: any) => {
 		const handle = data.map((v: any) => {
 			return {
@@ -56,7 +53,7 @@ const ToolBarRender = (props: ToolBarProps) => {
 	// console.log('导出表格数据（需要处理）：', exportExcel);
 
 	return [
-		// <Search placeholder='快捷搜索...' allowClear onSearch={quickSearch} style={{ width: 200 }} />,
+		<Search placeholder='快捷搜索...' allowClear onSearch={quickSearch} style={{ width: 200 }} />,
 		<Button icon={<PlusOutlined />} onClick={CreateBtn}>
 			新建
 		</Button>,

@@ -12,10 +12,14 @@ import DrawerComponent from '@/components/TableDrawer';
 import FooterComponent from '@/components/TableFooter';
 
 const useProTable = () => {
+	// 表格头部标题
+	const tableName = '岗位管理';
+	// Drawer 设置当前行的唯一字段 将其他字段替换(postName | menuName)为 name
+	const nameField = 'postName';
+
 	const actionRef = useRef<ActionType>(); // 表格 ref
 	const formRef = useRef<FormInstance>(); // 表单 ref
 	const [form] = Form.useForm();
-	const tableName = '岗位管理';
 
 	const [openSearch, SetOpenSearch] = useState<boolean>(false); // 工具栏：开启关闭表单搜索
 	const [loading, setLoading] = useState<boolean>(false); // Loading：加载Loading
@@ -31,7 +35,7 @@ const useProTable = () => {
 	const [modalIsVisible, setModalIsVisible] = useState<boolean>(false);
 	const [modalTitle, setModalTitle] = useState<string>('');
 	const [modalType, setModalType] = useState<'create' | 'edit' | 'detail'>('create');
-	const [modalUserInfo, setModalUserInfo] = useState({});
+	const [modalUserInfo, setModalUserInfo] = useState<any>({});
 
 	// Modal 操作：创建、编辑、详情
 	const modalOperate = (type: 'create' | 'edit' | 'detail', item?: any) => {
@@ -42,7 +46,7 @@ const useProTable = () => {
 		} else {
 			setModalIsVisible(true);
 			setModalUserInfo(item || {});
-			setModalTitle(type === 'create' ? '新建岗位' : '编辑岗位	');
+			setModalTitle(type === 'create' ? '新建岗位' : '编辑岗位');
 		}
 	};
 
@@ -68,7 +72,7 @@ const useProTable = () => {
 					if (res) {
 						if (type === 'moreDelete') setSelectedRows([]);
 						actionRef.current?.reloadAndRest?.();
-						message.success(`成功删除${type === 'delete' ? ` ${item?.postName}` : '多条'}记录`);
+						message.success(`${type === 'delete' ? `删除成功` : `删除${selectedRows.length}条记录成功`}`);
 					}
 				}
 			} catch (error: any) {
@@ -141,7 +145,7 @@ const useProTable = () => {
 	);
 
 	// * 工具栏 ToolBar
-	let ToolBarParams: any = {
+	let toolBarParams: any = {
 		quickSearch, // 工具栏：快捷搜索
 		openSearch,
 		SetOpenSearch, // 工具栏：开启表单搜索
@@ -149,6 +153,17 @@ const useProTable = () => {
 		tableName,
 		tableData,
 		ImportData,
+	};
+	const pageConfig = {
+		size: 'default',
+		showQuickJumper: true,
+		showSizeChanger: true,
+		...pagination,
+		pageSizeOptions: [10, 15, 20, 30, 50],
+		onChange: (page: number, pageSize: number) => {
+			SetPagination({ ...pagination, page, pageSize });
+		},
+		showTotal: () => `第 ${pagination.page} 页，共 ${pagination.total} 条`,
 	};
 
 	const allWidth = ColumnsConfig('', '').reduce((sum: any, col: any) => sum + (col.width || 0), 0);
@@ -169,24 +184,14 @@ const useProTable = () => {
 				dateFormatter='number'
 				defaultSize='small'
 				columns={ColumnsConfig(modalOperate, modalResult)}
-				toolBarRender={() => ToolBarRender(ToolBarParams)} // 渲染工具栏
-				search={openSearch ? false : { labelWidth: 'auto', filterType: 'query', span: 4, resetText: '重置', searchText: '查询', showHiddenNum: true }} // 搜索表单配置
+				toolBarRender={() => ToolBarRender(toolBarParams)} // 渲染工具栏
+				search={openSearch ? false : { labelWidth: 'auto', filterType: 'query', span: 4, showHiddenNum: true }} // 搜索表单配置
 				request={handleRequest}
 				pagination={{
-					size: 'default',
-					showQuickJumper: true,
-					showSizeChanger: true,
-					...pagination,
-					pageSizeOptions: [10, 15, 20, 30, 50],
-					onChange: (page, pageSize) => {
-						SetPagination({ ...pagination, page, pageSize });
-					},
-					showTotal: () => `第 ${pagination.page} 页，共 ${pagination.total} 条`,
+					...pageConfig,
 				}}
 				rowSelection={{
-					onChange: (selectedRowKeys, selectedRows) => {
-						setSelectedRows(selectedRows);
-					},
+					onChange: (selectedRowKeys, selectedRows) => setSelectedRows(selectedRows),
 				}}
 				ghost={false}
 				onSizeChange={() => {}} // Table 尺寸发生改变、将尺寸存储到数据库中
@@ -202,15 +207,7 @@ const useProTable = () => {
 
 			{selectedRows?.length > 0 && <FooterComponent selectedRows={selectedRows} modalResult={modalResult} />}
 
-			<ModalComponent
-				form={form}
-				modalIsVisible={modalIsVisible}
-				setModalIsVisible={setModalIsVisible}
-				modalTitle={modalTitle}
-				modalType={modalType}
-				modalUserInfo={modalUserInfo}
-				modalResult={modalResult}
-			/>
+			<ModalComponent form={form} modalIsVisible={modalIsVisible} setModalIsVisible={setModalIsVisible} modalTitle={modalTitle} modalType={modalType} modalUserInfo={modalUserInfo} modalResult={modalResult} />
 
 			<DrawerComponent
 				drawerIsVisible={drawerIsVisible}

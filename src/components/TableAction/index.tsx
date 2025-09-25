@@ -3,7 +3,7 @@ import { IconFont } from '../Icon';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 
 // * 操作：下拉显示详情、编辑、删除
-// export const renderAction = (entity: any, modalOperate: any, modalResult: any) => {
+// export const TableRenderAction = (entity: any, modalOperate: any, modalResult: any) => {
 // 	const menuItems: MenuProps['items'] = [
 // 		{
 // 			key: 'view',
@@ -58,11 +58,7 @@ export const TableRenderAction = (entity: any, modalOperate: any, modalResult: a
 	return (
 		<div key='operate' className='flex flex-row justify-around'>
 			{/* 查看详情 */}
-			<div
-				key='detail'
-				className='  bg-green-400 hover:bg-green-500 w-[30px] h-[22px] flex justify-center items-center   rounded-[4px] cursor-pointer'
-				onClick={() => modalOperate('detail', entity)}
-			>
+			<div key='detail' className='  bg-green-400 hover:bg-green-500 w-[30px] h-[22px] flex justify-center items-center   rounded-[4px] cursor-pointer' onClick={() => modalOperate('detail', entity)}>
 				<svg className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='1060' width='16' height='16'>
 					<path d='M512.048 768a224 224 0 1 1 0-448 224 224 0 0 1 0 448z m0-64a160 160 0 1 0 0-320 160 160 0 0 0 0 320z' p-id='1061' fill='#ffffff'></path>
 					<path
@@ -83,11 +79,7 @@ export const TableRenderAction = (entity: any, modalOperate: any, modalResult: a
 				</svg>
 			</div>
 			{/* 编辑 */}
-			<div
-				key='edit'
-				className='bg-blue-400 hover:bg-blue-500 w-[30px] h-[22px] flex justify-center items-center rounded-[4px] cursor-pointer'
-				onClick={() => modalOperate('edit', entity)}
-			>
+			<div key='edit' className='bg-blue-400 hover:bg-blue-500 w-[30px] h-[22px] flex justify-center items-center rounded-[4px] cursor-pointer' onClick={() => modalOperate('edit', entity)}>
 				<svg className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='1242' width='16' height='16'>
 					<path
 						d='M153.6 902.656a32.256 32.256 0 0 1 0-64h716.8a32.256 32.256 0 0 1 0 64zM743.936 151.04l72.192 72.192a51.2 51.2 0 0 1 0 72.192L358.4 751.616a51.2 51.2 0 0 1-36.352 14.848H226.816a25.6 25.6 0 0 1-25.6-25.6v-97.792a51.2 51.2 0 0 1 14.848-36.352l455.68-455.68a51.2 51.2 0 0 1 72.192 0z m-478.72 497.152v54.272h54.272l442.88-442.88L708.096 204.8z'

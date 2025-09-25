@@ -1,98 +1,142 @@
 import { ProTable } from '@ant-design/pro-components';
-import { useProTableLogic } from './config/useProTableLogic';
-import { proTableConfig } from './config/tableConfig';
+import ColumnsConfig from './component/Column';
+import ToolBarRender from './component/ToolBar';
+import { addJob, delJob, delMoreJob, ExJob, findJob, modifyJob } from '@/api/modules/system';
 import ModalComponent from './component/Modal';
-import './index.less';
-import TableColumnsConfig from './component/Column';
 import DrawerComponent from '@/components/TableDrawer';
 import FooterComponent from '@/components/TableFooter';
+import { useTableTemplate, TableDataItem } from '@/hooks/useTableTemplate';
 
-const JobManage = () => {
-	const tableName = '岗位管理';
+// 定义岗位数据类型
+interface JobData extends TableDataItem {
+	postName: string;
+	postSort: number;
+	flag: boolean;
+	status: string;
+	createTime?: string;
+	desc?: string;
+	[key: string]: any;
+}
 
+const JobTable = () => {
+	// 使用通用表格模板
 	const {
-		// Refs
-		actionRef,
-		formRef,
-		form,
-		// States
+		// 状态
 		loading,
-		openSearch,
-		setOpenSearch,
 		pagination,
 		setPagination,
 		selectedRows,
 		setSelectedRows,
-		// Modal
+		drawerIsVisible,
+		setDrawerIsVisible,
+		drawerCurrentRow,
+		setDrawerCurrentRow,
 		modalIsVisible,
 		setModalIsVisible,
 		modalTitle,
 		modalType,
-		modalUserInfo,
-		// Drawer
-		drawerCurrentRow,
-		drawerIsVisible,
-		drawerClose,
+		modalData,
 
-		// Handlers
-		handleModalOperate,
-		handleModalResult,
-		handleImportData,
-		handleProTableRequest,
-	} = useProTableLogic();
-
-	// 传递给工具栏的 props
-	const toolBarParams = {
-		quickSearch: () => {},
-		openSearch,
-		setOpenSearch,
-		modalOperate: handleModalOperate,
-		tableName,
-		tableData: [], // 你的原始代码中没有用到这个，所以设为空数组
-		ImportData: handleImportData,
-	};
-
-	// 获取 ProTable 的配置
-	const tableConfig: any = proTableConfig({
-		...toolBarParams, // 将工具栏参数也传递给配置生成器
-		loading,
-		pagination,
-		setPagination,
-		selectedRows,
-		setSelectedRows,
+		// 引用
 		actionRef,
 		formRef,
-		tableName,
-		handleModalOperate,
-		handleModalResult,
+		form,
+
+		// 方法
+		modalOperate,
+		modalResult,
+		handleRequest,
+		calculateTableWidth,
+		getToolBarParams,
+
+		// 配置
+		columnsConfig,
+		nameField,
+	} = useTableTemplate<JobData>({
+		tableName: '岗位管理',
+		nameField: 'postName',
+		columnsConfig: ColumnsConfig,
+		apiMethods: {
+			find: findJob,
+			add: addJob,
+			modify: modifyJob,
+			del: delJob,
+			delMore: delMoreJob,
+			import: ExJob,
+		},
 	});
+
+	const ToolBarParams: any = getToolBarParams();
+	const allWidth = calculateTableWidth();
 
 	return (
 		<>
-			<ProTable<any> {...tableConfig} request={handleProTableRequest} />
-
-			{selectedRows?.length > 0 && <FooterComponent selectedRows={selectedRows} modalResult={handleModalResult} />}
-
-			<ModalComponent
-				form={form}
-				modalIsVisible={modalIsVisible}
-				setModalIsVisible={setModalIsVisible}
-				modalTitle={modalTitle}
-				modalType={modalType}
-				modalUserInfo={modalUserInfo}
-				modalResult={handleModalResult}
+			<ProTable<any>
+				rowKey='_id'
+				className='ant-pro-table-scroll'
+				scroll={{ x: allWidth, y: '100vh' }}
+				headerTitle='岗位管理'
+				loading={loading}
+				formRef={formRef}
+				actionRef={actionRef}
+				bordered
+				cardBordered
+				dateFormatter='number'
+				defaultSize='small'
+				columns={columnsConfig(modalOperate, modalResult)}
+				toolBarRender={() => ToolBarRender(ToolBarParams)}
+				search={{
+					labelWidth: 'auto',
+					filterType: 'query',
+					span: 4,
+					resetText: '重置',
+					searchText: '查询',
+					showHiddenNum: true,
+				}}
+				request={handleRequest}
+				pagination={{
+					size: 'default',
+					showQuickJumper: true,
+					showSizeChanger: true,
+					...pagination,
+					pageSizeOptions: [10, 15, 20, 30, 50],
+					onChange: (page, pageSize) => {
+						setPagination({ ...pagination, page, pageSize });
+					},
+					showTotal: () => `第 ${pagination.page} 页，共 ${pagination.total} 条`,
+				}}
+				rowSelection={{
+					onChange: (selectedRowKeys, selectedRows) => {
+						setSelectedRows(selectedRows);
+					},
+				}}
+				ghost={false}
+				onSizeChange={() => {}}
+				onRequestError={(error: any) => {}}
+				editable={{ type: 'multiple' }}
+				columnsState={{
+					persistenceKey: 'key-job',
+					persistenceType: 'localStorage',
+				}}
 			/>
+
+			{selectedRows?.length > 0 && <FooterComponent selectedRows={selectedRows} modalResult={modalResult} />}
+
+			<ModalComponent form={form} modalIsVisible={modalIsVisible} setModalIsVisible={setModalIsVisible} modalTitle={modalTitle} modalType={modalType} modalUserInfo={modalData} modalResult={modalResult} />
 
 			<DrawerComponent
 				drawerIsVisible={drawerIsVisible}
-				drawerCurrentRow={{ ...drawerCurrentRow, name: drawerCurrentRow?.postName }}
-				drawerClose={drawerClose}
-				columnsConfig={TableColumnsConfig}
-				modalOperate={handleModalOperate}
-				modalResult={handleModalResult}
+				drawerCurrentRow={{ ...drawerCurrentRow, name: drawerCurrentRow?.[nameField] }}
+				drawerClose={() => {
+					setDrawerCurrentRow({});
+					setDrawerIsVisible(false);
+				}}
+				columnsConfig={columnsConfig}
+				modalOperate={modalOperate}
+				modalResult={modalResult}
 			/>
 		</>
 	);
 };
 
-export default JobManage;
+// export default JobTable;
