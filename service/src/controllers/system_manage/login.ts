@@ -15,6 +15,7 @@ class User extends Basic {
 
 	login = async (ctx: Context) => {
 		try {
+			// console.log(123);
 			const { username, password } = ctx.request.body as any;
 			if (!username) return ctx.sendError(400, '登陆操作：无用户名');
 			if (!password) return ctx.sendError(400, '登陆操作：无密码');

@@ -13,7 +13,7 @@
     "server_start": "cross-env NODE_ENV=development supervisor -i ./dist/client/ -w ./dist/ ./dist/app.js"
   },
   "engines": {
-    "node": ">=20.18.0"
+    "node": ">=18.18.0"
   },
   "dependencies": {
     "@koa/cors": "^5.0.0",

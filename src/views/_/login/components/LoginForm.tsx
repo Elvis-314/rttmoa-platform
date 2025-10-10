@@ -67,7 +67,7 @@ const LoginForm: React.FC = () => {
 
 			setLoading(true);
 			message.open({ type: 'loading', content: '登录中...' });
-
+			console.log('await loginAPI.userLogin(getValues)', await loginAPI.userLogin(getValues));
 			const { code, data }: any = type === 'account' ? await loginAPI.userLogin(getValues) : await loginAPI.userRegister(getValues);
 			console.log('data', data);
 			if (code != 200) {

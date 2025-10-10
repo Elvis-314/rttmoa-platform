@@ -4,7 +4,7 @@ import bodyparser from 'koa-bodyparser';
 import winston from 'winston';
 import { _errorHandle, _sendHandle, _dbHandle, _logger, _CrossDomain, _Security, _Public, _Mongo } from './middlewares/index.ts';
 import { protect, unprotect } from './routes/index.ts';
-import './schedule';   // # 定时任务
+// import './schedule';   // # 定时任务
 
 const app = new koa();
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
