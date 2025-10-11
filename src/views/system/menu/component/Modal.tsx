@@ -41,7 +41,7 @@ const ModalComponent = (Props: any) => {
 			isHide: type === 'create' ? '否' : data?.meta?.isHide == 1 ? '是' : '否',
 			isFull: type === 'create' ? '否' : data?.meta?.isFull == 1 ? '是' : '否',
 			isAffix: type === 'create' ? '否' : data?.meta?.isAffix == 1 ? '是' : '否',
-			enable: type === 'create' ? '开启' : data?.meta?.enable,
+			enable: type === 'create' ? '开启' : data?.meta?.enable || '开启',
 		});
 		setIsTop(type === 'create' ? '是' : data?.parent_id == 0 ? '是' : '否');
 		setValue(type === 'create' ? '' : data?.parent_id == 0 ? null : data?.parent_id);
@@ -108,15 +108,7 @@ const ModalComponent = (Props: any) => {
 					</Button>,
 				]}
 			>
-				<Form
-					className='mt-[20px] mb-[50px] px-[20px] max-h-[650px] overflow-auto'
-					layout='horizontal'
-					size='middle'
-					form={form}
-					onFinish={FormOnFinish}
-					labelCol={{ span: 6 }}
-					wrapperCol={{ span: 16 }}
-				>
+				<Form className='mt-[20px] mb-[50px] px-[20px] max-h-[650px] overflow-auto' layout='horizontal' size='middle' form={form} onFinish={FormOnFinish} labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
 					<Row gutter={16}>
 						<Col span={12}>
 							<Form.Item label='是否顶级部门' name='isTop' rules={[{ required: true, message: '' }]}>

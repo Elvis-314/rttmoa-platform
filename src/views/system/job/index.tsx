@@ -153,6 +153,7 @@ const useProTable = () => {
 		},
 		[findJob]
 	);
+
 	// * 工具栏 ToolBar
 	let toolBarParams: any = {
 		quickSearch, // 工具栏：快捷搜索
@@ -163,6 +164,7 @@ const useProTable = () => {
 		tableData,
 		ImportData,
 	};
+
 	const pageConfig = {
 		size: 'default',
 		showQuickJumper: true,

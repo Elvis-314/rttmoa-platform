@@ -305,7 +305,8 @@ class Menu extends Basic {
 			const KeyArr = await ctx.mongo.find('__menu', { query: { parent_id: currentKey } });
 			if (KeyArr.length) {
 				for (const element of KeyArr) {
-					if (element.enable != '关闭') return ctx.sendError(400, '更新菜单：当前节点下，将子节点修改为关闭状态');
+					console.log('element.enable', element.enable);
+					if (element.enable && element.enable != '关闭') return ctx.sendError(400, '更新菜单：当前节点下，将子节点修改为关闭状态');
 				}
 			}
 

@@ -3,7 +3,7 @@
     "src"
   ],
   // "exclude": [ "tests" ] 
-  "compilerOptions": {
+  "compilerOptions": { 
     "types": [
       "./src/koa.d.ts"
     ],
